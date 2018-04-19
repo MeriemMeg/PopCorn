@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="film_1">
+        <item>American Bluff</item>
+        <item>American Bluff ou Arnaque américaine au Québec et au Nouveau-Brunswick est un film policier américain de David O. Russell, sorti en salles aux États-Unis le 13 décembre 2013 en exploitation limitée, puis le 20 décembre 2013 en sortie nationale.</item>
+        <item>@drawable/americanhustle</item>
+    </string-array>
+
+    <string-array name="film_2">
+        <item>Comme des bêtes</item>
+        <item>Comme des bêtes est un film d\'animation américain réalisé par Chris Renaud et Yarrow Cheney, sorti en 2016.</item>
+        <item>@drawable/commedesbetes</item>
+    </string-array>
+
+    <string-array name="film_3">
+        <item>Death Wish</item>
+        <item>Death Wish est un film américain réalisé par Eli Roth, sorti en 2018. C\'est le remake du film Un justicier dans la ville avec Charles Bronson.</item>
+        <item>@drawable/deathwish</item>
+    </string-array>
+
+    <string-array name="film_4">
+        <item>Happy Deathday</item>
+        <item>Happy BirthDead ou Bonne fête encore! au Québec est un film d\'horreur américain coécrit et réalisé par Christopher B. Landon, sorti en 2017.</item>
+        <item>@drawable/happydeathday</item>
+    </string-array>
+
+    <string-array name="film_5">
+        <item>Hunger Games</item>
+        <item>Hunger Games ou Hunger Games : le film au Québec est un film de science-fiction américain écrit et réalisé par Gary Ross, sorti en 2012.</item>
+        <item>@drawable/hungergames</item>
+    </string-array>
+
+    <string-array name="film_6">
+        <item>Jumanji</item>
+        <item>Jumanji : Bienvenue dans la jungle est un film américain réalisé par Jake Kasdan, sorti en 2017. Il s\'agit de la suite de Jumanji, de Joseph « Joe » Eggleston Johnston, sorti en 1995.</item>
+
+        <item>@drawable/jumanji</item>
+    </string-array>
+
+    <string-array name="film_7">
+        <item>Le Royaume de Ga\'Hool</item>
+        <item>Le Royaume de Ga\'hoole est un film d\'animation américano-australien réalisé par Zack Snyder et sorti en 2010. Il est inspiré de la série de livres pour enfants Les Gardiens de Ga\'hoole, écrite par Kathryn Lasky.</item>
+        <item>@drawable/leroyaumedegahool</item>
+    </string-array>
+
+    <string-array name="film_8">
+        <item>Mother</item>
+        <item>mother! est un thriller américain écrit et réalisé par Darren Aronofsky, sorti en 2017. Il est présenté en sélection officielle à la Mostra de Venise 2017. Le film est sorti le 15 septembre 2017 aux Etats-unis.</item>
+        <item>@drawable/mother</item>
+    </string-array>
+
+    <string-array name="film_9">
+        <item>Murder on the Orient Express</item>
+        <item>Le Crime de l\'Orient-Express est un film britannique-film américain coproduit et réalisé par Kenneth Branagh, sorti en 2017. </item>
+        <item>@drawable/orientexpress</item>
+    </string-array>
+
+    <string-array name="film_10">
+        <item>Peter Rubbit</item>
+        <item>Pierre Lapin est une comédie américano-australienne, écrite et réalisée par Will Gluck qui mêle animation et prises de vues réelles, sortie en 2018.</item>
+        <item>@drawable/peterrabbit</item>
+    </string-array>
+
+    <string-array name="film_11">
+        <item>Serena</item>
+        <item>Serena est un film dramatique américano-franco-tchèque réalisé par Susanne Bier, sorti en 2014. Il s\'agit de l\'adaptation du roman américain éponyme de Ron Rash publié en 2008, et traduit en français sous le même titre en 2011</item>
+        <item>@drawable/serena</item>
+    </string-array>
+
+    <string-array name="film_12">
+        <item>Zootopia</item>
+        <item>Zootopia est le 135ᵉ long-métrage d\'animation et le 55ᵉ « Classique d\'animation » des studios Disney réalisé par Byron Howard et Rich Moore.</item>
+        <item>@drawable/superlapin</item>
+    </string-array>
+
+    <string-array name="film_13">
+        <item>House at the End of the Street</item>
+        <item>La Maison au bout de la rue est un film d\'horreur américano-canadien de Mark Tonderai sorti en 2012.</item>
+        <item>@drawable/whitenight</item>
+    </string-array>
+
+    <string-array name="film_14">
+        <item>Winter\'s Bone</item>
+        <item>Winter\'s Bone est un film dramatique américain de Debra Granik, réalisé en 2010. C\'est l\'adaptation du roman éponyme de Daniel Woodrell publié en 2006.</item>
+        <item>@drawable/wintersbone</item>
+    </string-array>
+
+    <string-array name="film_15">
+        <item>X-men</item>
+        <item>X-Men est une série de films américaine inspirée de la série de comics du même nom créée par Stan Lee et Jack Kirby, et publiée par Marvel Comics</item>
+        <item>@drawable/xmen</item>
+    </string-array>
+</resources>

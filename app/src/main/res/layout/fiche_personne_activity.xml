@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context="com.example.meriemmeguellati.cinema.Activities.MainActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+        <FrameLayout
+            android:id="@+id/film_background"
+            android:layout_width="match_parent"
+            android:layout_height="256dp"
+            android:background="@drawable/img20">
+
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/my_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="@color/actionBarre"
+                    android:elevation="4dp"
+                    android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:titleTextColor="@color/textColorPrimary"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+
+
+                <TextView
+                    android:id="@+id/nomActeur"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Jennefer Lawrance"
+                    android:textAlignment="textStart"
+                    android:textSize="25dp"
+                    android:textColor="@color/textColorPrimary"
+                    android:textStyle="bold"
+                    android:fontFamily="casual"
+                    app:layout_constraintBottom_toTopOf="@+id/bearthday"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.093"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0" />
+
+                <TextView
+                    android:id="@+id/bearthday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="31dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="casual"
+                    android:text="16 Janvier 1990"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/textColorPrimary"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/play_stop" />
+
+                <ImageButton
+                    android:id="@+id/play_stop"
+                    android:layout_width="41dp"
+                    android:layout_height="38dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginStart="16dp"
+                    android:background="@null"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:srcCompat="@drawable/ic_cake_white_24dp" />
+
+
+            </android.support.constraint.ConstraintLayout>
+        </FrameLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <View android:layout_width="fill_parent" android:id="@+id/focus_view"
+                    android:layout_height="0dp" android:focusable="true"
+                    android:focusableInTouchMode="true"><requestFocus/></View>
+
+                <TextView
+                    android:id="@+id/film_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="  Pierre Lapin est une comédie américano-australienne, écrite et réalisée par Will Gluck qui mêle animation et prises de vues réelles, sortie en 2018."
+                    android:textAlignment="textStart"
+                    android:textColor="@color/textColorPrimary"
+                    android:textSize="15dp"
+                    android:textStyle="bold" />
+                <android.support.v4.widget.Space
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp" />
+
+
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/filmgraphie"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scrollbars="none" />
+                </FrameLayout>
+
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</FrameLayout>
+
+
+

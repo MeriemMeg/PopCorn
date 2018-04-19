@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="comment_1">
+        <item>1</item>
+        <item>Great Movie</item>
+        <item>Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment</item>
+        <item>@drawable/jamescorden</item>
+    </string-array>
+    <string-array name="comment_2">
+        <item>2</item>
+        <item>Great Movie</item>
+        <item>Commentaire</item>
+        <item>@drawable/jenniferlawrence</item>
+    </string-array>
+    <string-array name="comment_3">
+        <item>3</item>
+        <item>LOVE IT</item>
+        <item>I liked the story very much</item>
+        <item>@drawable/margotrobbie</item>
+    </string-array>
+    <string-array name="comment_4">
+        <item>4</item>
+        <item>Thanks</item>
+        <item></item>
+        <item>@drawable/profile</item>
+    </string-array>
+    <string-array name="comment_5">
+        <item>5</item>
+        <item>....</item>
+        <item>Tip top</item>
+        <item>@drawable/rosebyrne</item>
+    </string-array>
+    <string-array name="comment_6">
+        <item>6</item>
+        <item>Cool</item>
+        <item>Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment</item>
+        <item>@drawable/samneill</item>
+    </string-array>
+</resources>

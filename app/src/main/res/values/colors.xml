@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1A1A1D</color>
+    <color name="colorPrimaryDark">#000</color>
+    <color name="colorAccent">#C3073F</color>
+    <color name="textColorPrimary">#fff</color>
+    <color name="textColorSecondary">#fff</color>
+    <color name="statutBarre">#77000000</color>
+    <color name="background">#AA000000</color>
+    <color name="titleBarre">#AAffffff</color>
+    <color name="actionBarre">#00ffffff</color>
+    <color name="poster_title">#FFF</color>
+    <color name="white_overlay">#7FFFFFFF</color>
+    <color name="section_color">#4E4E50</color>
+    <color name="comment">#EAEAEA</color>
+</resources>

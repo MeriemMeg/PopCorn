@@ -1,0 +1,5 @@
+<root>
+    <item name='android.content.res.Resources'>
+        <annotation name='java.lang.Deprecated' />
+    </item>
+</root>

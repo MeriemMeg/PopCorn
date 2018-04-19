@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single" >
+
+        <item
+            android:id="@+id/nav_accueil"
+            android:icon="@drawable/ic_home_white_24dp"
+            android:title="Accueil"
+            />
+        <item
+            android:id="@+id/nav_fan"
+            android:icon="@drawable/ic_favorite_white_24dp"
+            android:title="Fan" />
+        <item
+            android:id="@+id/nav_films"
+            android:icon="@drawable/ic_movie_white_24dp"
+            android:title="Films" />
+        <item
+            android:id="@+id/nav_series"
+            android:icon="@drawable/ic_ondemand_video_white_24dp"
+            android:title="Séries" />
+        <item
+            android:id="@+id/nav_salles"
+            android:icon="@drawable/ic_videocam_white_24dp"
+            android:title="Salles Cénima" />
+        <item
+            android:id="@+id/nav_personnes"
+            android:icon="@drawable/ic_portrait_white_24dp"
+            android:title="Personnes" />
+    </group>
+
+    <item android:title="">
+        <menu>
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_settings_white_24dp"
+                android:title="settings" />
+
+        </menu>
+    </item>
+
+</menu>

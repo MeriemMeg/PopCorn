@@ -1,0 +1,52 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppBlankTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+    </style>
+
+    <style name="AppTheme" parent="AppBlankTheme">
+        <!-- Customize your theme here. -->
+        <!-- Base application thème. -->
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="android:statusBarColor">@color/statutBarre</item>
+
+    </style>
+
+
+    <style name="SecondAppTheme" parent="AppBlankTheme">
+        <!-- Customize your theme here. -->
+        <!-- Base application thème. -->
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+
+    </style>
+
+    <style name="MyActionBar" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:titleTextStyle">@color/textColorPrimary</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="actionButtonStyle">@style/me</item>
+        <item name="android:actionBarTheme">@color/textColorPrimary</item>
+        <!-- Support library compatibility -->
+
+        <item name="background">@color/colorPrimary</item>
+    </style>
+
+    <style name="me">
+        <item name="android:color">@color/textColorPrimary</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+</resources>

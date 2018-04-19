@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="salle_1">
+        <item>La salle de cinéma Atlas</item>
+        <item>27, Rue mohamad seguir saadouni, Bab el oued, 16000, Alger, Algérie</item>
+        <item>+213 23 96 11 47</item>
+        <item>@drawable/cinemaatlas</item>
+    </string-array>
+    <string-array name="salle_2">
+        <item>La salle de cinéma cosmos</item>
+        <item>Centre commercial riadh el fath, el madania, 16000, Alger, Algérie</item>
+        <item>+213 21 68 34 19</item>
+        <item>@drawable/cinemacosmos</item>
+    </string-array>
+    <string-array name="salle_3">
+        <item>La salle de cinéma inb khaldoun</item>
+        <item>Rue doctor cherif saadane, Alger-centre, 16000, Alger, Algérie</item>
+        <item>+213 23 40 30 22</item>
+        <item>@drawable/cinemaibnkhaldoun</item>
+    </string-array>
+</resources>
