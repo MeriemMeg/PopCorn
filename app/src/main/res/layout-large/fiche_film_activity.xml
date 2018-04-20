@@ -148,7 +148,7 @@
                                 android:textColor="@color/section_color"
                                 android:textSize="20sp" />
                             <android.support.v4.widget.Space
-                                android:layout_width="580dp"
+                                android:layout_width="500dp"
                                 android:layout_height="match_parent" />
                             <ImageButton
                                 android:id="@+id/more"
