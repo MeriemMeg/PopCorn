@@ -14,6 +14,7 @@ data class Film(
 
 
 )  : Serializable{
+    var estEnCoursDeProjection : Boolean = false
     var estSuivi : Boolean = false
     var filmsLiés: ArrayList<Film> = ArrayList<Film> ()
     var commentaires : ArrayList<String> = ArrayList<String> ()
@@ -48,6 +49,9 @@ data class Film(
 
     fun suivre (){
         this.estSuivi = true
+    }
+    fun projeter (){
+        this.estEnCoursDeProjection = true
     }
 
 }

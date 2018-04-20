@@ -8,11 +8,14 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.meriemmeguellati.cinema.Data.Data
+import com.example.meriemmeguellati.cinema.Model.Comment
 
 import com.example.meriemmeguellati.cinema.R
 
 
 class CommentsFragment : Fragment() {
+    var commentaires = ArrayList<Comment>()
     private lateinit var recyclerView : RecyclerView
     private lateinit var mview : View
 
@@ -20,6 +23,11 @@ class CommentsFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         mview =  inflater.inflate(R.layout.fragment_comments, container, false)
+        val n = this.arguments.getInt("size") -1
+        for (i in 0..n){
+            this.commentaires.add(this.arguments.getSerializable("commentaire"+i.toString()) as Comment)
+        }
+
         return mview
     }
 
@@ -30,56 +38,19 @@ class CommentsFragment : Fragment() {
 
         recyclerView.layoutManager = GridLayoutManager(this.context, 1)
 
-        val comments = prepareComments()
+       // val comments = prepareComments()
 
-        val adapter = CommentsAdapter(this.context, comments)
+        val adapter = CommentsAdapter(this.context, this.commentaires)
 
         recyclerView.adapter = adapter
 
     }
     private fun prepareComments() : ArrayList<Comment>{
-        var profile: IntArray = intArrayOf(
-                R.drawable.jamescorden,
-                R.drawable.jenniferlawrence,
-                R.drawable.margotrobbie,
-                R.drawable.profile,
-                R.drawable.rosebyrne,
-                R.drawable.samneill
-        )
 
-        val res = resources
-        val comments = ArrayList<Comment>()
-        comments.add(Comment(
-                        res.getStringArray(R.array.comment_1)[0].toInt(),
-                        res.getStringArray(R.array.comment_1)[1],
-                        res.getStringArray(R.array.comment_1)[2],
-                        profile[0]))
-        comments.add(Comment(
-                res.getStringArray(R.array.comment_2)[0].toInt(),
-                res.getStringArray(R.array.comment_2)[1],
-                res.getStringArray(R.array.comment_2)[2],
-                profile[1]))
-        comments.add(Comment(
-                res.getStringArray(R.array.comment_3)[0].toInt(),
-                res.getStringArray(R.array.comment_3)[1],
-                res.getStringArray(R.array.comment_3)[2],
-                profile[2]))
-        comments.add(Comment(
-                res.getStringArray(R.array.comment_4)[0].toInt(),
-                res.getStringArray(R.array.comment_4)[1],
-                res.getStringArray(R.array.comment_4)[2],
-                profile[3]))
-        comments.add(Comment(
-                res.getStringArray(R.array.comment_5)[0].toInt(),
-                res.getStringArray(R.array.comment_5)[1],
-                res.getStringArray(R.array.comment_5)[2],
-                profile[4]))
-        comments.add(Comment(
-                res.getStringArray(R.array.comment_6)[0].toInt(),
-                res.getStringArray(R.array.comment_6)[1],
-                res.getStringArray(R.array.comment_6)[2],
-                profile[5]))
 
-        return comments
+        val data = Data(resources)
+        data.createComments()
+
+        return data.commentaire
     }
 }

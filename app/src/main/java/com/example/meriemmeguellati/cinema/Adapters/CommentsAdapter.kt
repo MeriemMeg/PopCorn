@@ -10,7 +10,9 @@ import android.widget.TextView
 import com.example.meriemmeguellati.cinema.R
 import android.graphics.BitmapFactory
 import android.graphics.Bitmap
-
+import android.widget.RatingBar
+import com.example.meriemmeguellati.cinema.Model.Comment
+import de.hdodenhof.circleimageview.CircleImageView
 
 
 class CommentsAdapter(val context: Context, val commentsList: ArrayList<Comment>): RecyclerView.Adapter<CommentsAdapter.ViewHolder>() {
@@ -28,11 +30,17 @@ class CommentsAdapter(val context: Context, val commentsList: ArrayList<Comment>
         val comment: Comment = commentsList[position]
         holder.message.text = comment.message
         holder.arrow.setImageResource(R.drawable.arrow)
+        holder.nom.text = comment.nom
+        holder.rating.rating = comment.rating.toFloat()
+        holder.profil.setImageResource(comment.profile)
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val message = itemView.findViewById<TextView>(R.id.message)
         val arrow = itemView.findViewById<ImageView>(R.id.arrow)
+        val nom = itemView.findViewById<TextView>(R.id.nom)
+        val rating = itemView.findViewById<RatingBar>(R.id.rating)
+        val profil = itemView.findViewById<CircleImageView>(R.id.profile)
     }
 
     fun decodeToBitmap(decodedByte: ByteArray): Bitmap {

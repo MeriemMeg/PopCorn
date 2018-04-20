@@ -42,12 +42,6 @@ class RecyclerViewFilmLiesAdapter(private val mContext: Context, private val dat
 
 
 
-        /* Glide.with(mContext)
-                   .load(feedItem.getImageURL())
-                   .diskCacheStrategy(DiskCacheStrategy.ALL)
-                   .centerCrop()
-                   .error(R.drawable.bg)
-                   .into(feedListRowHolder.thumbView);*/
     }
 
     override fun getItemCount(): Int {

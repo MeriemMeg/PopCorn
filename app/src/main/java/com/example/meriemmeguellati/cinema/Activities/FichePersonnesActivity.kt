@@ -7,31 +7,37 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.example.meriemmeguellati.cinema.Adapters.RecyclerViewFilmLiesAdapter
 import com.example.meriemmeguellati.cinema.Adapters.RecyclerViewSaisonAdapter
-import com.example.meriemmeguellati.cinema.Model.SectionDataModel
-import com.example.meriemmeguellati.cinema.Model.SingleItemModel
 import com.example.meriemmeguellati.cinema.R
 import android.net.Uri
-import com.example.meriemmeguellati.cinema.Model.Film
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentTransaction
+import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.*
 import android.widget.*
 import android.view.MotionEvent
 import android.view.View.OnTouchListener
+import com.example.meriemmeguellati.cinema.Adapters.CommentsFragment
 import com.example.meriemmeguellati.cinema.Adapters.RecyclerViewPersonnesAdapter
-import com.example.meriemmeguellati.cinema.Model.Personne
+import com.example.meriemmeguellati.cinema.Data.Data
+import com.example.meriemmeguellati.cinema.Model.*
 
 
 class FichePersonnesActivity : AppCompatActivity() {
 
-    var allSampleData: ArrayList<SectionDataModel> = ArrayList<SectionDataModel>()
+    var isCommentsShown : Boolean = false
+    lateinit var data : Data
+    lateinit var more : ImageButton
+    lateinit var showComments : TextView
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fiche_personne_activity)
         setSupportActionBar(findViewById(R.id.my_toolbar))
-        getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
-        getSupportActionBar()!!.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+        //getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
+      //  getSupportActionBar()!!.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
         getSupportActionBar()!!.title=""
 
 
@@ -72,6 +78,12 @@ class FichePersonnesActivity : AppCompatActivity() {
 
 
 
+        this.data = Data(resources)
+        this.data.createComments()
+        this.showComments = findViewById<TextView>(R.id.nb_comments)
+        this.showComments.text = "Commentaires (4)"
+        this.more = findViewById<ImageButton>(R.id.more)
+
 
 
         val film_liées_recycler_view = findViewById<RecyclerView>(R.id.filmgraphie)
@@ -83,6 +95,34 @@ class FichePersonnesActivity : AppCompatActivity() {
         film_liées_recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         film_liées_recycler_view.adapter = adapter2
+
+        val showComments = findViewById<TextView>(R.id.nb_comments)
+        showComments.text = "Commentaires (4)"
+
+        val more = findViewById<ImageButton>(R.id.more)
+        //évènements du Click
+        more.setOnClickListener {
+            if(this.isCommentsShown ==false) {
+                val fragment =  CommentsFragment()
+                val bundle = Bundle()
+                for (i in 0..(this.data.commentaire.size-1)){
+                    bundle.putSerializable("commentaire"+i.toString(),this.data.commentaire[i])
+                }
+                bundle.putInt("size",this.data.commentaire.size)
+
+                fragment.setArguments(bundle)
+                showFragment(fragment)
+                this.more.setImageResource(R.drawable.ic_expand_less_black_24dp)
+                this.isCommentsShown = true
+            }
+            else {
+                hideFragment()
+                this.more.setImageResource(R.drawable.ic_expand_more_black_24dp)
+                this.isCommentsShown = false
+            }
+
+        }
+
 
     }
 
@@ -97,57 +137,106 @@ class FichePersonnesActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
+        menuInflater.inflate(R.menu.menu_personne, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.action_follow -> {
-            // User chose the "Settings" item, show the app settings UI...
+        R.id.action_comment -> {
+            showCommenter()
             true
         }
 
         R.id.action_rate -> {
-            // User chose the "Favorite" action, mark the current item
-            // as a favorite...
+            showEvaluation()
             true
         }
 
-        R.id.action_follow -> {
-            // User chose the "Favorite" action, mark the current item
-            // as a favorite...
-            true
-        }
-        android.R.id.home->{
-            this.finish()
-            true
-        }
+
         else -> {
             // If we got here, the user's action was not recognized.
             // Invoke the superclass to handle it.
             super.onOptionsItemSelected(item)
         }
     }
-    fun createDummyData() {
+    private fun showFragment(fragment: Fragment) {
+        val fragmentManager = supportFragmentManager
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_comment, fragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit()
+    }
 
+    private fun hideFragment () {
+        val fragmentManager = supportFragmentManager
+        getSupportFragmentManager()
+                .beginTransaction().
+                remove(getSupportFragmentManager().findFragmentById(R.id.content_comment)).commit()
+    }
 
-        for (i in 0..5) {
+    fun showCommenter(){
+        var mBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
+        var mView: View = layoutInflater.inflate(R.layout.commenter, null)
 
+        val commentEditText = mView.findViewById<EditText>(R.id.commentText);
 
+        mBuilder.setView(mView)
+        var dialog: AlertDialog = mBuilder.create()
+        dialog.show()
 
-            val headerTitle = "Section " + i
+        val close : Button = mView?.findViewById<Button>(R.id.closePop) as Button
+        close.setOnClickListener {view ->
+            dialog.cancel()
+        }
 
-            val singleItem = ArrayList<SingleItemModel>()
-            for (j in 0..5) {
-                singleItem.add(SingleItemModel("Item " + j, "URL " + j))
+        val commenter: Button = mView?.findViewById<Button>(R.id.commenter)
+        commenter.setOnClickListener{ view ->
+            val comment: String = commentEditText.text.toString()
+            val myComment = Comment(resources.getStringArray(R.array.comment_1)[0].toInt(),
+                    resources.getStringArray(R.array.comment_1)[1],
+                    comment, R.drawable.avatar,"Meguellati Ahmed",3)
+            this.data.commentaire.add(0,myComment)
+            this.showComments.text = "Commentaires ("+this.data.commentaire.size.toString()+")"
+            Toast.makeText(this, "votre commentaire a été ajouté" , Toast.LENGTH_LONG).show();
+            dialog.cancel()
+            if(this.isCommentsShown ) {
+                hideFragment()
+                this.more.setImageResource(R.drawable.ic_expand_more_black_24dp)
+                this.isCommentsShown = false
             }
-
-
-            val dm = SectionDataModel(headerTitle,singleItem )
-            allSampleData.add(dm)
 
         }
     }
+    fun showEvaluation(){
+        var mBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
+        var mView: View = layoutInflater.inflate(R.layout.evaluation, null)
 
+        var ratingBar: RatingBar = mView.findViewById<RatingBar>(R.id.stars);
+        mBuilder.setView(mView)
+        var dialog: AlertDialog = mBuilder.create()
+        dialog.show()
+
+        val close : Button = mView?.findViewById<Button>(R.id.closePop)
+        close.setOnClickListener {view ->
+            dialog.cancel()
+        }
+
+        val evaluer : Button = mView?.findViewById<Button>(R.id.submit)
+        evaluer.setOnClickListener {view ->
+            val note: Float = ratingBar.getRating()
+            val myComment = Comment(resources.getStringArray(R.array.comment_1)[0].toInt(),
+                    resources.getStringArray(R.array.comment_1)[1],
+                    "", R.drawable.avatar,"Meguellati Ahmed",note.toInt())
+            this.data.commentaire.add(0,myComment)
+            this.showComments.text = "Commentaires ("+this.data.commentaire.size.toString()+")"
+            Toast.makeText(this, "votre évaluation a été ajoutée" , Toast.LENGTH_LONG).show();
+            if(this.isCommentsShown ) {
+                hideFragment()
+                this.more.setImageResource(R.drawable.ic_expand_more_black_24dp)
+                this.isCommentsShown = false
+            }
+            dialog.cancel()
+        }
+    }
 
 }

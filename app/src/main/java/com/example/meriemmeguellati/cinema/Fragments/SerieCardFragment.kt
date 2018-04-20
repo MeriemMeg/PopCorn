@@ -14,11 +14,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.example.meriemmeguellati.cinema.Activities.FicheSerieActivity
 import com.example.meriemmeguellati.cinema.Adapters.CardAdapter
+import com.example.meriemmeguellati.cinema.Model.Film
+import com.example.meriemmeguellati.cinema.Model.Serie
 import com.example.meriemmeguellati.cinema.R
 
 
 class SerieCardFragment : Fragment() {
-
+    lateinit var serie : Serie
     var cardView: CardView? = null
 
     @SuppressLint("DefaultLocale")
@@ -29,32 +31,15 @@ class SerieCardFragment : Fragment() {
         cardView = view.findViewById(R.id.cardView)
         cardView!!.maxCardElevation = cardView!!.cardElevation * CardAdapter.MAX_ELEVATION_FACTOR
 
+        this.serie = this.arguments.getSerializable("serie") as Serie
         var filmPoster: ImageView
         filmPoster = view.findViewById(R.id.filmPoster)
+        filmPoster.setImageResource(this.serie.affiche)
 
-        when(arguments.getInt("position")){
-            0-> filmPoster.setImageResource(R.drawable.img10)
-            1-> filmPoster.setImageResource(R.drawable.img11)
-            2-> filmPoster.setImageResource(R.drawable.img12)
-            3-> filmPoster.setImageResource(R.drawable.img13)
-            4-> filmPoster.setImageResource(R.drawable.img14)
-            5-> filmPoster.setImageResource(R.drawable.img17)
-            6-> filmPoster.setImageResource(R.drawable.img15)
-            7-> filmPoster.setImageResource(R.drawable.img16)
-        }
-
-
-        /*   val title = view.findViewById(R.id.title) as TextView
-           val button = view.findViewById(R.id.button) as Button
-
-           title.text = String.format("Card %d", arguments.getInt("position"))
-           button.setOnClickListener {
-               Toast.makeText(activity, "Button in Card " + arguments.getInt("position")
-                       + "Clicked!", Toast.LENGTH_SHORT).show()
-           }*/
-
+        //évnements
         cardView!!.setOnClickListener{
             val intent = Intent(activity, FicheSerieActivity::class.java)
+            intent.putExtra("serie", this.serie)
             startActivity(intent)
         }
 

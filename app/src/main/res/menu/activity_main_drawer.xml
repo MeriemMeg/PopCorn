@@ -26,10 +26,7 @@
             android:id="@+id/nav_salles"
             android:icon="@drawable/ic_videocam_white_24dp"
             android:title="Salles Cénima" />
-        <item
-            android:id="@+id/nav_personnes"
-            android:icon="@drawable/ic_portrait_white_24dp"
-            android:title="Personnes" />
+
     </group>
 
     <item android:title="">

@@ -5,6 +5,7 @@ package com.example.meriemmeguellati.cinema.Model
  */
 data class Chaine (
         val image: Int,
-        val nom : String
+        val date : String,
+        val heure : String
 ){
 }

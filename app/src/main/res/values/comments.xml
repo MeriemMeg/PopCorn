@@ -3,37 +3,35 @@
     <string-array name="comment_1">
         <item>1</item>
         <item>Great Movie</item>
-        <item>Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment</item>
+        <item>Great work ! keep it up</item>
         <item>@drawable/jamescorden</item>
+        <item>James Corden</item>
+        <item>1</item>
     </string-array>
     <string-array name="comment_2">
         <item>2</item>
         <item>Great Movie</item>
-        <item>Commentaire</item>
+        <item>I liked the story</item>
         <item>@drawable/jenniferlawrence</item>
+        <item>Jennifer lawrence</item>
+        <item>2</item>
     </string-array>
     <string-array name="comment_3">
         <item>3</item>
         <item>LOVE IT</item>
-        <item>I liked the story very much</item>
+        <item>I'm so excited to see your next work</item>
         <item>@drawable/margotrobbie</item>
+        <item>Margot Robbie</item>
+        <item>3</item>
     </string-array>
     <string-array name="comment_4">
         <item>4</item>
         <item>Thanks</item>
-        <item></item>
+        <item>You could do better</item>
         <item>@drawable/profile</item>
+        <item>Nour el imane</item>
+        <item>4</item>
     </string-array>
-    <string-array name="comment_5">
-        <item>5</item>
-        <item>....</item>
-        <item>Tip top</item>
-        <item>@drawable/rosebyrne</item>
-    </string-array>
-    <string-array name="comment_6">
-        <item>6</item>
-        <item>Cool</item>
-        <item>Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment</item>
-        <item>@drawable/samneill</item>
-    </string-array>
+
+
 </resources>

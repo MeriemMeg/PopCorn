@@ -1,9 +1,10 @@
-package com.example.meriemmeguellati.cinema.Model
+package com.example.meriemmeguellati.cinema.Data
 
 /**
  * Created by Meriem Meguellati on 18/04/2018.
  */
 import android.content.res.Resources
+import com.example.meriemmeguellati.cinema.Model.*
 import com.example.meriemmeguellati.cinema.R
 import java.io.Serializable
 
@@ -19,6 +20,11 @@ data class Data (
     var series : ArrayList<Serie> = ArrayList<Serie>()
     var personnes : ArrayList<Personne> = ArrayList<Personne>()
     var salle : ArrayList<Salle> = ArrayList<Salle>()
+    var filmsEnCours : ArrayList<Film> = ArrayList<Film>()
+    var seriesEnCours : ArrayList<Serie> = ArrayList<Serie>()
+    var filmsSuivis : ArrayList<Film> = ArrayList<Film>()
+    var seriesSuivies : ArrayList<Serie> = ArrayList<Serie>()
+    var commentaire : ArrayList<Comment> = ArrayList<Comment>()
 
 
     fun createData (){
@@ -92,36 +98,36 @@ data class Data (
 
 
         //definir les films
-        var film1  = Film(res.getStringArray(R.array.film_1)[0], covers[0],res.getStringArray(R.array.film_1)[1],"commedesbetes", covers2[0])
-        var film2 = Film(res.getStringArray(R.array.film_2)[0], covers[1],res.getStringArray(R.array.film_2)[1],"commedesbetes",covers2[1])
-        var film3 = Film(res.getStringArray(R.array.film_3)[0], covers[2],res.getStringArray(R.array.film_3)[1],"commedesbetes",covers2[2])
-        var film4 = Film(res.getStringArray(R.array.film_4)[0], covers[3],res.getStringArray(R.array.film_4)[1],"commedesbetes",covers2[3])
-        var film5 = Film(res.getStringArray(R.array.film_5)[0], covers[4],res.getStringArray(R.array.film_5)[1],"commedesbetes",covers2[4])
-        var film6 = Film(res.getStringArray(R.array.film_6)[0], covers[5],res.getStringArray(R.array.film_6)[1],"commedesbetes",covers2[5])
-        var film7 = Film(res.getStringArray(R.array.film_7)[0], covers[6],res.getStringArray(R.array.film_7)[1],"commedesbetes",covers2[6])
-        var film8 = Film(res.getStringArray(R.array.film_8)[0], covers[7],res.getStringArray(R.array.film_8)[1],"commedesbetes",covers2[7])
-        var film9 = Film(res.getStringArray(R.array.film_9)[0], covers[8],res.getStringArray(R.array.film_9)[1],"commedesbetes",covers2[8])
-        var film10 = Film(res.getStringArray(R.array.film_10)[0], covers[9],res.getStringArray(R.array.film_10)[1],"commedesbetes",covers2[9])
-        var film11 = Film(res.getStringArray(R.array.film_11)[0], covers[10],res.getStringArray(R.array.film_11)[1],"commedesbetes",covers2[10])
-        var film12 = Film(res.getStringArray(R.array.film_12)[0], covers[11],res.getStringArray(R.array.film_12)[1],"commedesbetes",covers2[11])
-        var film13 = Film(res.getStringArray(R.array.film_13)[0], covers[12],res.getStringArray(R.array.film_13)[1],"commedesbetes",covers2[12])
-        var film14 = Film(res.getStringArray(R.array.film_14)[0], covers[13],res.getStringArray(R.array.film_14)[1],"commedesbetes",covers2[13])
-        var film15 = Film(res.getStringArray(R.array.film_15)[0], covers[14],res.getStringArray(R.array.film_15)[1],"commedesbetes",covers2[14])
+        var film1  = Film(res.getStringArray(R.array.film_1)[0], covers[0], res.getStringArray(R.array.film_1)[1], "commedesbetes", covers2[0])
+        var film2 = Film(res.getStringArray(R.array.film_2)[0], covers[1], res.getStringArray(R.array.film_2)[1], "commedesbetes", covers2[1])
+        var film3 = Film(res.getStringArray(R.array.film_3)[0], covers[2], res.getStringArray(R.array.film_3)[1], "commedesbetes", covers2[2])
+        var film4 = Film(res.getStringArray(R.array.film_4)[0], covers[3], res.getStringArray(R.array.film_4)[1], "commedesbetes", covers2[3])
+        var film5 = Film(res.getStringArray(R.array.film_5)[0], covers[4], res.getStringArray(R.array.film_5)[1], "commedesbetes", covers2[4])
+        var film6 = Film(res.getStringArray(R.array.film_6)[0], covers[5], res.getStringArray(R.array.film_6)[1], "commedesbetes", covers2[5])
+        var film7 = Film(res.getStringArray(R.array.film_7)[0], covers[6], res.getStringArray(R.array.film_7)[1], "commedesbetes", covers2[6])
+        var film8 = Film(res.getStringArray(R.array.film_8)[0], covers[7], res.getStringArray(R.array.film_8)[1], "commedesbetes", covers2[7])
+        var film9 = Film(res.getStringArray(R.array.film_9)[0], covers[8], res.getStringArray(R.array.film_9)[1], "commedesbetes", covers2[8])
+        var film10 = Film(res.getStringArray(R.array.film_10)[0], covers[9], res.getStringArray(R.array.film_10)[1], "commedesbetes", covers2[9])
+        var film11 = Film(res.getStringArray(R.array.film_11)[0], covers[10], res.getStringArray(R.array.film_11)[1], "commedesbetes", covers2[10])
+        var film12 = Film(res.getStringArray(R.array.film_12)[0], covers[11], res.getStringArray(R.array.film_12)[1], "commedesbetes", covers2[11])
+        var film13 = Film(res.getStringArray(R.array.film_13)[0], covers[12], res.getStringArray(R.array.film_13)[1], "commedesbetes", covers2[12])
+        var film14 = Film(res.getStringArray(R.array.film_14)[0], covers[13], res.getStringArray(R.array.film_14)[1], "commedesbetes", covers2[13])
+        var film15 = Film(res.getStringArray(R.array.film_15)[0], covers[14], res.getStringArray(R.array.film_15)[1], "commedesbetes", covers2[14])
 
         //personnes
-        var p1 = Personne(res.getStringArray(R.array.personne_1)[0],res.getStringArray(R.array.personne_1)[1],personnesFiche[0],personnesFiche2[0],res.getStringArray(R.array.personne_1)[2])
-        var p2 = Personne(res.getStringArray(R.array.personne_2)[0],res.getStringArray(R.array.personne_2)[1],personnesFiche[1],personnesFiche2[1],res.getStringArray(R.array.personne_2)[2])
-        var p3 = Personne(res.getStringArray(R.array.personne_3)[0],res.getStringArray(R.array.personne_3)[1],personnesFiche[2],personnesFiche2[2],res.getStringArray(R.array.personne_3)[2])
-        var p4 = Personne(res.getStringArray(R.array.personne_4)[0],res.getStringArray(R.array.personne_4)[1],personnesFiche[3],personnesFiche2[3],res.getStringArray(R.array.personne_4)[2])
-        var p5 = Personne(res.getStringArray(R.array.personne_5)[0],res.getStringArray(R.array.personne_5)[1],personnesFiche[4],personnesFiche2[4],res.getStringArray(R.array.personne_5)[2])
-        var p6 = Personne(res.getStringArray(R.array.personne_6)[0],res.getStringArray(R.array.personne_6)[1],personnesFiche[5],personnesFiche2[5],res.getStringArray(R.array.personne_6)[2])
-        var p7 = Personne(res.getStringArray(R.array.personne_7)[0],res.getStringArray(R.array.personne_7)[1],personnesFiche[6],personnesFiche2[6],res.getStringArray(R.array.personne_7)[2])
-        var p8 = Personne(res.getStringArray(R.array.personne_8)[0],res.getStringArray(R.array.personne_8)[1],personnesFiche[7],personnesFiche2[7],res.getStringArray(R.array.personne_8)[2])
-        var p9 = Personne(res.getStringArray(R.array.personne_9)[0],res.getStringArray(R.array.personne_9)[1],personnesFiche[8],personnesFiche2[8],res.getStringArray(R.array.personne_9)[2])
-        var p10 = Personne(res.getStringArray(R.array.personne_10)[0],res.getStringArray(R.array.personne_10)[1],personnesFiche[9],personnesFiche2[9],res.getStringArray(R.array.personne_10)[2])
-        var p11 = Personne(res.getStringArray(R.array.personne_11)[0],res.getStringArray(R.array.personne_11)[1],personnesFiche[10],personnesFiche2[10],res.getStringArray(R.array.personne_11)[2])
-        var p12 = Personne(res.getStringArray(R.array.personne_12)[0],res.getStringArray(R.array.personne_12)[1],personnesFiche[11],personnesFiche2[11],res.getStringArray(R.array.personne_12)[2])
-        var p13 = Personne(res.getStringArray(R.array.personne_13)[0],res.getStringArray(R.array.personne_13)[1],personnesFiche[12],personnesFiche2[12],res.getStringArray(R.array.personne_13)[2])
+        var p1 = Personne(res.getStringArray(R.array.personne_1)[0], res.getStringArray(R.array.personne_1)[1], personnesFiche[0], personnesFiche2[0], res.getStringArray(R.array.personne_1)[2])
+        var p2 = Personne(res.getStringArray(R.array.personne_2)[0], res.getStringArray(R.array.personne_2)[1], personnesFiche[1], personnesFiche2[1], res.getStringArray(R.array.personne_2)[2])
+        var p3 = Personne(res.getStringArray(R.array.personne_3)[0], res.getStringArray(R.array.personne_3)[1], personnesFiche[2], personnesFiche2[2], res.getStringArray(R.array.personne_3)[2])
+        var p4 = Personne(res.getStringArray(R.array.personne_4)[0], res.getStringArray(R.array.personne_4)[1], personnesFiche[3], personnesFiche2[3], res.getStringArray(R.array.personne_4)[2])
+        var p5 = Personne(res.getStringArray(R.array.personne_5)[0], res.getStringArray(R.array.personne_5)[1], personnesFiche[4], personnesFiche2[4], res.getStringArray(R.array.personne_5)[2])
+        var p6 = Personne(res.getStringArray(R.array.personne_6)[0], res.getStringArray(R.array.personne_6)[1], personnesFiche[5], personnesFiche2[5], res.getStringArray(R.array.personne_6)[2])
+        var p7 = Personne(res.getStringArray(R.array.personne_7)[0], res.getStringArray(R.array.personne_7)[1], personnesFiche[6], personnesFiche2[6], res.getStringArray(R.array.personne_7)[2])
+        var p8 = Personne(res.getStringArray(R.array.personne_8)[0], res.getStringArray(R.array.personne_8)[1], personnesFiche[7], personnesFiche2[7], res.getStringArray(R.array.personne_8)[2])
+        var p9 = Personne(res.getStringArray(R.array.personne_9)[0], res.getStringArray(R.array.personne_9)[1], personnesFiche[8], personnesFiche2[8], res.getStringArray(R.array.personne_9)[2])
+        var p10 = Personne(res.getStringArray(R.array.personne_10)[0], res.getStringArray(R.array.personne_10)[1], personnesFiche[9], personnesFiche2[9], res.getStringArray(R.array.personne_10)[2])
+        var p11 = Personne(res.getStringArray(R.array.personne_11)[0], res.getStringArray(R.array.personne_11)[1], personnesFiche[10], personnesFiche2[10], res.getStringArray(R.array.personne_11)[2])
+        var p12 = Personne(res.getStringArray(R.array.personne_12)[0], res.getStringArray(R.array.personne_12)[1], personnesFiche[11], personnesFiche2[11], res.getStringArray(R.array.personne_12)[2])
+        var p13 = Personne(res.getStringArray(R.array.personne_13)[0], res.getStringArray(R.array.personne_13)[1], personnesFiche[12], personnesFiche2[12], res.getStringArray(R.array.personne_13)[2])
 
 
         //filmographie des personnes :
@@ -275,7 +281,7 @@ data class Data (
         film15.definirPersonnes(per15)
 
 
-        val films = java.util.ArrayList<Film>()
+       //liste de tous les films
         this.films.add(film1)
         this.films.add(film2)
         this.films.add(film3)
@@ -292,6 +298,29 @@ data class Data (
         this.films.add(film14)
         this.films.add(film15)
 
+        //liste des films en cours de projection
+        film2.projeter()
+        this.filmsEnCours.add(film2)
+        film12.projeter()
+        this.filmsEnCours.add(film12)
+        film6.projeter()
+        this.filmsEnCours.add(film6)
+        film15.projeter()
+        this.filmsEnCours.add(film15)
+        film8.projeter()
+        this.filmsEnCours.add(film8)
+
+        //liste des film suivi (fan)
+        film6.suivre()
+        this.filmsSuivis.add(film6)
+        film5.suivre()
+        this.filmsSuivis.add(film5)
+        film10.suivre()
+        this.filmsSuivis.add(film10)
+
+
+
+        //préparer les données des séries :
 
         var cover: IntArray = intArrayOf(
                 R.drawable.img10,
@@ -323,19 +352,19 @@ data class Data (
 
 
         //séries
-        val s1 = Serie(res.getStringArray(R.array.serie_1)[0], cover[0],res.getStringArray(R.array.serie_1)[1],cover2[0])
-        val s2 = Serie(res.getStringArray(R.array.serie_2)[0], cover[1],res.getStringArray(R.array.serie_2)[1],cover2[1])
-        val s3 = Serie(res.getStringArray(R.array.serie_3)[0], cover[2],res.getStringArray(R.array.serie_3)[1],cover2[2])
-        val s4 = Serie(res.getStringArray(R.array.serie_4)[0], cover[3],res.getStringArray(R.array.serie_4)[1],cover2[3])
-        val s5 = Serie(res.getStringArray(R.array.serie_5)[0], cover[4],res.getStringArray(R.array.serie_5)[1],cover2[4])
-        val s6 = Serie(res.getStringArray(R.array.serie_6)[0], cover[5],res.getStringArray(R.array.serie_6)[1],cover2[5])
+        val s1 = Serie(res.getStringArray(R.array.serie_1)[0], cover[0], res.getStringArray(R.array.serie_1)[1], cover2[0])
+        val s2 = Serie(res.getStringArray(R.array.serie_2)[0], cover[1], res.getStringArray(R.array.serie_2)[1], cover2[1])
+        val s3 = Serie(res.getStringArray(R.array.serie_3)[0], cover[2], res.getStringArray(R.array.serie_3)[1], cover2[2])
+        val s4 = Serie(res.getStringArray(R.array.serie_4)[0], cover[3], res.getStringArray(R.array.serie_4)[1], cover2[3])
+        val s5 = Serie(res.getStringArray(R.array.serie_5)[0], cover[4], res.getStringArray(R.array.serie_5)[1], cover2[4])
+        val s6 = Serie(res.getStringArray(R.array.serie_6)[0], cover[5], res.getStringArray(R.array.serie_6)[1], cover2[5])
 
         //saisons
 
-        val s1s1 = Saison(res.getStringArray(R.array.serie_1)[0],1,cover[0],res.getStringArray(R.array.serie_1_saison1)[0],cover2[0],"gooddoctortrailer")
-        val s1s2 = Saison(res.getStringArray(R.array.serie_1)[0],2,cover[0],res.getStringArray(R.array.serie_1_saison2)[0],cover2[0],"gooddoctortrailer")
-        val s1s3 = Saison(res.getStringArray(R.array.serie_1)[0],3,cover[0],res.getStringArray(R.array.serie_1_saison3)[0],cover2[0],"gooddoctortrailer")
-        val s1s4 = Saison(res.getStringArray(R.array.serie_1)[0],4,cover[0],res.getStringArray(R.array.serie_1_saison4)[0],cover2[0],"gooddoctortrailer")
+        val s1s1 = Saison(res.getStringArray(R.array.serie_1)[0], 1, cover[0], res.getStringArray(R.array.serie_1_saison1)[0], cover2[0], "gooddoctortrailer")
+        val s1s2 = Saison(res.getStringArray(R.array.serie_1)[0], 2, cover[0], res.getStringArray(R.array.serie_1_saison2)[0], cover2[0], "gooddoctortrailer")
+        val s1s3 = Saison(res.getStringArray(R.array.serie_1)[0], 3, cover[0], res.getStringArray(R.array.serie_1_saison3)[0], cover2[0], "gooddoctortrailer")
+        val s1s4 = Saison(res.getStringArray(R.array.serie_1)[0], 4, cover[0], res.getStringArray(R.array.serie_1_saison4)[0], cover2[0], "gooddoctortrailer")
         //personnes
         s1s1.personnages.addAll(per1)
         s1s2.personnages.addAll(per1)
@@ -343,19 +372,19 @@ data class Data (
         s1s4.personnages.addAll(per1)
         //episodes
         for (i in 1..22){
-            val eps6 = Episode(res.getStringArray(R.array.serie_1)[0],1,i,cover[0],cover2[0],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_1)[0], 1, i, cover[0], cover2[0], "gooddoctortrailer")
             s1s1.episodes.add(eps6);
         }
         for (i in 1..22){
-            val eps6 = Episode(res.getStringArray(R.array.serie_1)[0],2,i,cover[0],cover2[0],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_1)[0], 2, i, cover[0], cover2[0], "gooddoctortrailer")
             s1s2.episodes.add(eps6);
         }
         for (i in 1..22){
-            val eps6 = Episode(res.getStringArray(R.array.serie_1)[0],3,i,cover[0],cover2[0],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_1)[0], 3, i, cover[0], cover2[0], "gooddoctortrailer")
             s1s3.episodes.add(eps6);
         }
         for (i in 1..22){
-            val eps6 = Episode(res.getStringArray(R.array.serie_1)[0],4,i,cover[0],cover2[0],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_1)[0], 4, i, cover[0], cover2[0], "gooddoctortrailer")
             s1s4.episodes.add(eps6);
         }
 
@@ -365,12 +394,12 @@ data class Data (
         s1.saisons.add(s1s4)
 
 
-        val s2s1 = Saison(res.getStringArray(R.array.serie_2)[0],1,cover[1],res.getStringArray(R.array.serie_2_saison1)[0],cover2[1],"gooddoctortrailer")
-        val s2s2 = Saison(res.getStringArray(R.array.serie_2)[0],2,cover[1],res.getStringArray(R.array.serie_2_saison2)[0],cover2[1],"gooddoctortrailer")
-        val s2s3 = Saison(res.getStringArray(R.array.serie_2)[0],3,cover[1],res.getStringArray(R.array.serie_2_saison3)[0],cover2[1],"gooddoctortrailer")
-        val s2s4 = Saison(res.getStringArray(R.array.serie_2)[0],4,cover[1],res.getStringArray(R.array.serie_2_saison4)[0],cover2[1],"gooddoctortrailer")
-        val s2s5 = Saison(res.getStringArray(R.array.serie_2)[0],5,cover[1],res.getStringArray(R.array.serie_2_saison5)[0],cover2[1],"gooddoctortrailer")
-        val s2s6 = Saison(res.getStringArray(R.array.serie_2)[0],6,cover[1],res.getStringArray(R.array.serie_2_saison6)[0],cover2[1],"gooddoctortrailer")
+        val s2s1 = Saison(res.getStringArray(R.array.serie_2)[0], 1, cover[1], res.getStringArray(R.array.serie_2_saison1)[0], cover2[1], "gooddoctortrailer")
+        val s2s2 = Saison(res.getStringArray(R.array.serie_2)[0], 2, cover[1], res.getStringArray(R.array.serie_2_saison2)[0], cover2[1], "gooddoctortrailer")
+        val s2s3 = Saison(res.getStringArray(R.array.serie_2)[0], 3, cover[1], res.getStringArray(R.array.serie_2_saison3)[0], cover2[1], "gooddoctortrailer")
+        val s2s4 = Saison(res.getStringArray(R.array.serie_2)[0], 4, cover[1], res.getStringArray(R.array.serie_2_saison4)[0], cover2[1], "gooddoctortrailer")
+        val s2s5 = Saison(res.getStringArray(R.array.serie_2)[0], 5, cover[1], res.getStringArray(R.array.serie_2_saison5)[0], cover2[1], "gooddoctortrailer")
+        val s2s6 = Saison(res.getStringArray(R.array.serie_2)[0], 6, cover[1], res.getStringArray(R.array.serie_2_saison6)[0], cover2[1], "gooddoctortrailer")
        //personnes
         s2s1.personnages.addAll(per2)
         s2s2.personnages.addAll(per2)
@@ -380,27 +409,27 @@ data class Data (
         s2s6.personnages.addAll(per2)
         //episodes
         for (i in 1..22){
-            val eps6 = Episode(res.getStringArray(R.array.serie_2)[0],1,i,cover[1],cover2[1],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_2)[0], 1, i, cover[1], cover2[1], "gooddoctortrailer")
             s2s1.episodes.add(eps6);
         }
         for (i in 1..22){
-            val eps6 = Episode(res.getStringArray(R.array.serie_2)[0],2,i,cover[1],cover2[1],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_2)[0], 2, i, cover[1], cover2[1], "gooddoctortrailer")
             s2s2.episodes.add(eps6);
         }
         for (i in 1..22){
-            val eps6 = Episode(res.getStringArray(R.array.serie_2)[0],3,i,cover[1],cover2[1],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_2)[0], 3, i, cover[1], cover2[1], "gooddoctortrailer")
             s2s3.episodes.add(eps6);
         }
         for (i in 1..22){
-            val eps6 = Episode(res.getStringArray(R.array.serie_2)[0],4,i,cover[1],cover2[1],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_2)[0], 4, i, cover[1], cover2[1], "gooddoctortrailer")
             s2s4.episodes.add(eps6);
         }
         for (i in 1..22){
-            val eps6 = Episode(res.getStringArray(R.array.serie_2)[0],5,i,cover[1],cover2[1],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_2)[0], 5, i, cover[1], cover2[1], "gooddoctortrailer")
             s2s5.episodes.add(eps6);
         }
         for (i in 1..22){
-            val eps6 = Episode(res.getStringArray(R.array.serie_2)[0],6,i,cover[1],cover2[1],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_2)[0], 6, i, cover[1], cover2[1], "gooddoctortrailer")
             s2s6.episodes.add(eps6);
         }
         s2.saisons.add(s2s1)
@@ -411,21 +440,21 @@ data class Data (
         s2.saisons.add(s2s6)
 
 
-        val s3s1 = Saison(res.getStringArray(R.array.serie_3)[0],1,cover[2],res.getStringArray(R.array.serie_3_saison1)[0],cover2[2],"gooddoctortrailer")
+        val s3s1 = Saison(res.getStringArray(R.array.serie_3)[0], 1, cover[2], res.getStringArray(R.array.serie_3_saison1)[0], cover2[2], "gooddoctortrailer")
         //personnes
         s3s1.personnages.addAll(per5)
         //episodes
         for (i in 1..22){
-            val eps6 = Episode(res.getStringArray(R.array.serie_3)[0],1,i,cover[2],cover2[2],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_3)[0], 1, i, cover[2], cover2[2], "gooddoctortrailer")
             s3s1.episodes.add(eps6);
         }
         s3.saisons.add(s3s1)
 
-        val s4s1 = Saison(res.getStringArray(R.array.serie_4)[0],1,cover[3],res.getStringArray(R.array.serie_4_saison1)[0],cover2[3],"gooddoctortrailer")
-        val s4s2 = Saison(res.getStringArray(R.array.serie_4)[0],2,cover[3],res.getStringArray(R.array.serie_4_saison2)[0],cover2[3],"gooddoctortrailer")
-        val s4s3 = Saison(res.getStringArray(R.array.serie_4)[0],3,cover[3],res.getStringArray(R.array.serie_4_saison3)[0],cover2[3],"gooddoctortrailer")
-        val s4s4 = Saison(res.getStringArray(R.array.serie_4)[0],4,cover[3],res.getStringArray(R.array.serie_4_saison4)[0],cover2[3],"gooddoctortrailer")
-        val s4s5 = Saison(res.getStringArray(R.array.serie_4)[0],5,cover[3],res.getStringArray(R.array.serie_4_saison5)[0],cover2[3],"gooddoctortrailer")
+        val s4s1 = Saison(res.getStringArray(R.array.serie_4)[0], 1, cover[3], res.getStringArray(R.array.serie_4_saison1)[0], cover2[3], "gooddoctortrailer")
+        val s4s2 = Saison(res.getStringArray(R.array.serie_4)[0], 2, cover[3], res.getStringArray(R.array.serie_4_saison2)[0], cover2[3], "gooddoctortrailer")
+        val s4s3 = Saison(res.getStringArray(R.array.serie_4)[0], 3, cover[3], res.getStringArray(R.array.serie_4_saison3)[0], cover2[3], "gooddoctortrailer")
+        val s4s4 = Saison(res.getStringArray(R.array.serie_4)[0], 4, cover[3], res.getStringArray(R.array.serie_4_saison4)[0], cover2[3], "gooddoctortrailer")
+        val s4s5 = Saison(res.getStringArray(R.array.serie_4)[0], 5, cover[3], res.getStringArray(R.array.serie_4_saison5)[0], cover2[3], "gooddoctortrailer")
         //personnes
         s4s1.personnages.addAll(per15)
         s4s2.personnages.addAll(per15)
@@ -434,23 +463,23 @@ data class Data (
         s4s5.personnages.addAll(per15)
         //episodes :
         for (i in 1..22){
-            val eps6 = Episode(res.getStringArray(R.array.serie_4)[0],1,i,cover[3],cover2[3],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_4)[0], 1, i, cover[3], cover2[3], "gooddoctortrailer")
             s4s1.episodes.add(eps6);
         }
         for (i in 1..22){
-            val eps6 = Episode(res.getStringArray(R.array.serie_4)[0],2,i,cover[3],cover2[3],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_4)[0], 2, i, cover[3], cover2[3], "gooddoctortrailer")
             s4s2.episodes.add(eps6);
         }
         for (i in 1..22){
-            val eps6 = Episode(res.getStringArray(R.array.serie_4)[0],3,i,cover[3],cover2[3],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_4)[0], 3, i, cover[3], cover2[3], "gooddoctortrailer")
             s4s3.episodes.add(eps6);
         }
         for (i in 1..22){
-            val eps6 = Episode(res.getStringArray(R.array.serie_4)[0],4,i,cover[3],cover2[3],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_4)[0], 4, i, cover[3], cover2[3], "gooddoctortrailer")
             s4s4.episodes.add(eps6);
         }
         for (i in 1..22){
-            val eps6 = Episode(res.getStringArray(R.array.serie_4)[0],5,i,cover[3],cover2[3],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_4)[0], 5, i, cover[3], cover2[3], "gooddoctortrailer")
             s4s5.episodes.add(eps6);
         }
 
@@ -461,19 +490,19 @@ data class Data (
         s4.saisons.add(s4s4)
         s4.saisons.add(s4s5)
 
-        val s5s1 = Saison(res.getStringArray(R.array.serie_5)[0],1,cover[4],res.getStringArray(R.array.serie_5_saison1)[0],cover2[4],"gooddoctortrailer")
-        val s5s2 = Saison(res.getStringArray(R.array.serie_5)[0],2,cover[4],res.getStringArray(R.array.serie_5_saison2)[0],cover2[4],"gooddoctortrailer")
+        val s5s1 = Saison(res.getStringArray(R.array.serie_5)[0], 1, cover[4], res.getStringArray(R.array.serie_5_saison1)[0], cover2[4], "gooddoctortrailer")
+        val s5s2 = Saison(res.getStringArray(R.array.serie_5)[0], 2, cover[4], res.getStringArray(R.array.serie_5_saison2)[0], cover2[4], "gooddoctortrailer")
         //personnes
         s5s1.personnages.addAll(per2)
         s5s2.personnages.addAll(per2)
         //episodes
         for (i in 1..7){
-            val eps6 = Episode(res.getStringArray(R.array.serie_5)[0],1,i,cover[4],cover2[4],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_5)[0], 1, i, cover[4], cover2[4], "gooddoctortrailer")
             s5s1.episodes.add(eps6);
         }
 
         for (i in 1..7){
-            val eps6 = Episode(res.getStringArray(R.array.serie_5)[0],2,i,cover[4],cover2[4],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_5)[0], 2, i, cover[4], cover2[4], "gooddoctortrailer")
             s5s2.episodes.add(eps6);
         }
         s5.saisons.add(s5s1)
@@ -482,11 +511,11 @@ data class Data (
 
 
 
-        val s6s1 = Saison(res.getStringArray(R.array.serie_6)[0],1,cover[5],res.getStringArray(R.array.serie_6_saison1)[0],cover2[5],"gooddoctortrailer")
-        val s6s2 = Saison(res.getStringArray(R.array.serie_6)[0],2,cover[5],res.getStringArray(R.array.serie_6_saison2)[0],cover2[5],"gooddoctortrailer")
-        val s6s3 = Saison(res.getStringArray(R.array.serie_6)[0],3,cover[5],res.getStringArray(R.array.serie_6_saison3)[0],cover2[5],"gooddoctortrailer")
-        val s6s4 = Saison(res.getStringArray(R.array.serie_6)[0],4,cover[5],res.getStringArray(R.array.serie_6_saison4)[0],cover2[5],"gooddoctortrailer")
-        val s6s5 = Saison(res.getStringArray(R.array.serie_6)[0],5,cover[5],res.getStringArray(R.array.serie_6_saison5)[0],cover2[5],"gooddoctortrailer")
+        val s6s1 = Saison(res.getStringArray(R.array.serie_6)[0], 1, cover[5], res.getStringArray(R.array.serie_6_saison1)[0], cover2[5], "gooddoctortrailer")
+        val s6s2 = Saison(res.getStringArray(R.array.serie_6)[0], 2, cover[5], res.getStringArray(R.array.serie_6_saison2)[0], cover2[5], "gooddoctortrailer")
+        val s6s3 = Saison(res.getStringArray(R.array.serie_6)[0], 3, cover[5], res.getStringArray(R.array.serie_6_saison3)[0], cover2[5], "gooddoctortrailer")
+        val s6s4 = Saison(res.getStringArray(R.array.serie_6)[0], 4, cover[5], res.getStringArray(R.array.serie_6_saison4)[0], cover2[5], "gooddoctortrailer")
+        val s6s5 = Saison(res.getStringArray(R.array.serie_6)[0], 5, cover[5], res.getStringArray(R.array.serie_6_saison5)[0], cover2[5], "gooddoctortrailer")
         //persones
         s6s1.personnages.addAll(per2)
         s6s2.personnages.addAll(per2)
@@ -496,26 +525,26 @@ data class Data (
 
         //episodes
         for (i in 1..22){
-            val eps6 = Episode(res.getStringArray(R.array.serie_6)[0],1,i,cover[5],cover2[5],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_6)[0], 1, i, cover[5], cover2[5], "gooddoctortrailer")
             s6s1.episodes.add(eps6);
         }
 
         for (i in 1..22){
-            val eps6 = Episode(res.getStringArray(R.array.serie_6)[0],2,i,cover[5],cover2[5],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_6)[0], 2, i, cover[5], cover2[5], "gooddoctortrailer")
             s6s2.episodes.add(eps6);
         }
 
         for (i in 1..22){
-            val eps6 = Episode(res.getStringArray(R.array.serie_6)[0],3,i,cover[5],cover2[5],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_6)[0], 3, i, cover[5], cover2[5], "gooddoctortrailer")
             s6s3.episodes.add(eps6);
         }
         for (i in 1..22){
-            val eps6 = Episode(res.getStringArray(R.array.serie_6)[0],4,i,cover[5],cover2[5],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_6)[0], 4, i, cover[5], cover2[5], "gooddoctortrailer")
             s6s4.episodes.add(eps6);
         }
 
         for (i in 1..22){
-            val eps6 = Episode(res.getStringArray(R.array.serie_6)[0],5,i,cover[5],cover2[5],"gooddoctortrailer")
+            val eps6 = Episode(res.getStringArray(R.array.serie_6)[0], 5, i, cover[5], cover2[5], "gooddoctortrailer")
             s6s5.episodes.add(eps6);
         }
 
@@ -579,25 +608,84 @@ data class Data (
 
 
 
+        // la liste de toutes les séries
+        this.series.add(s1)
+        this.series.add(s2)
+        this.series.add(s3)
+        this.series.add(s4)
+        this.series.add(s5)
+        this.series.add(s6)
+        this.series.add(s1)
+        this.series.add(s2)
+        this.series.add(s3)
+        this.series.add(s4)
+        this.series.add(s5)
+        this.series.add(s6)
+        this.series.add(s1)
+        this.series.add(s2)
+        this.series.add(s3)
+        this.series.add(s4)
+        this.series.add(s5)
+        this.series.add(s6)
 
-        this.series.add(s1)
-        this.series.add(s2)
-        this.series.add(s3)
-        this.series.add(s4)
-        this.series.add(s5)
-        this.series.add(s6)
-        this.series.add(s1)
-        this.series.add(s2)
-        this.series.add(s3)
-        this.series.add(s4)
-        this.series.add(s5)
-        this.series.add(s6)
-        this.series.add(s1)
-        this.series.add(s2)
-        this.series.add(s3)
-        this.series.add(s4)
-        this.series.add(s5)
-        this.series.add(s6)
+        //liste des séries en cours de diffusion :
+
+        this.seriesEnCours.add(s1)
+        this.seriesEnCours.add(s3)
+        this.seriesEnCours.add(s2)
+        this.seriesEnCours.add(s6)
+
+        //liste des séries suivie
+        s4.suivre()
+        this.seriesSuivies.add(s4)
+        s5.suivre()
+        this.seriesSuivies.add(s5)
+        s2.suivre()
+        this.seriesSuivies.add(s2)
+
+    }
+
+    fun createComments(){
+        var profile: IntArray = intArrayOf(
+                R.drawable.jamescorden,
+                R.drawable.jenniferlawrence,
+                R.drawable.margotrobbie,
+                R.drawable.profile,
+                R.drawable.rosebyrne,
+                R.drawable.samneill
+        )
+
+
+        this.commentaire.add(Comment(
+                res.getStringArray(R.array.comment_1)[0].toInt(),
+                res.getStringArray(R.array.comment_1)[1],
+                res.getStringArray(R.array.comment_1)[2],
+                profile[0],
+                res.getStringArray(R.array.comment_1)[4],
+                res.getStringArray(R.array.comment_1)[5].toInt()
+        ))
+        this.commentaire.add(Comment(
+                res.getStringArray(R.array.comment_2)[0].toInt(),
+                res.getStringArray(R.array.comment_2)[1],
+                res.getStringArray(R.array.comment_2)[2],
+                profile[1],
+                res.getStringArray(R.array.comment_2)[4],
+                res.getStringArray(R.array.comment_2)[5].toInt()))
+        this.commentaire.add(Comment(
+                res.getStringArray(R.array.comment_3)[0].toInt(),
+                res.getStringArray(R.array.comment_3)[1],
+                res.getStringArray(R.array.comment_3)[2],
+                profile[2],
+                res.getStringArray(R.array.comment_3)[4],
+                res.getStringArray(R.array.comment_3)[5].toInt()))
+        this.commentaire.add(Comment(
+                res.getStringArray(R.array.comment_4)[0].toInt(),
+                res.getStringArray(R.array.comment_4)[1],
+                res.getStringArray(R.array.comment_4)[2],
+                profile[3],
+                res.getStringArray(R.array.comment_4)[4],
+                res.getStringArray(R.array.comment_4)[5].toInt()))
+
 
     }
 

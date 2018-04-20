@@ -9,19 +9,26 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v7.widget.CardView
 import android.view.ViewGroup
 import com.example.meriemmeguellati.cinema.Fragments.FilmCardFragment
+import com.example.meriemmeguellati.cinema.Model.Film
 
 import java.util.ArrayList
+import android.os.Bundle
 
-class FilmCardFragmentPagerAdapter(fm: FragmentManager, private val baseElevation: Float) : FragmentStatePagerAdapter(fm), CardAdapter {
+
+
+class FilmCardFragmentPagerAdapter(fm: FragmentManager, private val baseElevation: Float,private var dataList: ArrayList<Film>) : FragmentStatePagerAdapter(fm), CardAdapter {
 
     private val fragments: MutableList<FilmCardFragment>
+    private val data: ArrayList<Film> = dataList
 
     init {
         fragments = ArrayList()
 
-        for (i in 0..7) {
-            addCardFragment(FilmCardFragment())
-        }
+
+            for (i in 0..(dataList.size -1)) {
+                addCardFragment(FilmCardFragment())
+            }
+
     }
 
     override fun getBaseElevation(): Float {
@@ -41,8 +48,13 @@ class FilmCardFragmentPagerAdapter(fm: FragmentManager, private val baseElevatio
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val fragment = super.instantiateItem(container, position)
-        fragments[position] = fragment as FilmCardFragment
+
+
+        val fragment :FilmCardFragment = super.instantiateItem(container, position)as FilmCardFragment
+        val bundle = Bundle()
+        bundle.putSerializable("film",this.data[position])
+        fragment.setArguments(bundle)
+        fragments[position] = fragment
         return fragment
     }
 

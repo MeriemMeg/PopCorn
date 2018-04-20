@@ -31,7 +31,7 @@ class SallesAdapter(val context: Context, val sallesList: ArrayList<Salle>): Rec
         holder.nom.text = salle.nom
         holder.adresse.text = salle.adresse
         holder.tel.text = salle.tel
-        holder.thumbnail.setImageResource(salle.affiche)
+        holder.thumbnail.setImageResource(salle.thumbnail)
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){

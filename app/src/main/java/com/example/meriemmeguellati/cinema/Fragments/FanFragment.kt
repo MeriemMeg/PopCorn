@@ -12,6 +12,7 @@ import com.example.meriemmeguellati.cinema.Adapters.SerieCardFragmentPagerAdapte
 import com.example.meriemmeguellati.cinema.Animation.ShadowTransformer
 import com.example.meriemmeguellati.cinema.Activities.MainActivity
 import com.example.meriemmeguellati.cinema.Adapters.SalleCardFragmentPagerAdapter
+import com.example.meriemmeguellati.cinema.Data.Data
 import com.example.meriemmeguellati.cinema.R
 
 
@@ -34,8 +35,9 @@ class FanFragment : Fragment() {
         val mesFilmsviewPager = view.findViewById<View>(R.id.mes_films) as ViewPager
         val mesFeuilletonsViewPager = view.findViewById<View>(R.id.mes_feuilletons) as ViewPager
         val mesSallesViewPager = view.findViewById<View>(R.id.mes_salles) as ViewPager
-
-        val pagerAdapter = FilmCardFragmentPagerAdapter(childFragmentManager, MainActivity.dpToPixels(2, activity))
+        val data = Data(resources)
+        data.createData()
+        val pagerAdapter = FilmCardFragmentPagerAdapter(childFragmentManager, MainActivity.dpToPixels(2, activity),data.filmsSuivis)
         val fragmentCardShadowTransformer = ShadowTransformer(mesFilmsviewPager, pagerAdapter)
         fragmentCardShadowTransformer.enableScaling(true)
 
@@ -43,7 +45,7 @@ class FanFragment : Fragment() {
         mesFilmsviewPager.setPageTransformer(false, fragmentCardShadowTransformer)
         mesFilmsviewPager.offscreenPageLimit = 3
 
-        val pagerAdapter2 = SerieCardFragmentPagerAdapter(childFragmentManager, MainActivity.dpToPixels(2, activity))
+        val pagerAdapter2 = SerieCardFragmentPagerAdapter(childFragmentManager, MainActivity.dpToPixels(2, activity),data.seriesSuivies)
         val fragmentCardShadowTransformer2 = ShadowTransformer(mesFeuilletonsViewPager, pagerAdapter2)
         fragmentCardShadowTransformer2.enableScaling(true)
         mesFeuilletonsViewPager.adapter = pagerAdapter2

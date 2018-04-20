@@ -5,7 +5,7 @@
     <color name="colorAccent">#C3073F</color>
     <color name="textColorPrimary">#fff</color>
     <color name="textColorSecondary">#fff</color>
-    <color name="statutBarre">#77000000</color>
+    <color name="statutBarre">#AA000000</color>
     <color name="background">#AA000000</color>
     <color name="titleBarre">#AAffffff</color>
     <color name="actionBarre">#00ffffff</color>

@@ -12,13 +12,14 @@ import java.io.Serializable
         val poster : Int
 
 ) : Serializable {
-
+ var estSuivi : Boolean = false
  var saisons : ArrayList<Saison> =  ArrayList<Saison>()
  var seriesLiees : ArrayList<Serie> =  ArrayList<Serie>()
  var commentaires : ArrayList<String> = ArrayList<String>()
  var evaluation : ArrayList<Int> = ArrayList<Int>()
 
- fun ajouterSaison (s : ArrayList<Saison>){
-    this.saisons.addAll(s)
+ fun suivre (){
+  this.estSuivi = true
  }
+
 }

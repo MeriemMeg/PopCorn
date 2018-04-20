@@ -6,6 +6,7 @@ package com.example.meriemmeguellati.cinema.Fragments
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.support.annotation.Nullable
 import android.support.v4.app.Fragment
 import android.support.v7.widget.CardView
 import android.view.LayoutInflater
@@ -20,10 +21,12 @@ import com.example.meriemmeguellati.cinema.R
 
 
 class FilmCardFragment : Fragment() {
-
+    lateinit var film : Film
     var cardView: CardView? = null
 
     @SuppressLint("DefaultLocale")
+
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.view_pager_item, container, false)
@@ -31,27 +34,18 @@ class FilmCardFragment : Fragment() {
         cardView = view.findViewById(R.id.cardView)
         cardView!!.maxCardElevation = cardView!!.cardElevation * CardAdapter.MAX_ELEVATION_FACTOR
 
+        this.film = this.arguments.getSerializable("film") as Film
         var filmPoster: ImageView
         filmPoster = view.findViewById(R.id.filmPoster)
 
-        when(arguments.getInt("position")){
-            0-> filmPoster.setImageResource(R.drawable.img8)
-            1-> filmPoster.setImageResource(R.drawable.img6)
-            2-> filmPoster.setImageResource(R.drawable.img2)
-            3-> filmPoster.setImageResource(R.drawable.img3)
-            4-> filmPoster.setImageResource(R.drawable.img4)
-            5-> filmPoster.setImageResource(R.drawable.img5)
-            6-> filmPoster.setImageResource(R.drawable.img1)
-            7-> filmPoster.setImageResource(R.drawable.img7)
-        }
+        filmPoster.setImageResource(this.film.affiche)
 
 
-
+        //évènements
 
         cardView!!.setOnClickListener{
             val intent = Intent(activity, FicheFilmActivity::class.java)
-            val film = Film(activity.resources.getStringArray(R.array.film_1)[0],R.drawable.americanhustle,activity.resources.getStringArray(R.array.film_1)[2],"videoplayback",R.drawable.americanhustle)
-            intent.putExtra("film", film)
+            intent.putExtra("film", this.film)
             startActivity(intent)
         }
 

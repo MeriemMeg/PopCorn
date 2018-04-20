@@ -11,6 +11,7 @@ import com.example.meriemmeguellati.cinema.Adapters.FilmCardFragmentPagerAdapter
 import com.example.meriemmeguellati.cinema.Adapters.SerieCardFragmentPagerAdapter
 import com.example.meriemmeguellati.cinema.Animation.ShadowTransformer
 import com.example.meriemmeguellati.cinema.Activities.MainActivity
+import com.example.meriemmeguellati.cinema.Data.Data
 import com.example.meriemmeguellati.cinema.R
 
 
@@ -30,10 +31,12 @@ class AccueilFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater!!.inflate(R.layout.accueil_fragment, container, false)
-        val viewPager = view.findViewById<View>(R.id.viewPager) as ViewPager
-        val viewPager2 = view.findViewById<View>(R.id.viewPager2) as ViewPager
+        val viewPager = view.findViewById<ViewPager>(R.id.viewPager)
+        val viewPager2 = view.findViewById<ViewPager>(R.id.viewPager2)
 
-        val pagerAdapter = FilmCardFragmentPagerAdapter(childFragmentManager, MainActivity.dpToPixels(2, activity))
+        val data = Data(resources)
+        data.createData()
+        val pagerAdapter = FilmCardFragmentPagerAdapter(childFragmentManager, MainActivity.dpToPixels(2, activity),data.filmsEnCours)
         val fragmentCardShadowTransformer = ShadowTransformer(viewPager, pagerAdapter)
         fragmentCardShadowTransformer.enableScaling(true)
 
@@ -41,7 +44,7 @@ class AccueilFragment : Fragment() {
         viewPager.setPageTransformer(false, fragmentCardShadowTransformer)
         viewPager.offscreenPageLimit = 3
 
-        val pagerAdapter2 = SerieCardFragmentPagerAdapter(childFragmentManager, MainActivity.dpToPixels(2, activity))
+        val pagerAdapter2 = SerieCardFragmentPagerAdapter(childFragmentManager, MainActivity.dpToPixels(2, activity),data.seriesEnCours)
         val fragmentCardShadowTransformer2 = ShadowTransformer(viewPager2, pagerAdapter2)
         fragmentCardShadowTransformer2.enableScaling(true)
         viewPager2.adapter = pagerAdapter2

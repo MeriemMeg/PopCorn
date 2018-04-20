@@ -1,6 +1,5 @@
 package com.example.meriemmeguellati.cinema.Fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
@@ -8,10 +7,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.meriemmeguellati.cinema.Adapters.FilmsAdapter
 import com.example.meriemmeguellati.cinema.Adapters.SeriesAdapter
-import com.example.meriemmeguellati.cinema.Model.Data
-import com.example.meriemmeguellati.cinema.Model.Film
+import com.example.meriemmeguellati.cinema.Data.Data
 import com.example.meriemmeguellati.cinema.Model.Serie
 import com.example.meriemmeguellati.cinema.R
 import java.util.ArrayList
