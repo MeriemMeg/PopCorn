@@ -153,7 +153,7 @@ class FicheSerieActivity : AppCompatActivity() {
             val comment: String = commentEditText.text.toString()
             val myComment = Comment(resources.getStringArray(R.array.comment_1)[0].toInt(),
                     resources.getStringArray(R.array.comment_1)[1],
-                    comment, R.drawable.avatar,"Meguellati Ahmed",3)
+                    comment, R.drawable.avatar,"Meguellati Ahmed",0)
             this.data.commentaire.add(0,myComment)
             this.showComments.text = "Commentaires ("+this.data.commentaire.size.toString()+")"
             Toast.makeText(this, "votre commentaire a été ajouté" , Toast.LENGTH_LONG).show();

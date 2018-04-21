@@ -12,7 +12,7 @@
         android:id="@+id/recyler_view"
         android:clipToPadding="false"
         android:scrollbars="vertical"
-        android:background="@color/colorPrimary"
+        android:background="@color/bcgrd"
         >
 
     </android.support.v7.widget.RecyclerView>

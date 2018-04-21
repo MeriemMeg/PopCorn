@@ -99,26 +99,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 supportActionBar!!.title = "Accueil"
             }
             R.id.nav_fan -> {
-                supportActionBar!!.setBackgroundDrawable( ColorDrawable(Color.TRANSPARENT));
+
                 supportActionBar!!.title = "Fan"
                 showFragment(FanFragment())
             }
             R.id.nav_films -> {
                 this.fragmentShown = 1
-                supportActionBar!!.setBackgroundDrawable( ColorDrawable(Color.TRANSPARENT));
                 supportActionBar!!.title = "Films"
                 showFragment(MovieFragment())
             }
             R.id.nav_series -> {
                 this.fragmentShown = 2
-                supportActionBar!!.setBackgroundDrawable( ColorDrawable(Color.TRANSPARENT));
+
                 supportActionBar!!.title = "Séries"
                 showFragment(SeriesFragment())
 
             }
             R.id.nav_salles -> {
 
-                supportActionBar!!.setBackgroundDrawable( ColorDrawable(Color.TRANSPARENT));
+
                 supportActionBar!!.title = "Salles Cinéma"
                 showFragment(SallesFragment())
             }

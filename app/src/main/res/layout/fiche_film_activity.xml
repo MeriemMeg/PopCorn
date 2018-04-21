@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/bcgrd"
     tools:context="com.example.meriemmeguellati.cinema.Activities.MainActivity">
 
 
@@ -79,7 +79,7 @@
             android:id="@+id/my_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/actionBarre"
+            android:background="@color/colorPrimaryDark"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
@@ -108,9 +108,10 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="0dp"
+                    android:padding="4dp"
                     android:text="  Pierre Lapin est une comédie américano-australienne, écrite et réalisée par Will Gluck qui mêle animation et prises de vues réelles, sortie en 2018."
                     android:textAlignment="textStart"
-                    android:textColor="@color/textColorPrimary"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="15dp"
                     android:textStyle="bold" />
                 <FrameLayout
@@ -119,7 +120,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="4dp"
-                    android:background="@color/colorPrimary">
+                    android:background="@color/bcgrd">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -129,7 +130,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
-                        android:background="@android:color/black"
+                        android:background="@color/comment"
                         android:layout_marginBottom="4dp"/>
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -163,7 +164,7 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="0.5dp"
-                            android:background="@android:color/black"
+                            android:background="@color/comment"
                             android:layout_marginTop="4dp"/>
                     </LinearLayout>
 
@@ -174,7 +175,7 @@
                     android:id="@+id/commentaire"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary">
+                    android:background="@color/bcgrd">
 
                     <include layout="@layout/content_comment" />
 
@@ -182,7 +183,7 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary">
+                    android:background="@color/bcgrd">
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/personnes_associees"
@@ -195,7 +196,7 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary">
+                    android:background="@color/bcgrd">
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/film_lies"

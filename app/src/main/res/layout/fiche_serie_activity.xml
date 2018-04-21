@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/bcgrd"
     tools:context="com.example.meriemmeguellati.cinema.Activities.MainActivity">
 
 
@@ -51,7 +51,7 @@
             android:id="@+id/my_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/actionBarre"
+            android:background="@color/colorPrimaryDark"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:titleTextColor="@color/textColorPrimary"
@@ -81,7 +81,8 @@
                     android:layout_marginTop="8dp"
                     android:text="   Once Upon a Time ou Il était une fois au Québec est une série télévisée fantastique américaine créée par Edward Kitsis et Adam Horowitz, basée principalement sur les contes de fées et diffusée depuis le 23 octobre 2011 sur le réseau ABC"
                     android:textAlignment="textStart"
-                    android:textColor="@color/textColorPrimary"
+                    android:textColor="@color/colorPrimary"
+                    android:padding="4dp"
                     android:textSize="15dp"
                     android:textStyle="bold" />
                 <FrameLayout
@@ -90,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="4dp"
-                    android:background="@color/colorPrimary">
+                    android:background="@color/bcgrd">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -100,7 +101,7 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="0.5dp"
-                            android:background="@android:color/black"
+                            android:background="@color/comment"
                             android:layout_marginBottom="4dp"/>
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -134,9 +135,10 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="0.5dp"
-                            android:background="@android:color/black"
+                            android:background="@color/comment"
                             android:layout_marginTop="4dp"/>
                     </LinearLayout>
+
 
 
                 </FrameLayout>
@@ -145,7 +147,7 @@
                     android:id="@+id/commentaire"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary">
+                    android:background="@color/bcgrd">
 
                     <include layout="@layout/content_comment" />
 
@@ -154,7 +156,7 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary">
+                    android:background="@color/bcgrd">
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/saisons"

@@ -13,4 +13,5 @@
     <color name="white_overlay">#7FFFFFFF</color>
     <color name="section_color">#4E4E50</color>
     <color name="comment">#EAEAEA</color>
+    <color name="bcgrd">#f4f4f4</color>
 </resources>
