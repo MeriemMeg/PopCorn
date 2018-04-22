@@ -359,6 +359,43 @@ data class Data (
         val s5 = Serie(res.getStringArray(R.array.serie_5)[0], cover[4], res.getStringArray(R.array.serie_5)[1], cover2[4])
         val s6 = Serie(res.getStringArray(R.array.serie_6)[0], cover[5], res.getStringArray(R.array.serie_6)[1], cover2[5])
 
+
+
+        s1.seriesLiees.add(s2)
+        s1.seriesLiees.add(s3)
+        s1.seriesLiees.add(s4)
+        s1.seriesLiees.add(s5)
+        s1.seriesLiees.add(s6)
+
+        s2.seriesLiees.add(s1)
+        s2.seriesLiees.add(s3)
+        s2.seriesLiees.add(s4)
+        s2.seriesLiees.add(s5)
+        s2.seriesLiees.add(s6)
+
+        s3.seriesLiees.add(s2)
+        s3.seriesLiees.add(s1)
+        s3.seriesLiees.add(s4)
+        s3.seriesLiees.add(s5)
+        s3.seriesLiees.add(s6)
+
+        s4.seriesLiees.add(s2)
+        s4.seriesLiees.add(s3)
+        s4.seriesLiees.add(s1)
+        s4.seriesLiees.add(s5)
+        s4.seriesLiees.add(s6)
+
+        s5.seriesLiees.add(s2)
+        s5.seriesLiees.add(s3)
+        s5.seriesLiees.add(s4)
+        s5.seriesLiees.add(s1)
+        s5.seriesLiees.add(s6)
+
+        s6.seriesLiees.add(s2)
+        s6.seriesLiees.add(s3)
+        s6.seriesLiees.add(s4)
+        s6.seriesLiees.add(s5)
+        s6.seriesLiees.add(s1)
         //saisons
 
         val s1s1 = Saison(res.getStringArray(R.array.serie_1)[0], 1, cover[0], res.getStringArray(R.array.serie_1_saison1)[0], cover2[0], "gooddoctortrailer")

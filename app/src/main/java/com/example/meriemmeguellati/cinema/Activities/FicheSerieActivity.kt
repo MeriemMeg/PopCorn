@@ -1,8 +1,10 @@
 package com.example.meriemmeguellati.cinema.Activities
 
 import android.os.Bundle
+import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
+import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -14,8 +16,10 @@ import android.view.Window
 import android.widget.*
 import com.example.meriemmeguellati.cinema.Adapters.CommentsFragment
 import com.example.meriemmeguellati.cinema.Adapters.RecyclerViewSaisonAdapter
+import com.example.meriemmeguellati.cinema.Adapters.RecyclerViewSeriesLieesAdapter
 import com.example.meriemmeguellati.cinema.Data.Data
 import com.example.meriemmeguellati.cinema.Model.*
+import com.example.meriemmeguellati.cinema.NavDrawerHelper
 import com.example.meriemmeguellati.cinema.R
 
 
@@ -46,6 +50,15 @@ class FicheSerieActivity : AppCompatActivity() {
 
         my_recycler_view.adapter = adapter
 
+
+        val my_recycler_view2 = findViewById<RecyclerView>(R.id.series_liees)
+
+        my_recycler_view2.setHasFixedSize(true)
+        val adapter2 = RecyclerViewSeriesLieesAdapter(this, this.serie.seriesLiees)
+        my_recycler_view2.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+
+        my_recycler_view2.adapter = adapter2
+
         val name = findViewById<TextView>(R.id.serie_name)
         name.text = this.serie.titre
 
@@ -60,7 +73,7 @@ class FicheSerieActivity : AppCompatActivity() {
         this.showComments = findViewById<TextView>(R.id.nb_comments)
         this.showComments.text = "Commentaires (4)"
         this.more = findViewById<ImageButton>(R.id.more)
-
+        initNavigationDrawer()
         //évènements du Click
         more.setOnClickListener {
             if(this.isCommentsShown ==false) {
@@ -109,6 +122,8 @@ class FicheSerieActivity : AppCompatActivity() {
         R.id.action_follow -> {
             // User chose the "Favorite" action, mark the current item
             // as a favorite...
+            this.serie.suivre()
+            initNavigationDrawer()
             true
         }
 
@@ -196,6 +211,18 @@ class FicheSerieActivity : AppCompatActivity() {
             }
             dialog.cancel()
         }
+    }
+
+    fun initNavigationDrawer() {
+        //views
+        val navigationView = findViewById<NavigationView>(R.id.nav_view)
+        val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
+
+        val navDrawerHelper =  NavDrawerHelper(this);
+        // val data = Data(resources)
+        // data.createData()
+        if (this.serie.estSuivi) navDrawerHelper.setFanSeries(this.serie)
+        navDrawerHelper.initNav(drawerLayout, navigationView, false);
     }
 
 

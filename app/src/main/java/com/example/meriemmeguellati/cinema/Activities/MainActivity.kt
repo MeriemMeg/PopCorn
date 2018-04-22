@@ -25,6 +25,8 @@ import android.widget.Button
 import android.widget.RatingBar
 import android.widget.SearchView
 import android.widget.Toast
+import com.example.meriemmeguellati.cinema.Adapters.CommentsFragment
+import com.example.meriemmeguellati.cinema.Model.Film
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener ,SearchView.OnQueryTextListener{
@@ -47,8 +49,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
+        val intent = intent
+        val fragment = intent.getIntExtra("fragment",1)
+        if (fragment == 2) {
 
-        if (savedInstanceState == null) {
+            val fragment =  FanFragment()
+            val bundle = Bundle()
+            var film = intent.getSerializableExtra("fan")
+            if (film!= null) bundle.putSerializable("fan",film)
+            var serie = intent.getSerializableExtra("fanS")
+            if (serie!= null) bundle.putSerializable("fanS",serie)
+            fragment.setArguments(bundle)
+            showFragment(fragment)
+
+        }
+        else if (fragment == 3) {
+            showFragment(MovieFragment())
+        }
+        else if (fragment == 4){
+            showFragment(SeriesFragment())
+        }
+        else if (fragment == 5){
+            showFragment(SallesFragment())
+        }
+        else {
             showFragment(AccueilFragment())
         }
 

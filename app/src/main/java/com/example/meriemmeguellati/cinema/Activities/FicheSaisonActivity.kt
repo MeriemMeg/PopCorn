@@ -8,8 +8,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.example.meriemmeguellati.cinema.R
 import android.net.Uri
+import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
+import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.*
@@ -19,6 +21,7 @@ import android.view.View.OnTouchListener
 import com.example.meriemmeguellati.cinema.Adapters.*
 import com.example.meriemmeguellati.cinema.Data.Data
 import com.example.meriemmeguellati.cinema.Model.*
+import com.example.meriemmeguellati.cinema.NavDrawerHelper
 
 
 class FicheSaisonActivity : AppCompatActivity() {
@@ -99,6 +102,7 @@ class FicheSaisonActivity : AppCompatActivity() {
         this.showComments = findViewById<TextView>(R.id.nb_comments)
         this.showComments.text = "Commentaires (4)"
         this.more = findViewById<ImageButton>(R.id.more)
+        initNavigationDrawer()
         //évènements du Click
         more.setOnClickListener {
             if(this.isCommentsShown ==false) {
@@ -262,6 +266,14 @@ class FicheSaisonActivity : AppCompatActivity() {
             }
             dialog.cancel()
         }
+    }
+    fun initNavigationDrawer() {
+        //views
+        val navigationView = findViewById<NavigationView>(R.id.nav_view)
+        val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
+
+        val navDrawerHelper =  NavDrawerHelper(this);
+        navDrawerHelper.initNav(drawerLayout, navigationView, false);
     }
 
 }

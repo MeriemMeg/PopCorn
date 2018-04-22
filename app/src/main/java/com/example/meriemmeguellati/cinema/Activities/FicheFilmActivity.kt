@@ -7,8 +7,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.example.meriemmeguellati.cinema.R
 import android.net.Uri
+import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
+import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.GridLayoutManager
 import android.util.Log
@@ -19,6 +21,9 @@ import android.view.View.OnTouchListener
 import com.example.meriemmeguellati.cinema.Adapters.*
 import com.example.meriemmeguellati.cinema.Data.Data
 import com.example.meriemmeguellati.cinema.Model.*
+import com.example.meriemmeguellati.cinema.NavDrawerHelper
+import com.example.meriemmeguellati.cinema.R.styleable.NavigationView
+import kotlinx.android.synthetic.main.app_bar_main.*
 
 
 class FicheFilmActivity : AppCompatActivity() {
@@ -37,6 +42,7 @@ class FicheFilmActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.my_toolbar))
         //getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
        // getSupportActionBar()!!.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+
         getSupportActionBar()!!.title=""
 
         this.data = Data(resources)
@@ -103,6 +109,7 @@ class FicheFilmActivity : AppCompatActivity() {
         film_liées_recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         film_liées_recycler_view.adapter = adapter2
+        initNavigationDrawer()
 
         //évènements du Click
         more.setOnClickListener {
@@ -180,6 +187,7 @@ class FicheFilmActivity : AppCompatActivity() {
 
         R.id.action_follow -> {
             this.film.suivre();
+            initNavigationDrawer()
             true
         }
 
@@ -322,6 +330,18 @@ class FicheFilmActivity : AppCompatActivity() {
             }
             dialog.cancel()
         }
+    }
+
+    fun initNavigationDrawer() {
+        //views
+        val navigationView = findViewById<NavigationView>(R.id.nav_view)
+        val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
+
+        val navDrawerHelper =  NavDrawerHelper(this);
+       // val data = Data(resources)
+       // data.createData()
+         if (this.film.estSuivi) navDrawerHelper.setFanFilms(this.film)
+        navDrawerHelper.initNav(drawerLayout, navigationView, false);
     }
 
 }
