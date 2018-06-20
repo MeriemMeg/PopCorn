@@ -15,7 +15,6 @@ import java.util.ArrayList
 import android.os.Bundle
 
 
-
 class FilmCardFragmentPagerAdapter(fm: FragmentManager, private val baseElevation: Float,private var dataList: ArrayList<Film>) : FragmentStatePagerAdapter(fm), CardAdapter {
 
     private val fragments: MutableList<FilmCardFragment>
@@ -30,6 +29,22 @@ class FilmCardFragmentPagerAdapter(fm: FragmentManager, private val baseElevatio
             }
 
     }
+
+
+    fun replaceAll(items: ArrayList<Film>) {
+        data.clear()
+        data.addAll(items)
+        notifyDataSetChanged()
+    }
+
+    fun deleteFilm(filmId : Int) {
+       for( film in data){
+           if (film.id == filmId) data.remove(film)
+       }
+        notifyDataSetChanged()
+    }
+
+
 
     override fun getBaseElevation(): Float {
         return baseElevation

@@ -13,8 +13,11 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.meriemmeguellati.cinema.Activities.FicheFilmActivity
 import com.example.meriemmeguellati.cinema.Activities.FichePersonnesActivity
+import com.example.meriemmeguellati.cinema.BuildConfig
 import com.example.meriemmeguellati.cinema.Model.Personne
 
 import com.example.meriemmeguellati.cinema.Model.SingleItemModel
@@ -37,6 +40,13 @@ class SectionListPersonnesAdapter(private val mContext: Context, private val ite
         holder.tvTitle.text = singleItem.nom
 
         holder.image.setBackgroundResource(singleItem.fiche)
+        Glide.with(mContext)
+                .load(BuildConfig.BASE_URL_IMG + "w154" + singleItem.profil)
+                .apply(RequestOptions()
+                        .placeholder(R.drawable.img2)
+                        .centerCrop()
+                )
+                .into(holder.itemImage)
         holder.image.setOnClickListener {
             val intent = Intent(mContext, FichePersonnesActivity::class.java)
             intent.putExtra("Personne", singleItem)
@@ -44,12 +54,7 @@ class SectionListPersonnesAdapter(private val mContext: Context, private val ite
         }
 
 
-        /* Glide.with(mContext)
-                .load(feedItem.getImageURL())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .centerCrop()
-                .error(R.drawable.bg)
-                .into(feedListRowHolder.thumbView);*/
+
     }
 
     override fun getItemCount(): Int {
@@ -60,14 +65,15 @@ class SectionListPersonnesAdapter(private val mContext: Context, private val ite
 
         var tvTitle: TextView
         var image : FrameLayout
+        var itemImage: ImageView
 
-        // protected var itemImage: ImageView
 
 
         init {
 
             this.tvTitle = view.findViewById<TextView>(R.id.tvTitle)
             this.image = view.findViewById<FrameLayout>(R.id.imageFilmLie)
+            this.itemImage = view.findViewById<ImageView>(R.id.posterr)
 
             view.setOnClickListener { v -> Toast.makeText(v.context, tvTitle.text, Toast.LENGTH_SHORT).show() }
 

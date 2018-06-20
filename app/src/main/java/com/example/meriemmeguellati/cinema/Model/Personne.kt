@@ -13,6 +13,8 @@ data class Personne (
         val biographie : String
 
 ): Serializable {
+    var id : Int = 0
+    var profil : String = ""
     val filmographie : ArrayList<Film> = ArrayList<Film> ()
     val commentaires : ArrayList<String> = ArrayList<String> ()
     val evaluation : ArrayList<Int> = ArrayList<Int> ()

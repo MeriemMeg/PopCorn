@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.example.meriemmeguellati.cinema.R
 import android.net.Uri
+import android.os.AsyncTask
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
@@ -17,13 +18,18 @@ import android.util.Log
 import android.view.*
 import android.widget.*
 import android.view.MotionEvent
-import android.view.View.OnTouchListener
+import com.example.meriemmeguellati.cinema.APIresponses.*
+import com.example.meriemmeguellati.cinema.APIuser
 import com.example.meriemmeguellati.cinema.Adapters.*
 import com.example.meriemmeguellati.cinema.Data.Data
 import com.example.meriemmeguellati.cinema.Model.*
 import com.example.meriemmeguellati.cinema.NavDrawerHelper
-import com.example.meriemmeguellati.cinema.R.styleable.NavigationView
-import kotlinx.android.synthetic.main.app_bar_main.*
+import com.example.meriemmeguellati.cinema.OfflineData.FilmDB
+import com.example.meriemmeguellati.cinema.OfflineData.FilmEntity
+import com.google.gson.Gson
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class FicheFilmActivity : AppCompatActivity() {
@@ -34,6 +40,18 @@ class FicheFilmActivity : AppCompatActivity() {
     lateinit var data : Data
     lateinit var more : ImageButton
     lateinit var showComments : TextView
+    private var apiCall: Call<NowPlayingResponse>? = null
+    private  var apiCallPersons : Call<CreditsResponse>? = null
+    private  var apiCallComments : Call<ReviewsResponse>? = null
+    private val apiUser = APIuser()
+    private val gson = Gson()
+    private var item: MovieResponse? = null
+    lateinit var adapter2 :  RecyclerViewFilmLiesAdapter
+    lateinit var  adapter : RecyclerViewPersonnesAdapter
+    lateinit var film_liées_recycler_view :RecyclerView
+    lateinit var my_recycler_view : RecyclerView
+    lateinit var followItem : MenuItem
+     var comments  = ArrayList<Comment>()
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
@@ -46,7 +64,7 @@ class FicheFilmActivity : AppCompatActivity() {
         getSupportActionBar()!!.title=""
 
         this.data = Data(resources)
-        this.data.createComments()
+       // this.data.createComments()
 
         val intent = intent
          this.film = intent.getSerializableExtra("film") as Film
@@ -67,7 +85,7 @@ class FicheFilmActivity : AppCompatActivity() {
 
         try {
             // ID of video file.
-            val id = this.getRawResIdByName(film.trailer)
+            val id = this.getRawResIdByName(film.posterPath)
             videoView.setVideoURI(Uri.parse("android.resource://$packageName/$id"))
 
         } catch (e: Exception) {
@@ -82,33 +100,16 @@ class FicheFilmActivity : AppCompatActivity() {
 
         val description = findViewById<TextView>(R.id.film_description)
         description.text = film.description
-
         this.showComments = findViewById<TextView>(R.id.nb_comments)
         this.showComments.text = "Commentaires (4)"
-
         this.more = findViewById<ImageButton>(R.id.more)
-
-        val my_recycler_view = findViewById<RecyclerView>(R.id.personnes_associees)
-
+        my_recycler_view = findViewById<RecyclerView>(R.id.personnes_associees)
         my_recycler_view.setHasFixedSize(true)
-
-
-        val adapter = RecyclerViewPersonnesAdapter(this, film.personnesAssociés)
-
-        my_recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-
-        my_recycler_view.adapter = adapter
-
-
-        val film_liées_recycler_view = findViewById<RecyclerView>(R.id.film_lies)
-
+        loadAssociatedPersons(film.id.toString())
+        loadComments(film.id.toString())
+        film_liées_recycler_view = findViewById<RecyclerView>(R.id.film_lies)
         film_liées_recycler_view.setHasFixedSize(true)
-  //
-        val adapter2 = RecyclerViewFilmLiesAdapter(this, film.filmsLiés)
-
-        film_liées_recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-
-        film_liées_recycler_view.adapter = adapter2
+        loadSimilarMovies(film.id.toString())
         initNavigationDrawer()
 
         //évènements du Click
@@ -116,10 +117,11 @@ class FicheFilmActivity : AppCompatActivity() {
             if(this.isCommentsShown ==false) {
                 val fragment =  CommentsFragment()
                 val bundle = Bundle()
-                for (i in 0..(this.data.commentaire.size-1)){
-                    bundle.putSerializable("commentaire"+i.toString(),this.data.commentaire[i])
+                for (i in 0..(comments.size-1)){
+                    bundle.putSerializable("commentaire"+i.toString(),comments[i])
+                    Toast.makeText(this, comments[i].message, Toast.LENGTH_SHORT).show()
                 }
-                bundle.putInt("size",this.data.commentaire.size)
+                bundle.putInt("size",comments.size)
 
                 fragment.setArguments(bundle)
                 showFragment(fragment)
@@ -136,21 +138,17 @@ class FicheFilmActivity : AppCompatActivity() {
 
         playStop.setOnClickListener {
             videoView.start()
-           // getSupportActionBar()!!.hide()
             playStop.setVisibility(View.INVISIBLE);
             videoView.setBackgroundResource(0)
             titre.setVisibility(View.INVISIBLE)
-
         }
 
         videoView.setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(v: View, event: MotionEvent): Boolean {
 
                 videoView.pause()
-               // getSupportActionBar()!!.show()
                 playStop.setVisibility(View.VISIBLE);
                 titre.setVisibility(View.VISIBLE)
-
                 return false
             }
         })
@@ -161,7 +159,6 @@ class FicheFilmActivity : AppCompatActivity() {
     // Find ID corresponding to the name of the video (in the directory raw).
     fun getRawResIdByName(resName: String): Int {
         val pkgName = this.packageName
-        // Return 0 if not found.
         val resID = this.resources.getIdentifier(resName, "raw", pkgName)
         Log.i("AndroidVideoView", "Res Name: $resName==> Res ID = $resID")
         return resID
@@ -170,6 +167,9 @@ class FicheFilmActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_film, menu)
+        this.followItem = menu.getItem(1)
+        this.followItem.setEnabled(false)
+        checkFilm()
         return true
     }
 
@@ -186,8 +186,16 @@ class FicheFilmActivity : AppCompatActivity() {
         }
 
         R.id.action_follow -> {
-            this.film.suivre();
-            initNavigationDrawer()
+            if(film.estSuivi){
+
+                item.icon = getDrawable(R.drawable.baseline_favorite_border_white_18dp)
+                unfavorise(this.film.id)
+            }
+            else {
+                item.icon = getDrawable(R.drawable.ic_favorite_white_24dp)
+                saveFilm()
+            }
+
             true
         }
 
@@ -203,8 +211,6 @@ class FicheFilmActivity : AppCompatActivity() {
         }
 
         else -> {
-            // If we got here, the user's action was not recognized.
-            // Invoke the superclass to handle it.
             super.onOptionsItemSelected(item)
         }
     }
@@ -221,21 +227,18 @@ class FicheFilmActivity : AppCompatActivity() {
                 .beginTransaction().
                 remove(getSupportFragmentManager().findFragmentById(R.id.content_comment)).commit()
     }
+
     fun showSalle(){
         var mBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
         var mView: View = layoutInflater.inflate(R.layout.salles_projection, null)
-
         var recyclerView : RecyclerView = mView.findViewById(R.id.salle_projection)
         recyclerView.layoutManager = GridLayoutManager(mView.context, 1)
         val salles = prepareSalles()
         val adapter = SallesProjAdapter(mView.context, salles)
-
         recyclerView.adapter = adapter
-
         mBuilder.setView(mView)
         var dialog: AlertDialog = mBuilder.create()
         dialog.show()
-        //dialog.closeOptionsMenu()
     }
 
     private fun prepareSalles() : ArrayList<Salle>{
@@ -266,6 +269,7 @@ class FicheFilmActivity : AppCompatActivity() {
 
         return salles
     }
+
     fun showCommenter(){
         var mBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
         var mView: View = layoutInflater.inflate(R.layout.commenter, null)
@@ -287,8 +291,8 @@ class FicheFilmActivity : AppCompatActivity() {
             val myComment = Comment(resources.getStringArray(R.array.comment_1)[0].toInt(),
                     resources.getStringArray(R.array.comment_1)[1],
                     comment, R.drawable.avatar,"Meguellati Ahmed",0)
-            this.data.commentaire.add(0,myComment)
-            this.showComments.text = "Commentaires ("+this.data.commentaire.size.toString()+")"
+            this.comments.add(0,myComment)
+            this.showComments.text = "Commentaires ("+this.comments.size.toString()+")"
             Toast.makeText(this, "votre commentaire a été ajouté" , Toast.LENGTH_LONG).show();
             dialog.cancel()
             if(this.isCommentsShown ) {
@@ -336,12 +340,192 @@ class FicheFilmActivity : AppCompatActivity() {
         //views
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
-
         val navDrawerHelper =  NavDrawerHelper(this);
-       // val data = Data(resources)
-       // data.createData()
          if (this.film.estSuivi) navDrawerHelper.setFanFilms(this.film)
         navDrawerHelper.initNav(drawerLayout, navigationView, false);
+    }
+
+    private fun loadSimilarMovies(movie_item: String) {
+        apiCall = apiUser.getService().getSimilarmovies(movie_item, Language().Country())
+        apiCall!!.enqueue(object : Callback<NowPlayingResponse> {
+            override fun onResponse(call: Call<NowPlayingResponse>, response: Response<NowPlayingResponse>) {
+                if (response.isSuccessful()) {
+
+                    val items = response.body()!!.getResults()!!
+                    var filmsLiees = ArrayList<Film>()
+                    var film : Film
+                    for (item in items ){
+                        film = Film(item?.title?:"Aucun titre n'est disponible", R.drawable.p1, item?.overview?:"Aucune description n'est disponible", item?.posterPath?:"", R.drawable.p1)
+                        film.id = item.id
+                        filmsLiees.add(film)
+                    }
+
+                    //
+                    adapter2 = RecyclerViewFilmLiesAdapter(baseContext, filmsLiees)
+
+                    film_liées_recycler_view.layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.VERTICAL, false)
+
+                    film_liées_recycler_view.adapter = adapter2
+
+                } else
+                    loadFailed()
+            }
+
+            override fun onFailure(call: Call<NowPlayingResponse>, t: Throwable) {
+                loadFailed()
+            }
+        })
+    }
+
+    private fun loadAssociatedPersons(movie_item: String) {
+        apiCallPersons = apiUser.getService().getAssociatedPersons(movie_item)
+        apiCallPersons!!.enqueue(object : Callback<CreditsResponse> {
+            override fun onResponse(call: Call<CreditsResponse>, response: Response<CreditsResponse>) {
+                if (response.isSuccessful()) {
+
+                    val item = response.body()
+                    val cast= item!!.cast
+                    var personnesLiees = ArrayList<Personne>()
+                    var p : Personne
+                    for (person in cast!!){
+                        p = Personne(person?.name?:"Aucun Nom", "12/2/1978", R.drawable.jenniferlawrence, R.drawable.jenniferlawrence, "biooooooooooooographie")
+                        if(person.profile_path != null )p.profil = person.profile_path!!
+                        p.id = person?.cast_id?:0
+                        personnesLiees.add(p)
+                    }
+
+                    adapter = RecyclerViewPersonnesAdapter(baseContext, personnesLiees)
+
+                    my_recycler_view.layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.VERTICAL, false)
+
+                    my_recycler_view.adapter = adapter
+
+                } else
+                    loadFailed()
+            }
+
+            override fun onFailure(call: Call<CreditsResponse>, t: Throwable) {
+                loadFailed()
+            }
+        })
+    }
+
+    private fun loadComments(movie_item: String) {
+        apiCallComments = apiUser.getService().getComments(movie_item)
+        apiCallComments!!.enqueue(object : Callback<ReviewsResponse> {
+            override fun onResponse(call: Call<ReviewsResponse>, response: Response<ReviewsResponse>) {
+                if (response.isSuccessful()) {
+
+                    val item = response.body()
+                    var comment : Comment
+
+                        for (c in item?.results!!){
+                             comment = Comment(
+                                     0,
+                                     "",
+                                     c?.content?:"aucun contenu n'est disponible",
+                                     R.drawable.jamescorden,
+                                     c?.author?:"no name",
+                                     3)
+                            comments.add(comment)
+                        }
+
+
+                } else
+                    loadFailed()
+            }
+
+            override fun onFailure(call: Call<ReviewsResponse>, t: Throwable) {
+                loadFailed()
+            }
+        })
+    }
+
+    private fun loadFailed() {
+        Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun saveFilm(){
+        var act = this
+        val titre = this.film.titre
+        val description = this.film.description
+        val trailer = this.film.posterPath
+        val trailerposter: Int = this.film.trailerposter
+        val affiche: Int = this.film.affiche
+        val id : Int = this.film.id
+
+
+        object : AsyncTask<Void, Void, Void>() {
+            override fun doInBackground(vararg voids: Void): Void? {
+                val db = FilmDB.getInstance(act)
+                val dao = db?.FilmDAO()
+
+                    val film = FilmEntity(id,titre,affiche,description,trailer,trailerposter)
+                    dao?.ajouter(film)
+
+                return null
+            }
+
+
+            override fun onPostExecute(result: Void?) {
+                    film.estSuivi = true
+                    val toast = Toast.makeText(applicationContext,"Le film est ajouté à votre favorie", Toast.LENGTH_SHORT)
+                    toast.show()
+
+            }
+        }.execute()
+
+    }
+
+    fun checkFilm() {
+
+        var act = this
+        object : AsyncTask<Void, Void, Void>() {
+            override fun doInBackground(vararg voids: Void): Void? {
+                val db = FilmDB.getInstance(act)
+                val dao = db?.FilmDAO()
+                val existing = dao?.getFilm(film.id)
+                if(existing != film.id){
+                    film.estSuivi = false
+                    followItem.icon = getDrawable(R.drawable.baseline_favorite_border_white_18dp)
+                    followItem.setEnabled(true)
+                }
+                else {
+                    film.estSuivi = true
+                    followItem.icon = getDrawable(R.drawable.ic_favorite_white_24dp)
+                    followItem.setEnabled(true)
+                }
+
+                return null
+            }
+
+
+            override fun onPostExecute(result: Void?) {
+
+
+            }
+        }.execute()
+
+
+    }
+    fun unfavorise( id: Int) {
+
+        object : AsyncTask<Void, Void, Void>() {
+            override fun doInBackground(vararg voids: Void): Void? {
+                val db = FilmDB.getInstance(baseContext)
+                val dao = db?.FilmDAO()
+                dao?.supprimer(id)
+                return null
+            }
+
+
+            override fun onPostExecute(result: Void?) {
+                film.estSuivi = false
+                val toast = Toast.makeText(applicationContext,"Le film est retiré de votre favorie", Toast.LENGTH_SHORT)
+                toast.show()
+
+            }
+        }.execute()
     }
 
 }

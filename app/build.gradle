@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion 26
     defaultConfig {
@@ -14,6 +16,9 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         resValue "string", "google_maps_key", (project.findProperty("GOOGLE_MAPS_API_KEY") ?: "")
+        buildConfigField ("String", "API_KEY", '"807ff9dcc2b91db54df876e33ec6cdc9"')
+        buildConfigField ("String", "BASE_URL", '"https://api.themoviedb.org/3/"')
+        buildConfigField ("String", "BASE_URL_IMG", '"http://image.tmdb.org/t/p/"')
     }
     buildTypes {
         release {
@@ -35,5 +40,18 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.google.android.gms:play-services-maps:15.0.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.11'
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
+
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.github.bumptech.glide:glide:4.0.0'
+
+    implementation "android.arch.persistence.room:runtime:1.1.1"
+    kapt "android.arch.persistence.room:compiler:1.1.1"
 
 }

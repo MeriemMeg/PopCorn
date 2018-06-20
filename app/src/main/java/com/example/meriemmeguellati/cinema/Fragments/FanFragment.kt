@@ -1,6 +1,7 @@
 package com.example.meriemmeguellati.cinema.Fragments
 
 
+import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
@@ -17,6 +18,9 @@ import com.example.meriemmeguellati.cinema.Data.Data
 import com.example.meriemmeguellati.cinema.Model.Comment
 import com.example.meriemmeguellati.cinema.Model.Film
 import com.example.meriemmeguellati.cinema.Model.Serie
+import com.example.meriemmeguellati.cinema.OfflineData.FilmDAO
+import com.example.meriemmeguellati.cinema.OfflineData.FilmDB
+import com.example.meriemmeguellati.cinema.OfflineData.FilmEntity
 import com.example.meriemmeguellati.cinema.R
 
 
@@ -33,36 +37,46 @@ class FanFragment : Fragment() {
 
     var fanFilms = ArrayList<Film>()
     var fanSeries = ArrayList<Serie>()
+    private var db: FilmDB? = null
+    private var dao: FilmDAO? = null
+    private var filmsEntity: List<FilmEntity>? = null
+    lateinit var pagerAdapter : FilmCardFragmentPagerAdapter
+    lateinit var mesFilmsviewPager : ViewPager
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater!!.inflate(R.layout.fan_fragment, container, false)
-        val mesFilmsviewPager = view.findViewById<View>(R.id.mes_films) as ViewPager
+        mesFilmsviewPager = view.findViewById<View>(R.id.mes_films) as ViewPager
         val mesFeuilletonsViewPager = view.findViewById<View>(R.id.mes_feuilletons) as ViewPager
         val mesSallesViewPager = view.findViewById<View>(R.id.mes_salles) as ViewPager
         val data = Data(resources)
         data.createData()
-        fanFilms.addAll(data.filmsSuivis)
+
+       // fanFilms.addAll(data.filmsSuivis)
+        prepareData()
+
+        val films = ArrayList<Film>()
+
+        fanFilms.addAll(films)
+
+
         fanSeries.addAll(data.seriesSuivies)
 
-         if(this.arguments.getSerializable("fan") != null){
-             val f = this.arguments.getSerializable("fan") as Film
-             if(!this.fanFilms.contains(f))  this.fanFilms.add(f)
+       if(arguments!= null) {
 
-         }
-        if(this.arguments.getSerializable("fanS") != null){
-            val f = this.arguments.getSerializable("fanS") as Serie
-            if(!this.fanSeries.contains(f))  this.fanSeries.add(f)
+           if(this.arguments.getSerializable("fan") != null){
+               val f = this.arguments.getSerializable("fan") as Film
+               if(!this.fanFilms.contains(f))  this.fanFilms.add(f)
 
-        }
+           }
+           if(this.arguments.getSerializable("fanS") != null){
+               val f = this.arguments.getSerializable("fanS") as Serie
+               if(!this.fanSeries.contains(f))  this.fanSeries.add(f)
 
-        val pagerAdapter = FilmCardFragmentPagerAdapter(childFragmentManager, MainActivity.dpToPixels(2, activity),fanFilms)
-        val fragmentCardShadowTransformer = ShadowTransformer(mesFilmsviewPager, pagerAdapter)
-        fragmentCardShadowTransformer.enableScaling(true)
+           }
+       }
 
-        mesFilmsviewPager.adapter = pagerAdapter
-        mesFilmsviewPager.setPageTransformer(false, fragmentCardShadowTransformer)
-        mesFilmsviewPager.offscreenPageLimit = 3
+
 
         val pagerAdapter2 = SerieCardFragmentPagerAdapter(childFragmentManager, MainActivity.dpToPixels(2, activity),fanSeries)
         val fragmentCardShadowTransformer2 = ShadowTransformer(mesFeuilletonsViewPager, pagerAdapter2)
@@ -79,6 +93,55 @@ class FanFragment : Fragment() {
         mesSallesViewPager.offscreenPageLimit = 3
 
         return view
+    }
+
+    private fun prepareData(){
+
+        var act = this
+        object : AsyncTask<Void, Void, Void>() {
+            override fun doInBackground(vararg voids: Void): Void? {
+                act.db = FilmDB.getInstance(act.context!!)
+                act.dao = db?.FilmDAO()
+                filmsEntity = act.dao?.getFilms()
+
+                return null
+            }
+
+            override fun onPostExecute(result: Void?) {
+
+                if (filmsEntity != null) {
+
+                    val films = ArrayList<Film>()
+
+                    for (i in 0..(filmsEntity!!.size-1)){
+                        films.add(Film(
+                                filmsEntity!![i].titre,
+                                filmsEntity!![i].affiche,
+                                filmsEntity!![i].description,
+                                filmsEntity!![i].trailer,
+                                filmsEntity!![i].trailerposter)
+                        )
+                    }
+                    if(films.size>1){
+                        pagerAdapter = FilmCardFragmentPagerAdapter(childFragmentManager, MainActivity.dpToPixels(2, activity),films)
+                        val fragmentCardShadowTransformer = ShadowTransformer(mesFilmsviewPager, pagerAdapter)
+                        fragmentCardShadowTransformer.enableScaling(true)
+
+                        mesFilmsviewPager.adapter = pagerAdapter
+                        mesFilmsviewPager.setPageTransformer(false, fragmentCardShadowTransformer)
+                        mesFilmsviewPager.offscreenPageLimit = 3
+
+
+                    }else {
+                        val toast = Toast.makeText(act.context,"Aucun film n'a été trouvé", Toast.LENGTH_SHORT)
+                        toast.show()
+                    }
+
+                }
+            }
+        }.execute()
+
+
     }
 
 

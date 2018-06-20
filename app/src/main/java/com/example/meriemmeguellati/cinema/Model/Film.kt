@@ -9,11 +9,12 @@ data class Film(
         val titre: String,
         val affiche: Int,
         val description: String,
-        val trailer : String,
+        val posterPath : String,
         val trailerposter : Int
 
 
 )  : Serializable{
+    var id : Int = 0
     var estEnCoursDeProjection : Boolean = false
     var estSuivi : Boolean = false
     var filmsLiés: ArrayList<Film> = ArrayList<Film> ()
