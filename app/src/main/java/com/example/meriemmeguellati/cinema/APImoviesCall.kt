@@ -7,7 +7,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 
-class APIuser {
+class APImoviesCall {
     private var apiHub: APImovies
 
     init {

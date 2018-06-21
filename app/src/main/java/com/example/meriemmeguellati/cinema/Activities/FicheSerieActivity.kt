@@ -35,8 +35,6 @@ class FicheSerieActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fiche_serie_activity)
         setSupportActionBar(findViewById(R.id.my_toolbar))
-        //getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
-       // getSupportActionBar()!!.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
         getSupportActionBar()!!.title=""
         val my_recycler_view = findViewById<RecyclerView>(R.id.saisons)
 

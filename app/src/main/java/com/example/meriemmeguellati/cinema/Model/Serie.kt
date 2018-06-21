@@ -12,6 +12,7 @@ import java.io.Serializable
         val poster : Int
 
 ) : Serializable {
+ var id : Int = 0
  var estSuivi : Boolean = false
  var saisons : ArrayList<Saison> =  ArrayList<Saison>()
  var seriesLiees : ArrayList<Serie> =  ArrayList<Serie>()

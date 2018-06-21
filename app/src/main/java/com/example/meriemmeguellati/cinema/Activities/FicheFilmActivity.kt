@@ -19,14 +19,12 @@ import android.view.*
 import android.widget.*
 import android.view.MotionEvent
 import com.example.meriemmeguellati.cinema.APIresponses.*
-import com.example.meriemmeguellati.cinema.APIuser
+import com.example.meriemmeguellati.cinema.APImoviesCall
 import com.example.meriemmeguellati.cinema.Adapters.*
-import com.example.meriemmeguellati.cinema.Data.Data
 import com.example.meriemmeguellati.cinema.Model.*
 import com.example.meriemmeguellati.cinema.NavDrawerHelper
 import com.example.meriemmeguellati.cinema.OfflineData.FilmDB
 import com.example.meriemmeguellati.cinema.OfflineData.FilmEntity
-import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,34 +35,28 @@ class FicheFilmActivity : AppCompatActivity() {
     var isCommentsShown : Boolean = false
     var estEnCoursDeProjection : Boolean = false
     lateinit var film : Film
-    lateinit var data : Data
     lateinit var more : ImageButton
     lateinit var showComments : TextView
     private var apiCall: Call<NowPlayingResponse>? = null
     private  var apiCallPersons : Call<CreditsResponse>? = null
     private  var apiCallComments : Call<ReviewsResponse>? = null
-    private val apiUser = APIuser()
-    private val gson = Gson()
-    private var item: MovieResponse? = null
-    lateinit var adapter2 :  RecyclerViewFilmLiesAdapter
-    lateinit var  adapter : RecyclerViewPersonnesAdapter
+    private val apiUser = APImoviesCall()
+    lateinit var filmsLiesAdapter :  RecyclerViewFilmLiesAdapter
+    lateinit var  PersonnesLieesAdapter : RecyclerViewPersonnesAdapter
     lateinit var film_liées_recycler_view :RecyclerView
-    lateinit var my_recycler_view : RecyclerView
+    lateinit var personnesLieesRecycler_view : RecyclerView
     lateinit var followItem : MenuItem
      var comments  = ArrayList<Comment>()
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fiche_film_activity)
         setSupportActionBar(findViewById(R.id.my_toolbar))
-        //getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
-       // getSupportActionBar()!!.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
 
         getSupportActionBar()!!.title=""
 
-        this.data = Data(resources)
-       // this.data.createComments()
 
         val intent = intent
          this.film = intent.getSerializableExtra("film") as Film
@@ -103,8 +95,8 @@ class FicheFilmActivity : AppCompatActivity() {
         this.showComments = findViewById<TextView>(R.id.nb_comments)
         this.showComments.text = "Commentaires (4)"
         this.more = findViewById<ImageButton>(R.id.more)
-        my_recycler_view = findViewById<RecyclerView>(R.id.personnes_associees)
-        my_recycler_view.setHasFixedSize(true)
+        personnesLieesRecycler_view = findViewById<RecyclerView>(R.id.personnes_associees)
+        personnesLieesRecycler_view.setHasFixedSize(true)
         loadAssociatedPersons(film.id.toString())
         loadComments(film.id.toString())
         film_liées_recycler_view = findViewById<RecyclerView>(R.id.film_lies)
@@ -189,7 +181,7 @@ class FicheFilmActivity : AppCompatActivity() {
             if(film.estSuivi){
 
                 item.icon = getDrawable(R.drawable.baseline_favorite_border_white_18dp)
-                unfavorise(this.film.id)
+                unfavorise()
             }
             else {
                 item.icon = getDrawable(R.drawable.ic_favorite_white_24dp)
@@ -319,7 +311,7 @@ class FicheFilmActivity : AppCompatActivity() {
         }
 
         val evaluer : Button = mView?.findViewById<Button>(R.id.submit)
-        evaluer.setOnClickListener {view ->
+       /* evaluer.setOnClickListener {view ->
             val note: Float = ratingBar.getRating()
             val myComment = Comment(resources.getStringArray(R.array.comment_1)[0].toInt(),
                     resources.getStringArray(R.array.comment_1)[1],
@@ -333,7 +325,7 @@ class FicheFilmActivity : AppCompatActivity() {
                 this.isCommentsShown = false
             }
             dialog.cancel()
-        }
+        }*/
     }
 
     fun initNavigationDrawer() {
@@ -361,11 +353,11 @@ class FicheFilmActivity : AppCompatActivity() {
                     }
 
                     //
-                    adapter2 = RecyclerViewFilmLiesAdapter(baseContext, filmsLiees)
+                    filmsLiesAdapter = RecyclerViewFilmLiesAdapter(baseContext, filmsLiees)
 
                     film_liées_recycler_view.layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.VERTICAL, false)
 
-                    film_liées_recycler_view.adapter = adapter2
+                    film_liées_recycler_view.adapter = filmsLiesAdapter
 
                 } else
                     loadFailed()
@@ -394,11 +386,11 @@ class FicheFilmActivity : AppCompatActivity() {
                         personnesLiees.add(p)
                     }
 
-                    adapter = RecyclerViewPersonnesAdapter(baseContext, personnesLiees)
+                    PersonnesLieesAdapter = RecyclerViewPersonnesAdapter(baseContext, personnesLiees)
 
-                    my_recycler_view.layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.VERTICAL, false)
+                    personnesLieesRecycler_view.layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.VERTICAL, false)
 
-                    my_recycler_view.adapter = adapter
+                    personnesLieesRecycler_view.adapter = PersonnesLieesAdapter
 
                 } else
                     loadFailed()
@@ -508,13 +500,13 @@ class FicheFilmActivity : AppCompatActivity() {
 
 
     }
-    fun unfavorise( id: Int) {
+    fun unfavorise() {
 
         object : AsyncTask<Void, Void, Void>() {
             override fun doInBackground(vararg voids: Void): Void? {
                 val db = FilmDB.getInstance(baseContext)
                 val dao = db?.FilmDAO()
-                dao?.supprimer(id)
+                dao?.supprimer(film.id)
                 return null
             }
 
