@@ -36,8 +36,6 @@ class FicheEpisodeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fiche_personne_activity)
         setSupportActionBar(findViewById(R.id.my_toolbar))
-       // getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
-      //  getSupportActionBar()!!.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
         getSupportActionBar()!!.title=""
 
 
@@ -66,7 +64,7 @@ class FicheEpisodeActivity : AppCompatActivity() {
         mediaController?.setAnchorView(videoView)
 
         val description = findViewById<TextView>(R.id.film_description)
-        description.text = "This is the episode n°"+this.episode.num.toString()+" of the seaison "+this.episode.saison.toString()+" of" + this.episode.serie +"."
+        description.text = episode.description
 
 
         val icon = findViewById<ImageButton>(R.id.play_stop)

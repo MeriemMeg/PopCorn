@@ -1,5 +1,6 @@
 package com.example.meriemmeguellati.cinema.Model
 
+import android.net.Network
 import java.io.Serializable
 
 /**
@@ -12,7 +13,11 @@ import java.io.Serializable
         val poster : Int
 
 ) : Serializable {
+
+    var posterPath : String = ""
+    var backdrop_path : String = ""
  var id : Int = 0
+    var networks : List<com.example.meriemmeguellati.cinema.APIresponses.Network>? = null
  var estSuivi : Boolean = false
  var saisons : ArrayList<Saison> =  ArrayList<Saison>()
  var seriesLiees : ArrayList<Serie> =  ArrayList<Serie>()

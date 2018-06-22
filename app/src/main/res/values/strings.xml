@@ -54,5 +54,7 @@
     <string name="appwidget_text">Favorite Movies</string>
     <string name="add_widget">Add Widget</string>
     <string name="empty_text">You Dont Have Favorite Movies Yet</string>
+    <string name="accueil_poster_resolution">w154</string>
+    <string name="backdrop_resolution">w300</string>
 
 </resources>

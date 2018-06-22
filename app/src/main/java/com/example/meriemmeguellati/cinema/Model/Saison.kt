@@ -15,6 +15,10 @@ data class Saison(
         val trailer : String
 
 ): Serializable {
+    var id : Int = 0
+    var poster_path :String = ""
+    var backdrop_path : String = ""
+    var networks : List<com.example.meriemmeguellati.cinema.APIresponses.Network>? = null
     var estSuivie : Boolean = false
     var personnages : ArrayList<Personne> = ArrayList<Personne> ()
     var episodes : ArrayList<Episode> = ArrayList<Episode>()

@@ -1,6 +1,8 @@
 package com.example.meriemmeguellati.cinema.Activities
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -18,9 +20,12 @@ import android.util.Log
 import android.view.*
 import android.widget.*
 import android.view.MotionEvent
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.meriemmeguellati.cinema.APIresponses.*
 import com.example.meriemmeguellati.cinema.APImoviesCall
 import com.example.meriemmeguellati.cinema.Adapters.*
+import com.example.meriemmeguellati.cinema.BuildConfig
 import com.example.meriemmeguellati.cinema.Model.*
 import com.example.meriemmeguellati.cinema.NavDrawerHelper
 import com.example.meriemmeguellati.cinema.OfflineData.FilmDB
@@ -46,7 +51,8 @@ class FicheFilmActivity : AppCompatActivity() {
     lateinit var film_liées_recycler_view :RecyclerView
     lateinit var personnesLieesRecycler_view : RecyclerView
     lateinit var followItem : MenuItem
-     var comments  = ArrayList<Comment>()
+    var comments  = ArrayList<Comment>()
+    lateinit var backdrop : ImageView
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +68,15 @@ class FicheFilmActivity : AppCompatActivity() {
          this.film = intent.getSerializableExtra("film") as Film
         this.estEnCoursDeProjection = this.film.estEnCoursDeProjection
 
+        backdrop = findViewById(R.id.backdrop_film)
+        Glide.with(baseContext)
+                .load(BuildConfig.BASE_URL_IMG + "w300" + film.backdrop_path)
+                .apply(RequestOptions()
+                        .placeholder(R.drawable.revenge)
+                        .centerCrop()
+                )
+                .into(backdrop)
+
 
         val titre = findViewById<TextView>(R.id.film_name)
         titre.text = film.titre
@@ -70,12 +85,13 @@ class FicheFilmActivity : AppCompatActivity() {
         playStop.setImageResource(R.drawable.ic_play_arrow_white_24dp)
 
         val background = findViewById<FrameLayout>(R.id.film_background)
-        background.setBackgroundResource(film.affiche)
+       // background.setBackgroundResource(film.affiche)
+
         var videoView = findViewById<VideoView>(R.id.videoView)
         val mediaController = MediaController(this)
         mediaController?.setAnchorView(videoView)
 
-        try {
+      /*  try {
             // ID of video file.
             val id = this.getRawResIdByName(film.posterPath)
             videoView.setVideoURI(Uri.parse("android.resource://$packageName/$id"))
@@ -83,10 +99,10 @@ class FicheFilmActivity : AppCompatActivity() {
         } catch (e: Exception) {
             Log.e("Error", e.message)
             e.printStackTrace()
-        }
+        }*/
         videoView.setBackgroundResource(film.trailerposter)
 
-        videoView.requestFocus()
+      //  videoView.requestFocus()
 
 
 
@@ -127,7 +143,7 @@ class FicheFilmActivity : AppCompatActivity() {
             }
 
         }
-
+/*
         playStop.setOnClickListener {
             videoView.start()
             playStop.setVisibility(View.INVISIBLE);
@@ -144,26 +160,30 @@ class FicheFilmActivity : AppCompatActivity() {
                 return false
             }
         })
+ */
 
 
     }
 
-    // Find ID corresponding to the name of the video (in the directory raw).
+   /* // Find ID corresponding to the name of the video (in the directory raw).
     fun getRawResIdByName(resName: String): Int {
         val pkgName = this.packageName
         val resID = this.resources.getIdentifier(resName, "raw", pkgName)
         Log.i("AndroidVideoView", "Res Name: $resName==> Res ID = $resID")
         return resID
-    }
+    }*/
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_film, menu)
         this.followItem = menu.getItem(1)
         this.followItem.setEnabled(false)
-        checkFilm()
+       // var exist : Boolean = false
+        checkFilm( this)
         return true
     }
+
+
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_projection -> {
@@ -469,7 +489,7 @@ class FicheFilmActivity : AppCompatActivity() {
 
     }
 
-    fun checkFilm() {
+    fun checkFilm(context : Activity) {
 
         var act = this
         object : AsyncTask<Void, Void, Void>() {
@@ -479,13 +499,27 @@ class FicheFilmActivity : AppCompatActivity() {
                 val existing = dao?.getFilm(film.id)
                 if(existing != film.id){
                     film.estSuivi = false
-                    followItem.icon = getDrawable(R.drawable.baseline_favorite_border_white_18dp)
-                    followItem.setEnabled(true)
+                           context.runOnUiThread(java.lang.Runnable {
+
+                            followItem.icon = getDrawable(R.drawable.baseline_favorite_border_white_18dp)
+                            followItem.setEnabled(true)
+
+                    })
+
                 }
                 else {
                     film.estSuivi = true
-                    followItem.icon = getDrawable(R.drawable.ic_favorite_white_24dp)
-                    followItem.setEnabled(true)
+
+                    context.runOnUiThread(java.lang.Runnable {
+
+
+                        followItem.icon = getDrawable(R.drawable.ic_favorite_white_24dp)
+                        followItem.setEnabled(true)
+
+                    })
+
+
+
                 }
 
                 return null

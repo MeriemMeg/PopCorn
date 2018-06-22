@@ -19,11 +19,17 @@ import android.view.*
 import android.widget.*
 import android.view.MotionEvent
 import android.view.View.OnTouchListener
+import com.example.meriemmeguellati.cinema.APImoviesCall
+import com.example.meriemmeguellati.cinema.APIresponses.CreditsResponse
+import com.example.meriemmeguellati.cinema.APIresponses.MovieResponse
+import com.example.meriemmeguellati.cinema.APIresponses.NowPlayingResponse
+import com.example.meriemmeguellati.cinema.APIresponses.ReviewsResponse
 import com.example.meriemmeguellati.cinema.Adapters.CommentsFragment
 import com.example.meriemmeguellati.cinema.Adapters.RecyclerViewPersonnesAdapter
 import com.example.meriemmeguellati.cinema.Data.Data
 import com.example.meriemmeguellati.cinema.Model.*
 import com.example.meriemmeguellati.cinema.NavDrawerHelper
+import retrofit2.Call
 
 
 class FichePersonnesActivity : AppCompatActivity() {
@@ -32,6 +38,11 @@ class FichePersonnesActivity : AppCompatActivity() {
     lateinit var data : Data
     lateinit var more : ImageButton
     lateinit var showComments : TextView
+    lateinit var personne : Personne
+    private var apiCall: Call<MovieResponse>? = null
+    private  var apiCallPersons : Call<CreditsResponse>? = null
+    private  var apiCallComments : Call<ReviewsResponse>? = null
+    private val apiUser = APImoviesCall()
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,14 +50,15 @@ class FichePersonnesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fiche_personne_activity)
         setSupportActionBar(findViewById(R.id.my_toolbar))
-        //getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
-      //  getSupportActionBar()!!.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
         getSupportActionBar()!!.title=""
 
 
 
         val intent = intent
-        val personne = intent.getSerializableExtra("Personne") as Personne
+        personne = intent.getSerializableExtra("Personne") as Personne
+
+        loadPersonneDetails()
+
 
         val nomActeur = findViewById<TextView>(R.id.nomActeur)
         nomActeur.text = personne.nom
@@ -58,16 +70,16 @@ class FichePersonnesActivity : AppCompatActivity() {
 
         val background = findViewById<FrameLayout>(R.id.film_background)
         background.setBackgroundResource(personne.photo)
-        var videoView = findViewById<VideoView>(R.id.videoView)
+      //  var videoView = findViewById<VideoView>(R.id.videoView)
 
 
         // Set the media controller buttons
 
-        val mediaController = MediaController(this)
+        //val mediaController = MediaController(this)
 
         // Set the videoView that acts as the anchor for the MediaController.
 
-        mediaController?.setAnchorView(videoView)
+      //  mediaController?.setAnchorView(videoView)
 
         // Set MediaController for VideoView
         //  videoView.setMediaController(mediaController)
@@ -250,5 +262,9 @@ class FichePersonnesActivity : AppCompatActivity() {
 
         val navDrawerHelper =  NavDrawerHelper(this);
         navDrawerHelper.initNav(drawerLayout, navigationView, false);
+    }
+
+    fun loadPersonneDetails(){
+
     }
 }

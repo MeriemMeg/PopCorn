@@ -5,16 +5,16 @@ import com.google.gson.annotations.SerializedName
  class SeasonsResponse {
 
      @SerializedName("id")
-     private var id: Int = 0
+     var id: Int = 0
 
      @SerializedName("episode_count")
-     private var episode_count: Int = 0
+     var episode_count: Int = 0
 
      @SerializedName("poster_path")
-     private var poster_path: String = ""
+     var poster_path: String? = ""
 
      @SerializedName("season_number")
-     private var season_number: Int = 0
+     var season_number: Int = 0
 
 
  }

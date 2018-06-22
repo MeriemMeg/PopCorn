@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
          var id: Int = 0
 
         @SerializedName("poster_path")
-        var poster_path: String = ""
+        var poster_path: String? = ""
 
         @SerializedName("name")
          var name: String = ""

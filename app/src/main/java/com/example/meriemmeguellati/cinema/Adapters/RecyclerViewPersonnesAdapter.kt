@@ -44,6 +44,8 @@ class RecyclerViewPersonnesAdapter(private val mContext: Context, private val da
 
     }
 
+
+
     override fun getItemCount(): Int {
         return 1
     }

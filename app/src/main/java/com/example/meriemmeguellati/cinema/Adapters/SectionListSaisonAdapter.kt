@@ -13,8 +13,11 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.meriemmeguellati.cinema.Activities.FicheFilmActivity
 import com.example.meriemmeguellati.cinema.Activities.FicheSaisonActivity
+import com.example.meriemmeguellati.cinema.BuildConfig
 import com.example.meriemmeguellati.cinema.Model.Saison
 
 import com.example.meriemmeguellati.cinema.Model.SingleItemModel
@@ -35,7 +38,13 @@ class SectionListSaisonAdapter(private val mContext: Context, private val itemsL
         val singleItem = itemsList!![i]
 
         holder.tvTitle.text = "saison "+singleItem.num.toString()
-        holder.itemImage.setBackgroundResource(singleItem.affiche)
+        Glide.with(mContext)
+                .load(BuildConfig.BASE_URL_IMG + "w154" + singleItem.poster_path)
+                .apply(RequestOptions()
+                        .placeholder(R.drawable.img2)
+                        .centerCrop()
+                )
+                .into(holder.image)
         holder.itemImage.setOnClickListener {
             val intent = Intent(mContext, FicheSaisonActivity::class.java)
             intent.putExtra("saison", singleItem)
@@ -54,12 +63,14 @@ class SectionListSaisonAdapter(private val mContext: Context, private val itemsL
 
         var tvTitle: TextView
         var itemImage: FrameLayout
+        var image: ImageView
 
 
         init {
 
             this.tvTitle = view.findViewById<TextView>(R.id.tvTitle)
             this.itemImage = view.findViewById<FrameLayout>(R.id.imageFilmLie)
+            this.image = view.findViewById<ImageView>(R.id.posterr)
 
 
             view.setOnClickListener { v -> Toast.makeText(v.context, tvTitle.text, Toast.LENGTH_SHORT).show() }

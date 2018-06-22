@@ -15,6 +15,7 @@ data class Film(
 
 )  : Serializable{
     var id : Int = 0
+    var backdrop_path : String =""
     var estEnCoursDeProjection : Boolean = false
     var estSuivi : Boolean = false
     var filmsLiés: ArrayList<Film> = ArrayList<Film> ()

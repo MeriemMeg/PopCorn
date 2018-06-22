@@ -10,10 +10,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.meriemmeguellati.cinema.Activities.FicheEpisodeActivity
 import com.example.meriemmeguellati.cinema.Activities.FicheFilmActivity
+import com.example.meriemmeguellati.cinema.BuildConfig
 import com.example.meriemmeguellati.cinema.Model.Episode
 import com.example.meriemmeguellati.cinema.Model.Film
 import com.example.meriemmeguellati.cinema.Model.Saison
@@ -36,7 +40,14 @@ class SectionListEpisodesAdapter(private val mContext: Context, private val item
         val singleItem = itemsList!![i]
 
         holder.tvTitle.text = " S" + singleItem.saison.toString()+" E"+singleItem.num.toString()
-        holder.image.setBackgroundResource(singleItem.affiche)
+        //holder.image.setBackgroundResource(singleItem.affiche)
+        Glide.with(mContext)
+                .load(BuildConfig.BASE_URL_IMG + "w154" + singleItem.still_path)
+                .apply(RequestOptions()
+                        .placeholder(R.drawable.img2)
+                        .centerCrop()
+                )
+                .into(holder.itemImage)
         holder.image.setOnClickListener {
             val intent = Intent(mContext, FicheEpisodeActivity::class.java)
             intent.putExtra("Episode", singleItem)
@@ -54,13 +65,14 @@ class SectionListEpisodesAdapter(private val mContext: Context, private val item
 
         var tvTitle: TextView
         var image : FrameLayout
+        var itemImage : ImageView
 
 
         init {
 
             this.tvTitle = view.findViewById<TextView>(R.id.tvTitle)
             this.image = view.findViewById<FrameLayout>(R.id.imageFilmLie)
-            // this.itemImage = view.findViewById<ImageView>(R.id.itemImage)
+             this.itemImage = view.findViewById<ImageView>(R.id.posterr)
 
 
             view.setOnClickListener {

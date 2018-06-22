@@ -12,8 +12,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.meriemmeguellati.cinema.Activities.FicheSerieActivity
 import com.example.meriemmeguellati.cinema.Adapters.CardAdapter
+import com.example.meriemmeguellati.cinema.BuildConfig
 import com.example.meriemmeguellati.cinema.Model.Film
 import com.example.meriemmeguellati.cinema.Model.Serie
 import com.example.meriemmeguellati.cinema.R
@@ -34,7 +37,14 @@ class SerieCardFragment : Fragment() {
         this.serie = this.arguments.getSerializable("serie") as Serie
         var filmPoster: ImageView
         filmPoster = view.findViewById(R.id.filmPoster)
-        filmPoster.setImageResource(this.serie.affiche)
+
+        Glide.with(getContext())
+                .load(BuildConfig.BASE_URL_IMG + "w154" + this.serie.posterPath)
+                .apply(RequestOptions()
+                        .placeholder(R.drawable.housetrailer)
+                        .centerCrop()
+                )
+                .into(filmPoster)
 
         //évnements
         cardView!!.setOnClickListener{

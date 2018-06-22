@@ -18,10 +18,16 @@ import android.view.*
 import android.widget.*
 import android.view.MotionEvent
 import android.view.View.OnTouchListener
+import com.example.meriemmeguellati.cinema.APISeriesCall
+import com.example.meriemmeguellati.cinema.APImoviesCall
+import com.example.meriemmeguellati.cinema.APIresponses.*
 import com.example.meriemmeguellati.cinema.Adapters.*
 import com.example.meriemmeguellati.cinema.Data.Data
 import com.example.meriemmeguellati.cinema.Model.*
 import com.example.meriemmeguellati.cinema.NavDrawerHelper
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class FicheSaisonActivity : AppCompatActivity() {
@@ -29,17 +35,27 @@ class FicheSaisonActivity : AppCompatActivity() {
 
     var isCommentsShown : Boolean = false
     lateinit var saison : Saison
-    lateinit var data : Data
+
     lateinit var more : ImageButton
     lateinit var showComments : TextView
+    private var apiCall: Call<SeasonDetailsResponse>? = null
+    private  var apiCallPersons : Call<CreditsResponse>? = null
+    private  var apiCallComments : Call<ReviewsResponse>? = null
+    private val apiUser = APISeriesCall()
+    lateinit var episodesAdapter :  RecyclerViewEpisodesAdapter
+    lateinit var  PersonnesLieesAdapter : RecyclerViewPersonnesAdapter
+    lateinit var episodes_recycler_view :RecyclerView
+    lateinit var personnesLieesRecycler_view : RecyclerView
+    lateinit var followItem : MenuItem
+    var comments  = ArrayList<Comment>()
+
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fiche_film_activity)
         setSupportActionBar(findViewById(R.id.my_toolbar))
-        //getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
-        //getSupportActionBar()!!.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
         getSupportActionBar()!!.title=""
 
         val intent = intent
@@ -49,11 +65,11 @@ class FicheSaisonActivity : AppCompatActivity() {
         titre.text = this.saison.serie+ " S" + this.saison.num
 
         val playStop = findViewById<ImageButton>(R.id.play_stop)
-        playStop.setImageResource(R.drawable.ic_play_arrow_white_24dp)
+       // playStop.setImageResource(R.drawable.ic_play_arrow_white_24dp)
 
         val background = findViewById<FrameLayout>(R.id.film_background)
         background.setBackgroundResource(this.saison.affiche)
-        var videoView = findViewById<VideoView>(R.id.videoView) as VideoView
+       /* var videoView = findViewById<VideoView>(R.id.videoView) as VideoView
         val mediaController = MediaController(this)
         mediaController?.setAnchorView(videoView)
 
@@ -68,37 +84,21 @@ class FicheSaisonActivity : AppCompatActivity() {
         }
         videoView.setBackgroundResource(this.saison.poster)
 
-        videoView.requestFocus()
+        videoView.requestFocus() */
 
 
         val description = findViewById<TextView>(R.id.film_description)
         description.text = this.saison.description
 
 
-        val my_recycler_view = findViewById<RecyclerView>(R.id.personnes_associees)
+        personnesLieesRecycler_view = findViewById<RecyclerView>(R.id.personnes_associees)
 
-        my_recycler_view.setHasFixedSize(true)
+        loadAssociatedPersons(saison.id)
 
+        episodes_recycler_view = findViewById<RecyclerView>(R.id.film_lies)
 
-        val adapter = RecyclerViewPersonnesAdapter(this, this.saison.personnages)
+        loadEpisodes(saison.id)
 
-        my_recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-
-        my_recycler_view.adapter = adapter
-
-
-        val film_liées_recycler_view = findViewById<RecyclerView>(R.id.film_lies)
-
-        film_liées_recycler_view.setHasFixedSize(true)
-        //
-        val adapter2 = RecyclerViewEpisodesAdapter(this, this.saison.episodes)
-
-        film_liées_recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-
-        film_liées_recycler_view.adapter = adapter2
-
-        this.data = Data(resources)
-        this.data.createComments()
         this.showComments = findViewById<TextView>(R.id.nb_comments)
         this.showComments.text = "Commentaires (4)"
         this.more = findViewById<ImageButton>(R.id.more)
@@ -108,10 +108,10 @@ class FicheSaisonActivity : AppCompatActivity() {
             if(this.isCommentsShown ==false) {
                 val fragment =  CommentsFragment()
                 val bundle = Bundle()
-                for (i in 0..(this.data.commentaire.size-1)){
-                    bundle.putSerializable("commentaire"+i.toString(),this.data.commentaire[i])
+                for (i in 0..(this.comments.size-1)){
+                    bundle.putSerializable("commentaire"+i.toString(),this.comments[i])
                 }
-                bundle.putInt("size",this.data.commentaire.size)
+                bundle.putInt("size",this.comments.size)
 
                 fragment.setArguments(bundle)
                 showFragment(fragment)
@@ -127,7 +127,7 @@ class FicheSaisonActivity : AppCompatActivity() {
         }
 
 
-        playStop.setOnClickListener {
+    /*    playStop.setOnClickListener {
             videoView.start()
             //getSupportActionBar()!!.hide()
             playStop.setVisibility(View.INVISIBLE);
@@ -147,10 +147,10 @@ class FicheSaisonActivity : AppCompatActivity() {
             }
         })
 
-
+  */
     }
 
-    // Find ID corresponding to the name of the resource (in the directory raw).
+ /*   // Find ID corresponding to the name of the resource (in the directory raw).
     fun getRawResIdByName(resName: String): Int {
         val pkgName = this.packageName
         // Return 0 if not found.
@@ -158,7 +158,7 @@ class FicheSaisonActivity : AppCompatActivity() {
         Log.i("AndroidVideoView", "Res Name: $resName==> Res ID = $resID")
         return resID
     }
-
+*/
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -218,7 +218,7 @@ class FicheSaisonActivity : AppCompatActivity() {
             dialog.cancel()
         }
 
-        val commenter: Button = mView?.findViewById<Button>(R.id.commenter)
+    /*    val commenter: Button = mView?.findViewById<Button>(R.id.commenter)
         commenter.setOnClickListener{ view ->
             val comment: String = commentEditText.text.toString()
             val myComment = Comment(resources.getStringArray(R.array.comment_1)[0].toInt(),
@@ -234,7 +234,7 @@ class FicheSaisonActivity : AppCompatActivity() {
                 this.isCommentsShown = false
             }
 
-        }
+        }*/
     }
     fun showEvaluation(){
         var mBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
@@ -250,7 +250,7 @@ class FicheSaisonActivity : AppCompatActivity() {
             dialog.cancel()
         }
 
-        val evaluer : Button = mView?.findViewById<Button>(R.id.submit)
+     /*   val evaluer : Button = mView?.findViewById<Button>(R.id.submit)
         evaluer.setOnClickListener {view ->
             val note: Float = ratingBar.getRating()
             val myComment = Comment(resources.getStringArray(R.array.comment_1)[0].toInt(),
@@ -265,7 +265,7 @@ class FicheSaisonActivity : AppCompatActivity() {
                 this.isCommentsShown = false
             }
             dialog.cancel()
-        }
+        }*/
     }
     fun initNavigationDrawer() {
         //views
@@ -276,4 +276,124 @@ class FicheSaisonActivity : AppCompatActivity() {
         navDrawerHelper.initNav(drawerLayout, navigationView, false);
     }
 
+
+    private fun loadEpisodes(serieId: Int) {
+        apiCall = apiUser.getService().getSeasonDetails(serieId, saison.num)
+        apiCall!!.enqueue(object : Callback<SeasonDetailsResponse> {
+            override fun onResponse(call: Call<SeasonDetailsResponse>, response: Response<SeasonDetailsResponse>) {
+                if (response.isSuccessful()) {
+
+                    val items = response.body()!!
+                    var episode : Episode
+
+                    for (item in items.episodes!!){
+                        episode = Episode(saison.serie?:"Aucun titre n'est disponible",saison.num, item.episode_number?:0, R.drawable.p1,R.drawable.p1, "")
+                        episode.id = item.id
+                        episode.still_path = item.still_path?:""
+                        episode.networks = saison.networks
+                        episode.description = item.overview
+                        saison.episodes.add(episode)
+                        var p :Personne
+                        if (item.episode_number == 1){
+                            for (person in item.guest_stars!!){
+                                p = Personne(person.name!!,"19/12/1983",R.drawable.jenniferlawrence,R.drawable.jenniferlawrence, person.character!!)
+                                p.profil = person.profile_path?:""
+                                p.id = person?.cast_id?:0
+                                saison.personnages.add(p)
+                                PersonnesLieesAdapter = RecyclerViewPersonnesAdapter(baseContext, saison.personnages)
+
+                                personnesLieesRecycler_view.layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.VERTICAL, false)
+
+                                personnesLieesRecycler_view.adapter = PersonnesLieesAdapter
+                            }
+
+
+                        }
+                    }
+
+                    //
+                    episodes_recycler_view.setHasFixedSize(true)
+                    //
+                    episodesAdapter = RecyclerViewEpisodesAdapter(baseContext, saison.episodes)
+
+                    episodes_recycler_view.layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.VERTICAL, false)
+
+                    episodes_recycler_view.adapter = episodesAdapter
+
+                } else
+                    loadFailed()
+            }
+
+            override fun onFailure(call: Call<SeasonDetailsResponse>, t: Throwable) {
+                loadFailed()
+            }
+        })
+    }
+
+    private fun loadAssociatedPersons(serieId: Int) {
+        apiCallPersons = apiUser.getService().getAssociatedPersons(serieId)
+        apiCallPersons!!.enqueue(object : Callback<CreditsResponse> {
+            override fun onResponse(call: Call<CreditsResponse>, response: Response<CreditsResponse>) {
+                if (response.isSuccessful()) {
+
+                    val item = response.body()
+                    val cast= item!!.cast
+                    var p : Personne
+                    for (person in cast!!){
+                        p = Personne(person?.name?:"Aucun Nom", "12/2/1978", R.drawable.jenniferlawrence, R.drawable.jenniferlawrence, "biooooooooooooographie")
+                        if(person.profile_path != null )p.profil = person.profile_path!!
+                        p.id = person?.cast_id?:0
+                        saison.personnages.add(p)
+                    }
+
+                    PersonnesLieesAdapter = RecyclerViewPersonnesAdapter(baseContext, saison.personnages)
+
+                    personnesLieesRecycler_view.layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.VERTICAL, false)
+
+                    personnesLieesRecycler_view.adapter = PersonnesLieesAdapter
+
+                } else
+                    loadFailed()
+            }
+
+            override fun onFailure(call: Call<CreditsResponse>, t: Throwable) {
+                loadFailed()
+            }
+        })
+    }
+
+    private fun loadComments(serieId: Int) {
+        apiCallComments = apiUser.getService().getComments(serieId)
+        apiCallComments!!.enqueue(object : Callback<ReviewsResponse> {
+            override fun onResponse(call: Call<ReviewsResponse>, response: Response<ReviewsResponse>) {
+                if (response.isSuccessful()) {
+
+                    val item = response.body()
+                    var comment : Comment
+
+                    for (c in item?.results!!){
+                        comment = Comment(
+                                0,
+                                "",
+                                c?.content?:"aucun contenu n'est disponible",
+                                R.drawable.jamescorden,
+                                c?.author?:"no name",
+                                3)
+                        comments.add(comment)
+                    }
+
+
+                } else
+                    loadFailed()
+            }
+
+            override fun onFailure(call: Call<ReviewsResponse>, t: Throwable) {
+                loadFailed()
+            }
+        })
+    }
+
+    private fun loadFailed() {
+        Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
+    }
 }
