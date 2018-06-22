@@ -25,8 +25,10 @@ import com.example.meriemmeguellati.cinema.Adapters.*
 import com.example.meriemmeguellati.cinema.BuildConfig
 import com.example.meriemmeguellati.cinema.Model.*
 import com.example.meriemmeguellati.cinema.NavDrawerHelper
+import com.example.meriemmeguellati.cinema.OfflineData.FilmAssocieEntity
 import com.example.meriemmeguellati.cinema.OfflineData.FilmDB
 import com.example.meriemmeguellati.cinema.OfflineData.FilmEntity
+import com.example.meriemmeguellati.cinema.OfflineData.PersonneEntity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -50,6 +52,10 @@ class FicheFilmActivity : AppCompatActivity() {
     lateinit var followItem : MenuItem
     var comments  = ArrayList<Comment>()
     lateinit var backdrop : ImageView
+    lateinit var personnes : ArrayList<Personne>
+    lateinit var filmsAssocies: ArrayList<Film>
+    var filmsLiees = ArrayList<Film>()
+    var personnesLiees = ArrayList<Personne>()
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,30 +71,43 @@ class FicheFilmActivity : AppCompatActivity() {
          this.film = intent.getSerializableExtra("film") as Film
         this.estEnCoursDeProjection = this.film.estEnCoursDeProjection
 
-        backdrop = findViewById(R.id.backdrop_film)
-        Glide.with(baseContext)
-                .load(BuildConfig.BASE_URL_IMG + "w300" + film.backdrop_path)
-                .apply(RequestOptions()
-                        .placeholder(R.drawable.defaultfiche)
-                        .centerCrop()
-                )
-                .into(backdrop)
+        val mode = intent.getStringExtra("mode")
+
+        if (mode == "offline") {
+            this.personnes = intent.getSerializableExtra("personnes") as ArrayList<Personne>
+            this.filmsAssocies = intent.getSerializableExtra("filmsAssocies") as ArrayList<Film>
+            preparePersonnage(this)
+            prepareFilmsAssociés(this)
+            Toast.makeText(this, "size" + this.filmsAssocies.size,Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "offline : ", Toast.LENGTH_SHORT).show()
+
+        }else {
 
 
-        val titre = findViewById<TextView>(R.id.film_name)
-        titre.text = film.titre
+            backdrop = findViewById(R.id.backdrop_film)
+            Glide.with(baseContext)
+                    .load(BuildConfig.BASE_URL_IMG + "w300" + film.backdrop_path)
+                    .apply(RequestOptions()
+                            .placeholder(R.drawable.defaultfiche)
+                            .centerCrop()
+                    )
+                    .into(backdrop)
 
-        val playStop = findViewById<ImageButton>(R.id.play_stop)
-        playStop.setImageResource(R.drawable.ic_play_arrow_white_24dp)
 
-        val background = findViewById<FrameLayout>(R.id.film_background)
-       // background.setBackgroundResource(film.affiche)
+            val titre = findViewById<TextView>(R.id.film_name)
+            titre.text = film.titre
 
-        var videoView = findViewById<VideoView>(R.id.videoView)
-        val mediaController = MediaController(this)
-        mediaController?.setAnchorView(videoView)
+            val playStop = findViewById<ImageButton>(R.id.play_stop)
+            playStop.setImageResource(R.drawable.ic_play_arrow_white_24dp)
 
-      /*  try {
+            val background = findViewById<FrameLayout>(R.id.film_background)
+            // background.setBackgroundResource(film.affiche)
+
+            var videoView = findViewById<VideoView>(R.id.videoView)
+            val mediaController = MediaController(this)
+            mediaController?.setAnchorView(videoView)
+
+            /*  try {
             // ID of video file.
             val id = this.getRawResIdByName(film.posterPath)
             videoView.setVideoURI(Uri.parse("android.resource://$packageName/$id"))
@@ -97,50 +116,48 @@ class FicheFilmActivity : AppCompatActivity() {
             Log.e("Error", e.message)
             e.printStackTrace()
         }*/
-        videoView.setBackgroundResource(R.drawable.defaultfiche)
+            videoView.setBackgroundResource(R.drawable.defaultfiche)
 
-      //  videoView.requestFocus()
+            //  videoView.requestFocus()
 
 
+            val description = findViewById<TextView>(R.id.film_description)
+            description.text = film.description
+            this.showComments = findViewById<TextView>(R.id.nb_comments)
+            this.showComments.text = "Commentaires..."
+            this.more = findViewById<ImageButton>(R.id.more)
+            personnesLieesRecycler_view = findViewById<RecyclerView>(R.id.personnes_associees)
+            personnesLieesRecycler_view.setHasFixedSize(true)
+            loadAssociatedPersons(film.id.toString(), this)
+            loadComments(film.id.toString())
+            film_liées_recycler_view = findViewById<RecyclerView>(R.id.film_lies)
+            film_liées_recycler_view.setHasFixedSize(true)
+            loadSimilarMovies(film.id.toString(), this)
+            initNavigationDrawer()
 
-        val description = findViewById<TextView>(R.id.film_description)
-        description.text = film.description
-        this.showComments = findViewById<TextView>(R.id.nb_comments)
-        this.showComments.text = "Commentaires..."
-        this.more = findViewById<ImageButton>(R.id.more)
-        personnesLieesRecycler_view = findViewById<RecyclerView>(R.id.personnes_associees)
-        personnesLieesRecycler_view.setHasFixedSize(true)
-        loadAssociatedPersons(film.id.toString(),this)
-        loadComments(film.id.toString())
-        film_liées_recycler_view = findViewById<RecyclerView>(R.id.film_lies)
-        film_liées_recycler_view.setHasFixedSize(true)
-        loadSimilarMovies(film.id.toString(),this)
-        initNavigationDrawer()
+            //évènements du Click
 
-        //évènements du Click
+            more.setOnClickListener {
+                if (isCommentsShown == false) {
+                    val fragment = CommentsFragment()
+                    val bundle = Bundle()
+                    for (i in 0..(comments.size - 1)) {
+                        bundle.putSerializable("commentaire" + i.toString(), comments[i])
+                        //Toast.makeText(this, comments[i].message, Toast.LENGTH_SHORT).show()
+                    }
+                    bundle.putInt("size", comments.size)
 
-        more.setOnClickListener {
-            if(isCommentsShown ==false) {
-                val fragment =  CommentsFragment()
-                val bundle = Bundle()
-                for (i in 0..(comments.size-1)){
-                    bundle.putSerializable("commentaire"+i.toString(),comments[i])
-                    //Toast.makeText(this, comments[i].message, Toast.LENGTH_SHORT).show()
+                    fragment.setArguments(bundle)
+                    showFragment(fragment)
+                    more.setImageResource(R.drawable.ic_expand_less_black_24dp)
+                    isCommentsShown = true
+                } else {
+                    hideFragment()
+                    more.setImageResource(R.drawable.ic_expand_more_black_24dp)
+                    isCommentsShown = false
                 }
-                bundle.putInt("size",comments.size)
 
-                fragment.setArguments(bundle)
-                showFragment(fragment)
-                more.setImageResource(R.drawable.ic_expand_less_black_24dp)
-                isCommentsShown = true
             }
-            else {
-                hideFragment()
-                more.setImageResource(R.drawable.ic_expand_more_black_24dp)
-                isCommentsShown = false
-            }
-
-        }
 
 /*
         playStop.setOnClickListener {
@@ -159,8 +176,7 @@ class FicheFilmActivity : AppCompatActivity() {
                 return false
             }
         })
- */
-
+ */ }
 
     }
 
@@ -211,6 +227,12 @@ class FicheFilmActivity : AppCompatActivity() {
             else {
                 item.icon = getDrawable(R.drawable.ic_favorite_white_24dp)
                 saveFilm()
+                for (i in 0..(personnesLiees.size-1)){
+                    savePersonne(i)
+                }
+                for (j in 0..(filmsLiees.size-1)){
+                    saveFilmsAssocies(j)
+                }
             }
 
             true
@@ -371,7 +393,7 @@ class FicheFilmActivity : AppCompatActivity() {
                 if (response.isSuccessful()) {
 
                     val items = response.body()!!.getResults()!!
-                    var filmsLiees = ArrayList<Film>()
+
                     var film : Film
                     for (item in items ){
                         film = Film(item?.title?:"Aucun titre n'est disponible", R.drawable.p1, item?.overview?:"Aucune description n'est disponible", item?.posterPath?:"", R.drawable.p1)
@@ -404,7 +426,6 @@ class FicheFilmActivity : AppCompatActivity() {
 
                     val item = response.body()
                     val cast= item!!.cast
-                    var personnesLiees = ArrayList<Personne>()
                     var p : Personne
                     for (person in cast!!){
                         p = Personne(person?.name?:"Aucun Nom", "12/2/1978", R.drawable.jenniferlawrence, R.drawable.jenniferlawrence, "biooooooooooooographie")
@@ -565,4 +586,78 @@ class FicheFilmActivity : AppCompatActivity() {
         }.execute()
     }
 
+    fun preparePersonnage(context: Context){
+        personnesLieesRecycler_view = findViewById(R.id.personnes_associees)
+        personnesLieesRecycler_view.setHasFixedSize(true)
+
+        PersonnesLieesAdapter = RecyclerViewPersonnesAdapter(context, personnes)
+
+        personnesLieesRecycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+        personnesLieesRecycler_view.adapter = PersonnesLieesAdapter
+    }
+
+    fun prepareFilmsAssociés(context : Context){
+        film_liées_recycler_view = findViewById(R.id.film_lies)
+        film_liées_recycler_view.setHasFixedSize(true)
+
+        filmsLiesAdapter = RecyclerViewFilmLiesAdapter(context, filmsAssocies)
+
+        film_liées_recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+        film_liées_recycler_view.adapter = filmsLiesAdapter
+    }
+
+
+    private fun saveFilmsAssocies(i: Int){
+        var act = this
+        val id : Int = this.filmsLiees[i].id
+        val film_id : Int = this.film.id
+        val titre = this.filmsLiees[i].titre
+        val affiche = this.filmsLiees[i].affiche
+
+        object : AsyncTask<Void, Void, Void>() {
+            override fun doInBackground(vararg voids: Void): Void? {
+                val db = FilmDB.getInstance(act)
+                val dao = db?.FilmAssocieDAO()
+
+                val film = FilmAssocieEntity(id,film_id,titre, affiche)
+                dao?.insert(film)
+
+                return null
+            }
+
+
+            override fun onPostExecute(result: Void?) {
+
+            }
+        }.execute()
+
+    }
+
+    private fun savePersonne(i: Int){
+        var act = this
+        val id : Int = this.personnesLiees[i].id
+        val film_id : Int = this.film.id
+        val nom = this.personnesLiees[i].nom
+        val profil = this.personnesLiees[i].profil
+
+        object : AsyncTask<Void, Void, Void>() {
+            override fun doInBackground(vararg voids: Void): Void? {
+                val db = FilmDB.getInstance(act)
+                val dao = db?.PersonneDAO()
+
+                val personne = PersonneEntity(id,film_id,nom, profil)
+                dao?.insert(personne)
+
+                return null
+            }
+
+
+            override fun onPostExecute(result: Void?) {
+
+            }
+        }.execute()
+
+    }
 }

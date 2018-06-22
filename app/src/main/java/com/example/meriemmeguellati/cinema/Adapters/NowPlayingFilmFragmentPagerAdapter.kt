@@ -66,6 +66,7 @@ class  NowPlayingFilmFragmentPagerAdapter(fm: FragmentManager, private val baseE
         val fragment : FilmCardFragment = super.instantiateItem(container, position)as FilmCardFragment
         val bundle = Bundle()
         bundle.putSerializable("film",this.data[position])
+        bundle.putString("mode","online")
         fragment.setArguments(bundle)
         fragments[position] = fragment
         return fragment

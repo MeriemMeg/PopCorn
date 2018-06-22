@@ -38,7 +38,7 @@ class FanFragment : Fragment() {
     var fanFilms = ArrayList<Film>()
     var fanSeries = ArrayList<Serie>()
     private var db: FilmDB? = null
-    private var dao: FilmDAO? = null
+    private var filmDao: FilmDAO? = null
     private var filmsEntity: List<FilmEntity>? = null
     lateinit var pagerAdapter : FilmCardFragmentPagerAdapter
     lateinit var mesFilmsviewPager : ViewPager
@@ -53,12 +53,11 @@ class FanFragment : Fragment() {
         data.createData()
 
        // fanFilms.addAll(data.filmsSuivis)
-        prepareData()
+        prepareFilms()
 
         val films = ArrayList<Film>()
 
         fanFilms.addAll(films)
-
 
         fanSeries.addAll(data.seriesSuivies)
 
@@ -95,15 +94,15 @@ class FanFragment : Fragment() {
         return view
     }
 
-    private fun prepareData(){
+
+    private fun prepareFilms(){
 
         var act = this
         object : AsyncTask<Void, Void, Void>() {
             override fun doInBackground(vararg voids: Void): Void? {
                 act.db = FilmDB.getInstance(act.context!!)
-                act.dao = db?.FilmDAO()
-                filmsEntity = act.dao?.getFilms()
-
+                act.filmDao = db?.FilmDAO()
+                filmsEntity = act.filmDao?.getFilms()
                 return null
             }
 
@@ -122,7 +121,7 @@ class FanFragment : Fragment() {
                                 filmsEntity!![i].trailerposter)
                         )
                     }
-                    if(films.size>1){
+                    if(films.size>0){
                         pagerAdapter = FilmCardFragmentPagerAdapter(childFragmentManager, MainActivity.dpToPixels(2, activity),films)
                         val fragmentCardShadowTransformer = ShadowTransformer(mesFilmsviewPager, pagerAdapter)
                         fragmentCardShadowTransformer.enableScaling(true)
@@ -140,10 +139,7 @@ class FanFragment : Fragment() {
                 }
             }
         }.execute()
-
-
     }
-
 
 
 

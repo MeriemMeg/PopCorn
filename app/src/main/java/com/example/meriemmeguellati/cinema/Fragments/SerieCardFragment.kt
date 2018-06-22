@@ -41,7 +41,7 @@ class SerieCardFragment : Fragment() {
         Glide.with(getContext())
                 .load(BuildConfig.BASE_URL_IMG + "w500" + this.serie.posterPath)
                 .apply(RequestOptions()
-                        .placeholder(R.drawable.housetrailer)
+                        .placeholder(R.drawable.defaultposter)
                         .centerCrop()
                 )
                 .into(filmPoster)

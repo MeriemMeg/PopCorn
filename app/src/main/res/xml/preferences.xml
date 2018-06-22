@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+    <PreferenceCategory android:title="Notification">
+
+        <SwitchPreference
+            android:key="notifications"
+            android:summary="Enable/Disable New Movies Notifications"
+            android:title="Notifications" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Genres">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="action"
+            android:summary="Turn ON/Off Action Films Notifications"
+            android:title="Action" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="adventure"
+            android:summary="Turn ON/Off Adventure Films Notifications"
+            android:title="Animated" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="comedy"
+            android:summary="Turn ON/Off Comedy Films Notifications"
+            android:title="Comedy" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="drama"
+            android:summary="Turn ON/Off Drama Films Notifications"
+            android:title="Drama" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="horror"
+            android:summary="Turn ON/Off Horror Films Notifications"
+            android:title="Horror" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="history"
+            android:summary="Turn ON/Off History Films Notifications"
+            android:title="history" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="romance"
+            android:summary="Turn ON/Off Romance Films Notifications"
+            android:title="Romance" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="sience_fiction"
+            android:summary="Turn ON/Off Sience Fiction Films Notifications"
+            android:title="Sience Fiction" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="war"
+            android:summary="Turn ON/Off War Films Notifications"
+            android:title="War" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="crime"
+            android:summary="Turn ON/Off Crime Films Notifications"
+            android:title="Crime" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="family"
+            android:summary="Turn ON/Off Family Films Notifications"
+            android:title="Family" />
+
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

@@ -20,6 +20,7 @@ import com.example.meriemmeguellati.cinema.R
 import android.app.SearchManager
 import android.content.Intent
 import android.net.ConnectivityManager
+import android.preference.PreferenceFragment
 import android.support.v7.app.AlertDialog
 import android.view.View
 import android.widget.Button
@@ -54,48 +55,48 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
 
-            val intent = intent
-            val fragment = intent.getIntExtra("fragment",1)
-            if (fragment == 2) {
+        val intent = intent
+        val fragment = intent.getIntExtra("fragment",1)
+        if (fragment == 2) {
 
-                if (!checkConnexion()) {
-                    showFragment(NoConnexionFragment())
-                    Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
-                }
-                else {
-                    val fragment = FanFragment()
-                    showFragment(fragment)
-                }
-
-            }
-            else if (fragment == 3) {
-                if (!checkConnexion()) {
-                    showFragment(NoConnexionFragment())
-                    Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
-                }
-                else showFragment(MovieFragment())
-            }
-            else if (fragment == 4){
-                if (!checkConnexion()) {
-                    showFragment(NoConnexionFragment())
-                    Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
-                }
-                else showFragment(SeriesFragment())
-            }
-            else if (fragment == 5){
-                if (!checkConnexion()) {
-                    showFragment(NoConnexionFragment())
-                    Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
-                }
-                else showFragment(SallesFragment())
+            if (!checkConnexion()) {
+                showFragment(NoConnexionFragment())
+                Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
             }
             else {
-                if (!checkConnexion()) {
-                    showFragment(NoConnexionFragment())
-                    Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
-                }
-                else showFragment(AccueilFragment())
+                val fragment = FanFragment()
+                showFragment(fragment)
             }
+
+        }
+        else if (fragment == 3) {
+            if (!checkConnexion()) {
+                showFragment(NoConnexionFragment())
+                Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
+            }
+            else showFragment(MovieFragment())
+        }
+        else if (fragment == 4){
+            if (!checkConnexion()) {
+                showFragment(NoConnexionFragment())
+                Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
+            }
+            else showFragment(SeriesFragment())
+        }
+        else if (fragment == 5){
+            if (!checkConnexion()) {
+                showFragment(NoConnexionFragment())
+                Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
+            }
+            else showFragment(SallesFragment())
+        }
+        else {
+            if (!checkConnexion()) {
+                showFragment(NoConnexionFragment())
+                Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
+            }
+            else showFragment(AccueilFragment())
+        }
 
 
 
@@ -115,7 +116,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
-         val searchManager =  getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchManager =  getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchView = menu.findItem(R.id.app_bar_search).actionView as SearchView
         searchView.setSearchableInfo(searchManager.
                 getSearchableInfo(getComponentName()))
@@ -151,7 +152,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 supportActionBar!!.title = "Accueil"
             }
             R.id.nav_fan -> {
-                 showFragment(FanFragment())
+                showFragment(FanFragment())
 
                 supportActionBar!!.title = "Fan"
 
@@ -189,6 +190,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 showFragment(SallesFragment())
             }
 
+            R.id.nav_settings -> {
+
+
+                supportActionBar!!.title = "Settings"
+                showFragment(BlankFragment())
+                showSettingsFragment(SettingsFragment())
+            }
+
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)
@@ -203,6 +212,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit()
     }
+
+    private fun showSettingsFragment(fragment: PreferenceFragment) {
+        val fragmentManager = fragmentManager
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_main, fragment)
+                .commit()
+    }
+
     override fun onQueryTextSubmit(query: String): Boolean {
 
         val searchIntent = Intent(this, SearchResultsActivity::class.java)
@@ -246,7 +263,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-     fun checkConnexion():Boolean{
+    fun checkConnexion():Boolean{
 
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 

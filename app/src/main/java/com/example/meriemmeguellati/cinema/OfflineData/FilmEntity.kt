@@ -6,7 +6,8 @@ import android.arch.persistence.room.ColumnInfo
 
 @Entity()
 data class FilmEntity (
-        @PrimaryKey() var id: Int,
+        @PrimaryKey(autoGenerate = true)
+        @ColumnInfo(name= "id") var id: Int,
         @ColumnInfo(name= "titre") var titre: String,
         @ColumnInfo(name= "affiche") var affiche: Int,
         @ColumnInfo(name= "description") var description: String,

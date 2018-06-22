@@ -39,7 +39,7 @@ class FilmsAdapter(val context: Context, val filmsList: ArrayList<Film>): Recycl
         Glide.with(mContext)
                 .load(BuildConfig.BASE_URL_IMG + "w154" + film.posterPath)
                 .apply(RequestOptions()
-                        .placeholder(R.drawable.img2)
+                        .placeholder(R.drawable.defaultposter)
                         .centerCrop()
                 )
                 .into(holder.thumbnail)
