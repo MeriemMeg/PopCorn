@@ -173,6 +173,12 @@ class FicheFilmActivity : AppCompatActivity() {
         return resID
     }*/
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if (apiCall != null) apiCall!!.cancel()
+
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_film, menu)
@@ -348,6 +354,8 @@ class FicheFilmActivity : AppCompatActivity() {
         }*/
     }
 
+
+
     fun initNavigationDrawer() {
         //views
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
@@ -402,7 +410,7 @@ class FicheFilmActivity : AppCompatActivity() {
                     for (person in cast!!){
                         p = Personne(person?.name?:"Aucun Nom", "12/2/1978", R.drawable.jenniferlawrence, R.drawable.jenniferlawrence, "biooooooooooooographie")
                         if(person.profile_path != null )p.profil = person.profile_path!!
-                        p.id = person?.cast_id?:0
+                        p.id = person?.id?:0
                         personnesLiees.add(p)
                     }
 
@@ -530,6 +538,7 @@ class FicheFilmActivity : AppCompatActivity() {
 
 
             }
+
         }.execute()
 
 

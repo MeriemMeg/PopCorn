@@ -27,6 +27,7 @@ import android.widget.SearchView
 import android.widget.Toast
 import com.example.meriemmeguellati.cinema.Adapters.CommentsFragment
 import com.example.meriemmeguellati.cinema.Model.Film
+import com.example.meriemmeguellati.cinema.R.id.drawer_layout
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener ,SearchView.OnQueryTextListener{

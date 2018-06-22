@@ -19,7 +19,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.meriemmeguellati.cinema.*
 import com.example.meriemmeguellati.cinema.APIresponses.*
 import com.example.meriemmeguellati.cinema.Adapters.*
-import com.example.meriemmeguellati.cinema.Data.Data
 import com.example.meriemmeguellati.cinema.Model.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -105,6 +104,15 @@ class FicheSerieActivity : AppCompatActivity() {
         }
 
 
+
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (apiCall != null) apiCall!!.cancel()
+        if(apiCallSeasons != null) apiCallSeasons!!.cancel()
+        if(apiCallComments != null) apiCallComments!!.cancel()
 
 
     }
@@ -226,8 +234,6 @@ class FicheSerieActivity : AppCompatActivity() {
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
 
         val navDrawerHelper =  NavDrawerHelper(this);
-        // val data = Data(resources)
-        // data.createData()
         if (this.serie.estSuivi) navDrawerHelper.setFanSeries(this.serie)
         navDrawerHelper.initNav(drawerLayout, navigationView, false);
     }

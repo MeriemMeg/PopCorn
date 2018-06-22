@@ -6,43 +6,39 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.example.meriemmeguellati.cinema.Adapters.RecyclerViewFilmLiesAdapter
-import com.example.meriemmeguellati.cinema.Adapters.RecyclerViewSaisonAdapter
 import com.example.meriemmeguellati.cinema.R
-import android.net.Uri
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.AlertDialog
-import android.util.Log
 import android.view.*
 import android.widget.*
-import android.view.MotionEvent
-import android.view.View.OnTouchListener
-import com.example.meriemmeguellati.cinema.APImoviesCall
-import com.example.meriemmeguellati.cinema.APIresponses.CreditsResponse
-import com.example.meriemmeguellati.cinema.APIresponses.MovieResponse
-import com.example.meriemmeguellati.cinema.APIresponses.NowPlayingResponse
-import com.example.meriemmeguellati.cinema.APIresponses.ReviewsResponse
-import com.example.meriemmeguellati.cinema.Adapters.CommentsFragment
-import com.example.meriemmeguellati.cinema.Adapters.RecyclerViewPersonnesAdapter
-import com.example.meriemmeguellati.cinema.Data.Data
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.example.meriemmeguellati.cinema.APIpersonnesCall
+import com.example.meriemmeguellati.cinema.APIresponses.*
+import com.example.meriemmeguellati.cinema.BuildConfig
 import com.example.meriemmeguellati.cinema.Model.*
 import com.example.meriemmeguellati.cinema.NavDrawerHelper
 import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class FichePersonnesActivity : AppCompatActivity() {
 
-    var isCommentsShown : Boolean = false
-    lateinit var data : Data
+
     lateinit var more : ImageButton
     lateinit var showComments : TextView
     lateinit var personne : Personne
-    private var apiCall: Call<MovieResponse>? = null
-    private  var apiCallPersons : Call<CreditsResponse>? = null
-    private  var apiCallComments : Call<ReviewsResponse>? = null
-    private val apiUser = APImoviesCall()
+    private var apiCallPersons: Call<PersonneCastResponse>? = null
+    private  var apiCallDetails : Call<PersonDetailsResponse>? = null
+   private  var apiCallComments : Call<ReviewsResponse>? = null
+    private val apiUser = APIpersonnesCall()
+    lateinit var naissance :TextView
+    lateinit var description :TextView
+    lateinit var film_liées_recycler_view : RecyclerView
+    lateinit var filmographieAdapter : RecyclerViewFilmLiesAdapter
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,99 +53,44 @@ class FichePersonnesActivity : AppCompatActivity() {
         val intent = intent
         personne = intent.getSerializableExtra("Personne") as Personne
 
-        loadPersonneDetails()
-
-
         val nomActeur = findViewById<TextView>(R.id.nomActeur)
         nomActeur.text = personne.nom
 
-        val naissance = findViewById<TextView>(R.id.bearthday)
-        naissance.text = personne.naissance
+        naissance = findViewById<TextView>(R.id.bearthday)
 
+        val backdrop = findViewById<ImageView>(R.id.profileImage)
 
 
         val background = findViewById<FrameLayout>(R.id.film_background)
         background.setBackgroundResource(personne.photo)
-      //  var videoView = findViewById<VideoView>(R.id.videoView)
+        Glide.with(baseContext)
+                .load(BuildConfig.BASE_URL_IMG + "w300" + personne.profil)
+                .apply(RequestOptions()
+                        .placeholder(R.drawable.revenge)
+                        .centerCrop()
+                )
+                .into(backdrop)
 
+       description = findViewById<TextView>(R.id.film_description)
 
-        // Set the media controller buttons
+        loadPersonneDetails(personne.id)
 
-        //val mediaController = MediaController(this)
+        film_liées_recycler_view = findViewById<RecyclerView>(R.id.filmgraphie)
 
-        // Set the videoView that acts as the anchor for the MediaController.
+        loadFilmography(personne.id)
 
-      //  mediaController?.setAnchorView(videoView)
+    }
 
-        // Set MediaController for VideoView
-        //  videoView.setMediaController(mediaController)
-
-
-
-
-
-        val description = findViewById<TextView>(R.id.film_description)
-        description.text = personne.biographie
-
-
-
-        this.data = Data(resources)
-        this.data.createComments()
-        this.showComments = findViewById<TextView>(R.id.nb_comments)
-        this.showComments.text = "Commentaires (4)"
-        this.more = findViewById<ImageButton>(R.id.more)
-
-
-
-        val film_liées_recycler_view = findViewById<RecyclerView>(R.id.filmgraphie)
-
-        film_liées_recycler_view.setHasFixedSize(true)
-        //
-        val adapter2 = RecyclerViewFilmLiesAdapter(this, personne.filmographie)
-
-        film_liées_recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-
-        film_liées_recycler_view.adapter = adapter2
-
-        val showComments = findViewById<TextView>(R.id.nb_comments)
-        showComments.text = "Commentaires (4)"
-
-        val more = findViewById<ImageButton>(R.id.more)
-        initNavigationDrawer()
-        //évènements du Click
-        more.setOnClickListener {
-            if(this.isCommentsShown ==false) {
-                val fragment =  CommentsFragment()
-                val bundle = Bundle()
-                for (i in 0..(this.data.commentaire.size-1)){
-                    bundle.putSerializable("commentaire"+i.toString(),this.data.commentaire[i])
-                }
-                bundle.putInt("size",this.data.commentaire.size)
-
-                fragment.setArguments(bundle)
-                showFragment(fragment)
-                this.more.setImageResource(R.drawable.ic_expand_less_black_24dp)
-                this.isCommentsShown = true
-            }
-            else {
-                hideFragment()
-                this.more.setImageResource(R.drawable.ic_expand_more_black_24dp)
-                this.isCommentsShown = false
-            }
-
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        if (apiCallDetails != null) apiCallDetails!!.cancel()
+        if(apiCallPersons != null) apiCallPersons!!.cancel()
+        if(apiCallComments != null) apiCallComments!!.cancel()
 
 
     }
 
-    // Find ID corresponding to the name of the resource (in the directory raw).
-    fun getRawResIdByName(resName: String): Int {
-        val pkgName = this.packageName
-        // Return 0 if not found.
-        val resID = this.resources.getIdentifier(resName, "raw", pkgName)
-        Log.i("AndroidVideoView", "Res Name: $resName==> Res ID = $resID")
-        return resID
-    }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -159,12 +100,12 @@ class FichePersonnesActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_comment -> {
-            showCommenter()
+
             true
         }
 
         R.id.action_rate -> {
-            showEvaluation()
+            //showEvaluation()
             true
         }
 
@@ -190,70 +131,6 @@ class FichePersonnesActivity : AppCompatActivity() {
                 remove(getSupportFragmentManager().findFragmentById(R.id.content_comment)).commit()
     }
 
-    fun showCommenter(){
-        var mBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
-        var mView: View = layoutInflater.inflate(R.layout.commenter, null)
-
-        val commentEditText = mView.findViewById<EditText>(R.id.commentText);
-
-        mBuilder.setView(mView)
-        var dialog: AlertDialog = mBuilder.create()
-        dialog.show()
-
-        val close : Button = mView?.findViewById<Button>(R.id.closePop) as Button
-        close.setOnClickListener {view ->
-            dialog.cancel()
-        }
-
-        val commenter: Button = mView?.findViewById<Button>(R.id.commenter)
-        commenter.setOnClickListener{ view ->
-            val comment: String = commentEditText.text.toString()
-            val myComment = Comment(resources.getStringArray(R.array.comment_1)[0].toInt(),
-                    resources.getStringArray(R.array.comment_1)[1],
-                    comment, R.drawable.avatar,"Meguellati Ahmed",0)
-            this.data.commentaire.add(0,myComment)
-            this.showComments.text = "Commentaires ("+this.data.commentaire.size.toString()+")"
-            Toast.makeText(this, "votre commentaire a été ajouté" , Toast.LENGTH_LONG).show();
-            dialog.cancel()
-            if(this.isCommentsShown ) {
-                hideFragment()
-                this.more.setImageResource(R.drawable.ic_expand_more_black_24dp)
-                this.isCommentsShown = false
-            }
-
-        }
-    }
-    fun showEvaluation(){
-        var mBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
-        var mView: View = layoutInflater.inflate(R.layout.evaluation, null)
-
-        var ratingBar: RatingBar = mView.findViewById<RatingBar>(R.id.stars);
-        mBuilder.setView(mView)
-        var dialog: AlertDialog = mBuilder.create()
-        dialog.show()
-
-        val close : Button = mView?.findViewById<Button>(R.id.closePop)
-        close.setOnClickListener {view ->
-            dialog.cancel()
-        }
-
-        val evaluer : Button = mView?.findViewById<Button>(R.id.submit)
-        evaluer.setOnClickListener {view ->
-            val note: Float = ratingBar.getRating()
-            val myComment = Comment(resources.getStringArray(R.array.comment_1)[0].toInt(),
-                    resources.getStringArray(R.array.comment_1)[1],
-                    "", R.drawable.avatar,"Meguellati Ahmed",note.toInt())
-            this.data.commentaire.add(0,myComment)
-            this.showComments.text = "Commentaires ("+this.data.commentaire.size.toString()+")"
-            Toast.makeText(this, "votre évaluation a été ajoutée" , Toast.LENGTH_LONG).show();
-            if(this.isCommentsShown ) {
-                hideFragment()
-                this.more.setImageResource(R.drawable.ic_expand_more_black_24dp)
-                this.isCommentsShown = false
-            }
-            dialog.cancel()
-        }
-    }
 
     fun initNavigationDrawer() {
         //views
@@ -263,8 +140,65 @@ class FichePersonnesActivity : AppCompatActivity() {
         val navDrawerHelper =  NavDrawerHelper(this);
         navDrawerHelper.initNav(drawerLayout, navigationView, false);
     }
+    private fun loadFilmography(personneId: Int) {
+        apiCallPersons = apiUser.getService().getMoviesPerson(personneId,Language().Country())
+        apiCallPersons!!.enqueue(object : Callback<PersonneCastResponse> {
+            override fun onResponse(call: Call<PersonneCastResponse>, response: Response<PersonneCastResponse>) {
+                if (response.isSuccessful()) {
 
-    fun loadPersonneDetails(){
+                    val items = response.body()!!
+                    var film : Film
+                    for (item in items.cast!!){
+                        film = Film(item?.title?:"Aucun titre n'est disponible", R.drawable.p1, item?.overview?:"Aucune description n'est disponible", item?.posterPath?:"", R.drawable.p1)
+                        film.id = item.id
+                        film.backdrop_path = item.backdropPath?:""
+                        personne.filmographie.add(film)
+                    }
 
+                    film_liées_recycler_view.setHasFixedSize(true)
+                    //
+                    filmographieAdapter = RecyclerViewFilmLiesAdapter(baseContext, personne.filmographie)
+
+                    film_liées_recycler_view.layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.VERTICAL, false)
+
+                    film_liées_recycler_view.adapter = filmographieAdapter
+
+
+
+                } else
+                    loadFailed()
+            }
+
+            override fun onFailure(call: Call<PersonneCastResponse>, t: Throwable) {
+                loadFailed()
+            }
+        })
+    }
+
+    private fun loadPersonneDetails(personneId: Int) {
+        apiCallDetails = apiUser.getService().getDetailPerson(personneId,Language().Country())
+        apiCallDetails!!.enqueue(object : Callback<PersonDetailsResponse> {
+            override fun onResponse(call: Call<PersonDetailsResponse>, response: Response<PersonDetailsResponse>) {
+                if (response.isSuccessful()) {
+
+                    val item = response.body()
+                    personne.biographie = item?.biography?:"Aucune biographie"
+                    personne.naissance = item?.birthday?:"Aucune"
+                    naissance.text = personne.naissance
+                    description.text = personne.biographie
+
+                } else
+                    loadFailed()
+            }
+
+            override fun onFailure(call: Call<PersonDetailsResponse>, t: Throwable) {
+                loadFailed()
+            }
+        })
+    }
+
+
+    private fun loadFailed() {
+        Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
     }
 }

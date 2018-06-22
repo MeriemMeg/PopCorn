@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName
 
 class CastResponse {
 
-    @SerializedName("cast_id")
-    var cast_id: Int? = 0
+    @SerializedName("id")
+    var id: Int? = 0
 
     @SerializedName("character")
     var character: String? = null

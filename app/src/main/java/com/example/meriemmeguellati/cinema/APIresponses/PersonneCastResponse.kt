@@ -3,7 +3,7 @@ import com.google.gson.annotations.SerializedName
 
 class PersonneCastResponse {
 
-    @SerializedName("biography")
-    var biography: String? = null
+    @SerializedName("cast")
+    var cast: List<MovieResponse>? = null
 
 }

@@ -27,7 +27,6 @@ class FicheEpisodeActivity : AppCompatActivity() {
 
     var isCommentsShown : Boolean = false
     lateinit var episode : Episode
-    lateinit var data : Data
     lateinit var more : ImageButton
     lateinit var showComments : TextView
     @SuppressLint("ClickableViewAccessibility")
@@ -71,8 +70,7 @@ class FicheEpisodeActivity : AppCompatActivity() {
         icon.setImageResource(R.drawable.ic_ondemand_video_white_24dp)
 
 
-        this.data = Data(resources)
-        this.data.createComments()
+
         this.showComments = findViewById<TextView>(R.id.nb_comments)
         this.showComments.text = "Commentaires (4)"
         this.more = findViewById<ImageButton>(R.id.more)
@@ -89,7 +87,7 @@ class FicheEpisodeActivity : AppCompatActivity() {
         initNavigationDrawer()
 
         //évènements du Click
-        more.setOnClickListener {
+   /*    more.setOnClickListener {
             if(this.isCommentsShown ==false) {
                 val fragment =  CommentsFragment()
                 val bundle = Bundle()
@@ -111,7 +109,7 @@ class FicheEpisodeActivity : AppCompatActivity() {
 
         }
 
-
+    */
 
     }
 
@@ -123,6 +121,8 @@ class FicheEpisodeActivity : AppCompatActivity() {
         Log.i("AndroidVideoView", "Res Name: $resName==> Res ID = $resID")
         return resID
     }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -178,7 +178,7 @@ class FicheEpisodeActivity : AppCompatActivity() {
             dialog.cancel()
         }
 
-        val commenter: Button = mView?.findViewById<Button>(R.id.commenter)
+       /* val commenter: Button = mView?.findViewById<Button>(R.id.commenter)
         commenter.setOnClickListener{ view ->
             val comment: String = commentEditText.text.toString()
             val myComment = Comment(resources.getStringArray(R.array.comment_1)[0].toInt(),
@@ -194,7 +194,7 @@ class FicheEpisodeActivity : AppCompatActivity() {
                 this.isCommentsShown = false
             }
 
-        }
+        }*/
     }
 
 
@@ -220,7 +220,7 @@ class FicheEpisodeActivity : AppCompatActivity() {
             dialog.cancel()
         }
 
-        val evaluer : Button = mView?.findViewById<Button>(R.id.submit)
+       /* val evaluer : Button = mView?.findViewById<Button>(R.id.submit)
         evaluer.setOnClickListener {view ->
             val note: Float = ratingBar.getRating()
             val myComment = Comment(resources.getStringArray(R.array.comment_1)[0].toInt(),
@@ -235,7 +235,7 @@ class FicheEpisodeActivity : AppCompatActivity() {
                 this.isCommentsShown = false
             }
             dialog.cancel()
-        }
+        }*/
     }
     fun initNavigationDrawer() {
         //views

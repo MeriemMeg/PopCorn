@@ -7,10 +7,10 @@ import java.io.Serializable
  */
 data class Personne (
         val nom : String,
-        val naissance : String,
+        var naissance : String,
         val fiche : Int,
         val photo : Int,
-        val biographie : String
+        var biographie : String
 
 ): Serializable {
     var id : Int = 0

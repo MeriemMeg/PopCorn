@@ -10,10 +10,14 @@ interface APIpersons {
 
     // détails d'une personne
     @GET("person/{person_id}")
-    fun getDetailPerson(@Path("person_id") person_id: Int, @Query("language") language: String): Call<SerieDetailsResponse>
+    fun getDetailPerson(@Path("person_id") person_id: Int, @Query("language") language: String): Call<PersonDetailsResponse>
 
     // les films dans lesquels une personne est apparue
     @GET("person/{person_id}/movie_credits")
-    fun getMoviesPerson(@Path("person_id") person_id: Int, @Query("language") language: String): Call<MovieResponse>
+    fun getMoviesPerson(@Path("person_id") person_id: Int, @Query("language") language: String): Call<PersonneCastResponse>
+
+    //criiques d'une personne
+    @GET("movie/{movie_id}/reviews")
+    fun getComments(@Path("movie_id") movie_id: String) : Call<ReviewsResponse>
 
 }

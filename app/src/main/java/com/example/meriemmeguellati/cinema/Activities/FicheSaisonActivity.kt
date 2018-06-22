@@ -22,7 +22,6 @@ import com.example.meriemmeguellati.cinema.APISeriesCall
 import com.example.meriemmeguellati.cinema.APImoviesCall
 import com.example.meriemmeguellati.cinema.APIresponses.*
 import com.example.meriemmeguellati.cinema.Adapters.*
-import com.example.meriemmeguellati.cinema.Data.Data
 import com.example.meriemmeguellati.cinema.Model.*
 import com.example.meriemmeguellati.cinema.NavDrawerHelper
 import retrofit2.Call
@@ -127,6 +126,8 @@ class FicheSaisonActivity : AppCompatActivity() {
         }
 
 
+
+
     /*    playStop.setOnClickListener {
             videoView.start()
             //getSupportActionBar()!!.hide()
@@ -148,6 +149,15 @@ class FicheSaisonActivity : AppCompatActivity() {
         })
 
   */
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (apiCall != null) apiCall!!.cancel()
+        if(apiCallPersons != null) apiCallPersons!!.cancel()
+        if(apiCallComments != null) apiCallComments!!.cancel()
+
+
     }
 
  /*   // Find ID corresponding to the name of the resource (in the directory raw).
@@ -298,7 +308,7 @@ class FicheSaisonActivity : AppCompatActivity() {
                             for (person in item.guest_stars!!){
                                 p = Personne(person.name!!,"19/12/1983",R.drawable.jenniferlawrence,R.drawable.jenniferlawrence, person.character!!)
                                 p.profil = person.profile_path?:""
-                                p.id = person?.cast_id?:0
+                                p.id = person?.id?:0
                                 saison.personnages.add(p)
                                 PersonnesLieesAdapter = RecyclerViewPersonnesAdapter(baseContext, saison.personnages)
 
@@ -342,7 +352,7 @@ class FicheSaisonActivity : AppCompatActivity() {
                     for (person in cast!!){
                         p = Personne(person?.name?:"Aucun Nom", "12/2/1978", R.drawable.jenniferlawrence, R.drawable.jenniferlawrence, "biooooooooooooographie")
                         if(person.profile_path != null )p.profil = person.profile_path!!
-                        p.id = person?.cast_id?:0
+                        p.id = person?.id?:0
                         saison.personnages.add(p)
                     }
 
