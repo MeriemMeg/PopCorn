@@ -2,25 +2,21 @@
 package com.example.meriemmeguellati.cinema.Activities
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.example.meriemmeguellati.cinema.R
-import android.net.Uri
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AlertDialog
-import android.util.Log
 import android.view.*
 import android.widget.*
-import android.view.MotionEvent
-import android.view.View.OnTouchListener
-import com.example.meriemmeguellati.cinema.APISeriesCall
-import com.example.meriemmeguellati.cinema.APImoviesCall
-import com.example.meriemmeguellati.cinema.APIresponses.*
+import com.example.meriemmeguellati.cinema.TMDBapi.RetrofitCalls.APISeriesCall
+import com.example.meriemmeguellati.cinema.TMDBapi.APIresponses.*
 import com.example.meriemmeguellati.cinema.Adapters.*
 import com.example.meriemmeguellati.cinema.Model.*
 import com.example.meriemmeguellati.cinema.NavDrawerHelper
@@ -92,11 +88,11 @@ class FicheSaisonActivity : AppCompatActivity() {
 
         personnesLieesRecycler_view = findViewById<RecyclerView>(R.id.personnes_associees)
 
-        loadAssociatedPersons(saison.id)
+        loadAssociatedPersons(saison.id,this)
 
         episodes_recycler_view = findViewById<RecyclerView>(R.id.film_lies)
 
-        loadEpisodes(saison.id)
+        loadEpisodes(saison.id,this)
 
         this.showComments = findViewById<TextView>(R.id.nb_comments)
         this.showComments.text = "Commentaires (4)"
@@ -287,7 +283,7 @@ class FicheSaisonActivity : AppCompatActivity() {
     }
 
 
-    private fun loadEpisodes(serieId: Int) {
+    private fun loadEpisodes(serieId: Int,context : Context) {
         apiCall = apiUser.getService().getSeasonDetails(serieId, saison.num)
         apiCall!!.enqueue(object : Callback<SeasonDetailsResponse> {
             override fun onResponse(call: Call<SeasonDetailsResponse>, response: Response<SeasonDetailsResponse>) {
@@ -310,9 +306,9 @@ class FicheSaisonActivity : AppCompatActivity() {
                                 p.profil = person.profile_path?:""
                                 p.id = person?.id?:0
                                 saison.personnages.add(p)
-                                PersonnesLieesAdapter = RecyclerViewPersonnesAdapter(baseContext, saison.personnages)
+                                PersonnesLieesAdapter = RecyclerViewPersonnesAdapter(context, saison.personnages)
 
-                                personnesLieesRecycler_view.layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.VERTICAL, false)
+                                personnesLieesRecycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
                                 personnesLieesRecycler_view.adapter = PersonnesLieesAdapter
                             }
@@ -324,9 +320,9 @@ class FicheSaisonActivity : AppCompatActivity() {
                     //
                     episodes_recycler_view.setHasFixedSize(true)
                     //
-                    episodesAdapter = RecyclerViewEpisodesAdapter(baseContext, saison.episodes)
+                    episodesAdapter = RecyclerViewEpisodesAdapter(context, saison.episodes)
 
-                    episodes_recycler_view.layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.VERTICAL, false)
+                    episodes_recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
                     episodes_recycler_view.adapter = episodesAdapter
 
@@ -340,7 +336,7 @@ class FicheSaisonActivity : AppCompatActivity() {
         })
     }
 
-    private fun loadAssociatedPersons(serieId: Int) {
+    private fun loadAssociatedPersons(serieId: Int,context : Context) {
         apiCallPersons = apiUser.getService().getAssociatedPersons(serieId)
         apiCallPersons!!.enqueue(object : Callback<CreditsResponse> {
             override fun onResponse(call: Call<CreditsResponse>, response: Response<CreditsResponse>) {
@@ -356,9 +352,9 @@ class FicheSaisonActivity : AppCompatActivity() {
                         saison.personnages.add(p)
                     }
 
-                    PersonnesLieesAdapter = RecyclerViewPersonnesAdapter(baseContext, saison.personnages)
+                    PersonnesLieesAdapter = RecyclerViewPersonnesAdapter(context, saison.personnages)
 
-                    personnesLieesRecycler_view.layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.VERTICAL, false)
+                    personnesLieesRecycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
                     personnesLieesRecycler_view.adapter = PersonnesLieesAdapter
 

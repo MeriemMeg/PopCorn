@@ -17,7 +17,7 @@ import java.io.Serializable
     var posterPath : String = ""
     var backdrop_path : String = ""
  var id : Int = 0
-    var networks : List<com.example.meriemmeguellati.cinema.APIresponses.Network>? = null
+    var networks : List<com.example.meriemmeguellati.cinema.TMDBapi.APIresponses.Network>? = null
  var estSuivi : Boolean = false
  var saisons : ArrayList<Saison> =  ArrayList<Saison>()
  var seriesLiees : ArrayList<Serie> =  ArrayList<Serie>()

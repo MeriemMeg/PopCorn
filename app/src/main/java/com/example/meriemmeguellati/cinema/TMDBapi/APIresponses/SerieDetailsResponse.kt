@@ -1,4 +1,4 @@
-package com.example.meriemmeguellati.cinema.APIresponses
+package com.example.meriemmeguellati.cinema.TMDBapi.APIresponses
 
 
 import com.google.gson.annotations.SerializedName

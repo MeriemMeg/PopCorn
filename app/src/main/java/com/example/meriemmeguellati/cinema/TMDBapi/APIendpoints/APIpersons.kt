@@ -1,6 +1,6 @@
-package com.example.meriemmeguellati.cinema
+package com.example.meriemmeguellati.cinema.TMDBapi.APIendpoints
 
-import com.example.meriemmeguellati.cinema.APIresponses.*
+import com.example.meriemmeguellati.cinema.TMDBapi.APIresponses.*
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

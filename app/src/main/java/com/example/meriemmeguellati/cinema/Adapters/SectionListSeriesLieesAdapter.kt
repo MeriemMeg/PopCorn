@@ -3,6 +3,7 @@ package com.example.meriemmeguellati.cinema.Adapters
 /**
  * Created by Meriem Meguellati on 03/04/2018.
  */
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.support.v7.widget.RecyclerView
@@ -49,6 +50,9 @@ class SectionListSeriesLieesAdapter(private val mContext: Context, private val i
             val intent = Intent(mContext, FicheSerieActivity::class.java)
             intent.putExtra("serie", singleItem)
             mContext.startActivity(intent)
+            val activity = mContext as Activity
+            activity.finish()
+
         }
 
 

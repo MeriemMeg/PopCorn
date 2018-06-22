@@ -14,7 +14,7 @@ import java.io.Serializable
         val trailer : String
 
 ) : Serializable{
-    var networks : List<com.example.meriemmeguellati.cinema.APIresponses.Network>? = null
+    var networks : List<com.example.meriemmeguellati.cinema.TMDBapi.APIresponses.Network>? = null
     var description : String = ""
     var id :Int = 0
     var still_path :String = ""

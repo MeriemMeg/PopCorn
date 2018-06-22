@@ -1,6 +1,7 @@
 package com.example.meriemmeguellati.cinema.Activities
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -15,8 +16,8 @@ import android.view.*
 import android.widget.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.example.meriemmeguellati.cinema.APIpersonnesCall
-import com.example.meriemmeguellati.cinema.APIresponses.*
+import com.example.meriemmeguellati.cinema.TMDBapi.RetrofitCalls.APIpersonnesCall
+import com.example.meriemmeguellati.cinema.TMDBapi.APIresponses.*
 import com.example.meriemmeguellati.cinema.BuildConfig
 import com.example.meriemmeguellati.cinema.Model.*
 import com.example.meriemmeguellati.cinema.NavDrawerHelper
@@ -77,7 +78,7 @@ class FichePersonnesActivity : AppCompatActivity() {
 
         film_liées_recycler_view = findViewById<RecyclerView>(R.id.filmgraphie)
 
-        loadFilmography(personne.id)
+        loadFilmography(personne.id,this)
 
     }
 
@@ -140,7 +141,7 @@ class FichePersonnesActivity : AppCompatActivity() {
         val navDrawerHelper =  NavDrawerHelper(this);
         navDrawerHelper.initNav(drawerLayout, navigationView, false);
     }
-    private fun loadFilmography(personneId: Int) {
+    private fun loadFilmography(personneId: Int,context : Context) {
         apiCallPersons = apiUser.getService().getMoviesPerson(personneId,Language().Country())
         apiCallPersons!!.enqueue(object : Callback<PersonneCastResponse> {
             override fun onResponse(call: Call<PersonneCastResponse>, response: Response<PersonneCastResponse>) {
@@ -157,9 +158,9 @@ class FichePersonnesActivity : AppCompatActivity() {
 
                     film_liées_recycler_view.setHasFixedSize(true)
                     //
-                    filmographieAdapter = RecyclerViewFilmLiesAdapter(baseContext, personne.filmographie)
+                    filmographieAdapter = RecyclerViewFilmLiesAdapter(context, personne.filmographie)
 
-                    film_liées_recycler_view.layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.VERTICAL, false)
+                    film_liées_recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
                     film_liées_recycler_view.adapter = filmographieAdapter
 

@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v7.widget.CardView
 import android.view.ViewGroup
-import com.example.meriemmeguellati.cinema.APIresponses.MovieResponse
+import com.example.meriemmeguellati.cinema.TMDBapi.APIresponses.MovieResponse
 import com.example.meriemmeguellati.cinema.Fragments.FilmCardFragment
 import com.example.meriemmeguellati.cinema.Model.Film
 import com.example.meriemmeguellati.cinema.R

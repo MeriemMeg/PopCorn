@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
-import com.example.meriemmeguellati.cinema.APISeriesCall
-import com.example.meriemmeguellati.cinema.APIresponses.Language
-import com.example.meriemmeguellati.cinema.APIresponses.NowPlayingResponse
-import com.example.meriemmeguellati.cinema.APImoviesCall
-import com.example.meriemmeguellati.cinema.APIresponses.LatestSeriesResponse
+import com.example.meriemmeguellati.cinema.TMDBapi.RetrofitCalls.APISeriesCall
+import com.example.meriemmeguellati.cinema.TMDBapi.APIresponses.Language
+import com.example.meriemmeguellati.cinema.TMDBapi.APIresponses.NowPlayingResponse
+import com.example.meriemmeguellati.cinema.TMDBapi.RetrofitCalls.APImoviesCall
+import com.example.meriemmeguellati.cinema.TMDBapi.APIresponses.LatestSeriesResponse
 import com.example.meriemmeguellati.cinema.Animation.ShadowTransformer
 import com.example.meriemmeguellati.cinema.Activities.MainActivity
 import com.example.meriemmeguellati.cinema.Adapters.LatestSeriesCardFragmentPagerAdapter

@@ -1,6 +1,6 @@
-package com.example.meriemmeguellati.cinema
+package com.example.meriemmeguellati.cinema.TMDBapi.APIendpoints
 
-import com.example.meriemmeguellati.cinema.APIresponses.*
+import com.example.meriemmeguellati.cinema.TMDBapi.APIresponses.*
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -11,6 +11,10 @@ interface APImovies {
     //films en cours de projection
     @GET("movie/now_playing")
      fun getNowPlayingMovie(@Query("language") language: String): Call<NowPlayingResponse>
+
+    //films en cours de projection
+    @GET("movie/popular")
+    fun getPopularMovie(@Query("language") language: String): Call<NowPlayingResponse>
 
     // détails d'un film
     @GET("movie/{movie_id}")

@@ -9,7 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.meriemmeguellati.cinema.Activities.FicheFilmActivity
+import com.example.meriemmeguellati.cinema.BuildConfig
 import com.example.meriemmeguellati.cinema.Model.Film
 import com.example.meriemmeguellati.cinema.R
 /**
@@ -32,7 +35,14 @@ class FilmsAdapter(val context: Context, val filmsList: ArrayList<Film>): Recycl
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val film: Film = filmsList[position]
         holder.titre.text = film.titre
-        holder.thumbnail.setImageResource(film.affiche)
+
+        Glide.with(mContext)
+                .load(BuildConfig.BASE_URL_IMG + "w154" + film.posterPath)
+                .apply(RequestOptions()
+                        .placeholder(R.drawable.img2)
+                        .centerCrop()
+                )
+                .into(holder.thumbnail)
         holder.thumbnail.setOnClickListener {
             val intent = Intent(mContext, FicheFilmActivity::class.java)
             intent.putExtra("film", film)

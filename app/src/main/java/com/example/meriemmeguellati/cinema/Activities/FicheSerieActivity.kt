@@ -1,5 +1,6 @@
 package com.example.meriemmeguellati.cinema.Activities
 
+import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
@@ -17,9 +18,10 @@ import android.widget.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.meriemmeguellati.cinema.*
-import com.example.meriemmeguellati.cinema.APIresponses.*
+import com.example.meriemmeguellati.cinema.TMDBapi.APIresponses.*
 import com.example.meriemmeguellati.cinema.Adapters.*
 import com.example.meriemmeguellati.cinema.Model.*
+import com.example.meriemmeguellati.cinema.TMDBapi.RetrofitCalls.APISeriesCall
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -57,10 +59,10 @@ class FicheSerieActivity : AppCompatActivity() {
         this.serie = intent.getSerializableExtra("serie") as Serie
 
         series_liées_recycler_view = findViewById<RecyclerView>(R.id.series_liees)
-        loadSimilarSeries(this.serie.id)
+        loadSimilarSeries(this.serie.id,this)
 
         saisonsRecycler_view = findViewById<RecyclerView>(R.id.saisons)
-        loadSaisons(this.serie.id)
+        loadSaisons(this.serie.id,this)
 
 
 
@@ -239,7 +241,7 @@ class FicheSerieActivity : AppCompatActivity() {
     }
 
 
-    private fun loadSimilarSeries(serie_item: Int) {
+    private fun loadSimilarSeries(serie_item: Int,context: Context) {
         apiCall = apiUser.getService().getSimilarSeries(serie_item, Language().Country())
         apiCall!!.enqueue(object : Callback<LatestSeriesResponse> {
             override fun onResponse(call: Call<LatestSeriesResponse>, response: Response<LatestSeriesResponse>) {
@@ -256,8 +258,8 @@ class FicheSerieActivity : AppCompatActivity() {
                     }
 
                     series_liées_recycler_view.setHasFixedSize(true)
-                    seriesLiesAdapter = RecyclerViewSeriesLieesAdapter(baseContext, serie.seriesLiees)
-                    series_liées_recycler_view.layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.VERTICAL, false)
+                    seriesLiesAdapter = RecyclerViewSeriesLieesAdapter(context, serie.seriesLiees)
+                    series_liées_recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
                     series_liées_recycler_view.adapter = seriesLiesAdapter
                     //
@@ -273,7 +275,7 @@ class FicheSerieActivity : AppCompatActivity() {
         })
     }
 
-    private fun loadSaisons(serieId: Int) {
+    private fun loadSaisons(serieId: Int,context : Context) {
         apiCallSeasons = apiUser.getService().getDetailSerie(serieId,Language().Country())
         apiCallSeasons!!.enqueue(object : Callback<SerieDetailsResponse> {
             override fun onResponse(call: Call<SerieDetailsResponse>, response: Response<SerieDetailsResponse>) {
@@ -300,9 +302,9 @@ class FicheSerieActivity : AppCompatActivity() {
                     }
 
                     saisonsRecycler_view.setHasFixedSize(true)
-                    saisonsAdapter = RecyclerViewSaisonAdapter(baseContext, serie.saisons)
+                    saisonsAdapter = RecyclerViewSaisonAdapter(context, serie.saisons)
 
-                    saisonsRecycler_view.layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.VERTICAL, false)
+                    saisonsRecycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
                     saisonsRecycler_view.adapter = saisonsAdapter
 

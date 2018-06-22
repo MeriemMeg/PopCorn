@@ -1,11 +1,10 @@
-package com.example.meriemmeguellati.cinema
+package com.example.meriemmeguellati.cinema.TMDBapi.RetrofitCalls
 
-import okhttp3.Interceptor
+import com.example.meriemmeguellati.cinema.BuildConfig
+import com.example.meriemmeguellati.cinema.TMDBapi.APIendpoints.APIpersons
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.IOException
 
 class APIpersonnesCall {
 

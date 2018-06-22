@@ -71,11 +71,6 @@ class FicheEpisodeActivity : AppCompatActivity() {
 
 
 
-        this.showComments = findViewById<TextView>(R.id.nb_comments)
-        this.showComments.text = "Commentaires (4)"
-        this.more = findViewById<ImageButton>(R.id.more)
-
-
         val my_recycler_view = findViewById<RecyclerView>(R.id.filmgraphie)
         my_recycler_view.setHasFixedSize(true)
 

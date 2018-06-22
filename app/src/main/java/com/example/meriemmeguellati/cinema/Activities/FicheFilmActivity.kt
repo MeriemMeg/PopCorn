@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.example.meriemmeguellati.cinema.R
-import android.net.Uri
 import android.os.AsyncTask
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
@@ -16,14 +15,12 @@ import android.support.v4.app.FragmentTransaction
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.GridLayoutManager
-import android.util.Log
 import android.view.*
 import android.widget.*
-import android.view.MotionEvent
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.example.meriemmeguellati.cinema.APIresponses.*
-import com.example.meriemmeguellati.cinema.APImoviesCall
+import com.example.meriemmeguellati.cinema.TMDBapi.APIresponses.*
+import com.example.meriemmeguellati.cinema.TMDBapi.RetrofitCalls.APImoviesCall
 import com.example.meriemmeguellati.cinema.Adapters.*
 import com.example.meriemmeguellati.cinema.BuildConfig
 import com.example.meriemmeguellati.cinema.Model.*
@@ -113,11 +110,11 @@ class FicheFilmActivity : AppCompatActivity() {
         this.more = findViewById<ImageButton>(R.id.more)
         personnesLieesRecycler_view = findViewById<RecyclerView>(R.id.personnes_associees)
         personnesLieesRecycler_view.setHasFixedSize(true)
-        loadAssociatedPersons(film.id.toString())
+        loadAssociatedPersons(film.id.toString(),this)
         loadComments(film.id.toString())
         film_liées_recycler_view = findViewById<RecyclerView>(R.id.film_lies)
         film_liées_recycler_view.setHasFixedSize(true)
-        loadSimilarMovies(film.id.toString())
+        loadSimilarMovies(film.id.toString(),this)
         initNavigationDrawer()
 
         //évènements du Click
@@ -365,7 +362,7 @@ class FicheFilmActivity : AppCompatActivity() {
         navDrawerHelper.initNav(drawerLayout, navigationView, false);
     }
 
-    private fun loadSimilarMovies(movie_item: String) {
+    private fun loadSimilarMovies(movie_item: String,contect : Context) {
         apiCall = apiUser.getService().getSimilarmovies(movie_item, Language().Country())
         apiCall!!.enqueue(object : Callback<NowPlayingResponse> {
             override fun onResponse(call: Call<NowPlayingResponse>, response: Response<NowPlayingResponse>) {
@@ -381,9 +378,9 @@ class FicheFilmActivity : AppCompatActivity() {
                     }
 
                     //
-                    filmsLiesAdapter = RecyclerViewFilmLiesAdapter(baseContext, filmsLiees)
+                    filmsLiesAdapter = RecyclerViewFilmLiesAdapter(contect, filmsLiees)
 
-                    film_liées_recycler_view.layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.VERTICAL, false)
+                    film_liées_recycler_view.layoutManager = LinearLayoutManager(contect, LinearLayoutManager.VERTICAL, false)
 
                     film_liées_recycler_view.adapter = filmsLiesAdapter
 
@@ -397,7 +394,7 @@ class FicheFilmActivity : AppCompatActivity() {
         })
     }
 
-    private fun loadAssociatedPersons(movie_item: String) {
+    private fun loadAssociatedPersons(movie_item: String,context: Context) {
         apiCallPersons = apiUser.getService().getAssociatedPersons(movie_item)
         apiCallPersons!!.enqueue(object : Callback<CreditsResponse> {
             override fun onResponse(call: Call<CreditsResponse>, response: Response<CreditsResponse>) {
@@ -414,9 +411,9 @@ class FicheFilmActivity : AppCompatActivity() {
                         personnesLiees.add(p)
                     }
 
-                    PersonnesLieesAdapter = RecyclerViewPersonnesAdapter(baseContext, personnesLiees)
+                    PersonnesLieesAdapter = RecyclerViewPersonnesAdapter(context, personnesLiees)
 
-                    personnesLieesRecycler_view.layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.VERTICAL, false)
+                    personnesLieesRecycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
                     personnesLieesRecycler_view.adapter = PersonnesLieesAdapter
 
