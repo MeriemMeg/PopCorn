@@ -43,7 +43,7 @@ class FilmCardFragment : Fragment() {
 
         //filmPoster.setImageResource(this.film.affiche)
         Glide.with(getContext())
-                .load(BuildConfig.BASE_URL_IMG + "w154" + this.film.posterPath)
+                .load(BuildConfig.BASE_URL_IMG + "w500" + this.film.posterPath)
                 .apply(RequestOptions()
                         .placeholder(R.drawable.housetrailer)
                         .centerCrop()

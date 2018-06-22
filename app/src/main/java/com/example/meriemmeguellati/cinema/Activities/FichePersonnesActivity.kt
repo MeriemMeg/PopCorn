@@ -12,10 +12,12 @@ import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.widget.DrawerLayout
+import android.support.v7.app.AlertDialog
 import android.view.*
 import android.widget.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.meriemmeguellati.cinema.Adapters.CommentsFragment
 import com.example.meriemmeguellati.cinema.TMDBapi.RetrofitCalls.APIpersonnesCall
 import com.example.meriemmeguellati.cinema.TMDBapi.APIresponses.*
 import com.example.meriemmeguellati.cinema.BuildConfig
@@ -29,6 +31,7 @@ import retrofit2.Response
 class FichePersonnesActivity : AppCompatActivity() {
 
 
+    var isCommentsShown : Boolean = false
     lateinit var more : ImageButton
     lateinit var showComments : TextView
     lateinit var personne : Personne
@@ -40,6 +43,7 @@ class FichePersonnesActivity : AppCompatActivity() {
     lateinit var description :TextView
     lateinit var film_liées_recycler_view : RecyclerView
     lateinit var filmographieAdapter : RecyclerViewFilmLiesAdapter
+    var comments = ArrayList<Comment>()
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,6 +93,34 @@ class FichePersonnesActivity : AppCompatActivity() {
 
         loadFilmography(personne.id,this)
 
+        this.showComments = findViewById<TextView>(R.id.nb_comments)
+        this.showComments.text = "Commentaires (0)"
+        this.more = findViewById<ImageButton>(R.id.more)
+        initNavigationDrawer()
+        //évènements du Click
+        more.setOnClickListener {
+            if(this.isCommentsShown ==false) {
+                val fragment =  CommentsFragment()
+                val bundle = Bundle()
+                for (i in 0..(this.comments.size-1)){
+                    bundle.putSerializable("commentaire"+i.toString(),this.comments[i])
+                }
+                bundle.putInt("size",this.comments.size)
+
+                fragment.setArguments(bundle)
+                showFragment(fragment)
+                this.more.setImageResource(R.drawable.ic_expand_less_black_24dp)
+                this.isCommentsShown = true
+            }
+            else {
+                hideFragment()
+                this.more.setImageResource(R.drawable.ic_expand_more_black_24dp)
+                this.isCommentsShown = false
+            }
+
+        }
+
+
     }
 
     override fun onDestroy() {
@@ -110,12 +142,12 @@ class FichePersonnesActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_comment -> {
-
+            showCommenter()
             true
         }
 
         R.id.action_rate -> {
-            //showEvaluation()
+            showEvaluation()
             true
         }
 
@@ -141,7 +173,71 @@ class FichePersonnesActivity : AppCompatActivity() {
                 remove(getSupportFragmentManager().findFragmentById(R.id.content_comment)).commit()
     }
 
+    fun showCommenter(){
+        var mBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
+        var mView: View = layoutInflater.inflate(R.layout.commenter, null)
 
+        val commentEditText = mView.findViewById<EditText>(R.id.commentText);
+
+        mBuilder.setView(mView)
+        var dialog: AlertDialog = mBuilder.create()
+        dialog.show()
+
+        val close : Button = mView?.findViewById<Button>(R.id.closePop) as Button
+        close.setOnClickListener {view ->
+            dialog.cancel()
+        }
+
+        val commenter: Button = mView?.findViewById<Button>(R.id.commenter)
+        commenter.setOnClickListener{ view ->
+            val comment: String = commentEditText.text.toString()
+            val myComment = Comment(resources.getStringArray(R.array.comment_1)[0].toInt(),
+                    resources.getStringArray(R.array.comment_1)[1],
+                    comment, R.drawable.avatar,"Meguellati Ahmed",0)
+            comments.add(0,myComment)
+            this.showComments.text = "Commentaires ("+comments.size.toString()+")"
+            Toast.makeText(this, "votre commentaire a été ajouté" , Toast.LENGTH_LONG).show();
+            dialog.cancel()
+            if(this.isCommentsShown ) {
+                hideFragment()
+                this.more.setImageResource(R.drawable.ic_expand_more_black_24dp)
+                this.isCommentsShown = false
+            }
+
+        }
+    }
+
+    fun showEvaluation(){
+        var mBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
+        var mView: View = layoutInflater.inflate(R.layout.evaluation, null)
+
+        var ratingBar: RatingBar = mView.findViewById<RatingBar>(R.id.stars);
+        mBuilder.setView(mView)
+        var dialog: AlertDialog = mBuilder.create()
+        dialog.show()
+
+        val close : Button = mView?.findViewById<Button>(R.id.closePop)
+        close.setOnClickListener {view ->
+            dialog.cancel()
+        }
+
+        val evaluer : Button = mView?.findViewById<Button>(R.id.submit)
+        evaluer.setOnClickListener {view ->
+            val note: Float = ratingBar.getRating()
+            val myComment = Comment(resources.getStringArray(R.array.comment_1)[0].toInt(),
+                    resources.getStringArray(R.array.comment_1)[1],
+                    "", R.drawable.avatar,"Meguellati Ahmed",note.toInt())
+            comments.add(0,myComment)
+            this.showComments.text = "Commentaires ("+comments.size.toString()+")"
+            Toast.makeText(this, "votre évaluation a été ajoutée" , Toast.LENGTH_LONG).show();
+            if(this.isCommentsShown ) {
+                hideFragment()
+                this.more.setImageResource(R.drawable.ic_expand_more_black_24dp)
+                this.isCommentsShown = false
+            }
+            dialog.cancel()
+        }
+    }
     fun initNavigationDrawer() {
         //views
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
