@@ -26,14 +26,14 @@
             android:id="@+id/film_background"
             android:layout_width="match_parent"
             android:layout_height="229dp"
-            android:background="@drawable/img20">
+            android:background="@drawable/defaultfiche">
 
 
             <ImageView
                 android:id="@+id/backdrop_film"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/once" />
+                app:srcCompat="@drawable/defaultfiche" />
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -65,7 +65,7 @@
                     app:layout_constraintEnd_toEndOf="@+id/videoView"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/heart" />
+                    app:srcCompat="@drawable/defaultfiche" />
 
                 <TextView
                     android:id="@+id/film_name"

@@ -45,7 +45,7 @@ class SectionListEpisodesAdapter(private val mContext: Context, private val item
         Glide.with(mContext)
                 .load(BuildConfig.BASE_URL_IMG + "w154" + singleItem.still_path)
                 .apply(RequestOptions()
-                        .placeholder(R.drawable.img2)
+                        .placeholder(R.drawable.defaultposter)
                         .centerCrop()
                 )
                 .into(holder.itemImage)

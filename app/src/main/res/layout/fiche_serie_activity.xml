@@ -25,14 +25,14 @@
             android:id="@+id/affiche"
             android:layout_width="match_parent"
             android:layout_height="229dp"
-            android:background="@drawable/once_upon_a_time">
+            android:background="@drawable/defaultfiche">
 
 
             <ImageView
                 android:id="@+id/backdrop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/revenge" />
+                app:srcCompat="@drawable/defaultfiche" />
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"

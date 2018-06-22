@@ -42,7 +42,7 @@ class SectionListSeriesLieesAdapter(private val mContext: Context, private val i
         Glide.with(mContext)
                 .load(BuildConfig.BASE_URL_IMG + "w154" + singleItem.posterPath)
                 .apply(RequestOptions()
-                        .placeholder(R.drawable.img2)
+                        .placeholder(R.drawable.defaultposter)
                         .centerCrop()
                 )
                 .into(holder.itemImage)

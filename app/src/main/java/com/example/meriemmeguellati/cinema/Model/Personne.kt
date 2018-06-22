@@ -13,6 +13,7 @@ data class Personne (
         var biographie : String
 
 ): Serializable {
+    var gender : Int = 1
     var id : Int = 0
     var profil : String = ""
     val filmographie : ArrayList<Film> = ArrayList<Film> ()

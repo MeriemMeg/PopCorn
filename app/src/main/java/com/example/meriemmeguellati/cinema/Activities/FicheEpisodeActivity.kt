@@ -50,7 +50,7 @@ class FicheEpisodeActivity : AppCompatActivity() {
 
 
         val background = findViewById<FrameLayout>(R.id.film_background)
-        background.setBackgroundResource(this.episode.poster)
+      //  background.setBackgroundResource(this.episode.poster)
         var videoView = findViewById<VideoView>(R.id.videoView)
 
 

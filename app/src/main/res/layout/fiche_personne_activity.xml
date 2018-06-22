@@ -26,13 +26,13 @@
             android:id="@+id/film_background"
             android:layout_width="match_parent"
             android:layout_height="256dp"
-            android:background="@drawable/img20">
+            android:background="@drawable/hommeholder">
 
             <ImageView
                 android:id="@+id/profileImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/once" />
+                app:srcCompat="@drawable/hommeholder" />
 
             <LinearLayout
                 android:layout_width="match_parent"

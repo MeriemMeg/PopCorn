@@ -63,14 +63,23 @@ class FichePersonnesActivity : AppCompatActivity() {
 
 
         val background = findViewById<FrameLayout>(R.id.film_background)
-        background.setBackgroundResource(personne.photo)
+        //background.setBackgroundResource(personne.photo)
+        if(personne.gender == 1)
         Glide.with(baseContext)
                 .load(BuildConfig.BASE_URL_IMG + "w300" + personne.profil)
                 .apply(RequestOptions()
-                        .placeholder(R.drawable.revenge)
+                        .placeholder(R.drawable.femmeholder)
                         .centerCrop()
                 )
                 .into(backdrop)
+        else
+            Glide.with(baseContext)
+                    .load(BuildConfig.BASE_URL_IMG + "w300" + personne.profil)
+                    .apply(RequestOptions()
+                            .placeholder(R.drawable.hommeholder)
+                            .centerCrop()
+                    )
+                    .into(backdrop)
 
        description = findViewById<TextView>(R.id.film_description)
 

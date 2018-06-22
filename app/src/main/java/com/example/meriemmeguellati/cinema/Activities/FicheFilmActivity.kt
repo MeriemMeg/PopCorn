@@ -69,7 +69,7 @@ class FicheFilmActivity : AppCompatActivity() {
         Glide.with(baseContext)
                 .load(BuildConfig.BASE_URL_IMG + "w300" + film.backdrop_path)
                 .apply(RequestOptions()
-                        .placeholder(R.drawable.revenge)
+                        .placeholder(R.drawable.defaultfiche)
                         .centerCrop()
                 )
                 .into(backdrop)
@@ -97,7 +97,7 @@ class FicheFilmActivity : AppCompatActivity() {
             Log.e("Error", e.message)
             e.printStackTrace()
         }*/
-        videoView.setBackgroundResource(film.trailerposter)
+        videoView.setBackgroundResource(R.drawable.defaultfiche)
 
       //  videoView.requestFocus()
 
@@ -106,7 +106,7 @@ class FicheFilmActivity : AppCompatActivity() {
         val description = findViewById<TextView>(R.id.film_description)
         description.text = film.description
         this.showComments = findViewById<TextView>(R.id.nb_comments)
-        this.showComments.text = "Commentaires (4)"
+        this.showComments.text = "Commentaires..."
         this.more = findViewById<ImageButton>(R.id.more)
         personnesLieesRecycler_view = findViewById<RecyclerView>(R.id.personnes_associees)
         personnesLieesRecycler_view.setHasFixedSize(true)
@@ -118,28 +118,30 @@ class FicheFilmActivity : AppCompatActivity() {
         initNavigationDrawer()
 
         //évènements du Click
+
         more.setOnClickListener {
-            if(this.isCommentsShown ==false) {
+            if(isCommentsShown ==false) {
                 val fragment =  CommentsFragment()
                 val bundle = Bundle()
                 for (i in 0..(comments.size-1)){
                     bundle.putSerializable("commentaire"+i.toString(),comments[i])
-                    Toast.makeText(this, comments[i].message, Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this, comments[i].message, Toast.LENGTH_SHORT).show()
                 }
                 bundle.putInt("size",comments.size)
 
                 fragment.setArguments(bundle)
                 showFragment(fragment)
-                this.more.setImageResource(R.drawable.ic_expand_less_black_24dp)
-                this.isCommentsShown = true
+                more.setImageResource(R.drawable.ic_expand_less_black_24dp)
+                isCommentsShown = true
             }
             else {
                 hideFragment()
-                this.more.setImageResource(R.drawable.ic_expand_more_black_24dp)
-                this.isCommentsShown = false
+                more.setImageResource(R.drawable.ic_expand_more_black_24dp)
+                isCommentsShown = false
             }
 
         }
+
 /*
         playStop.setOnClickListener {
             videoView.start()
@@ -334,13 +336,13 @@ class FicheFilmActivity : AppCompatActivity() {
         }
 
         val evaluer : Button = mView?.findViewById<Button>(R.id.submit)
-       /* evaluer.setOnClickListener {view ->
+        evaluer.setOnClickListener {view ->
             val note: Float = ratingBar.getRating()
             val myComment = Comment(resources.getStringArray(R.array.comment_1)[0].toInt(),
                     resources.getStringArray(R.array.comment_1)[1],
                     "", R.drawable.avatar,"Meguellati Ahmed",note.toInt())
-            this.data.commentaire.add(0,myComment)
-            this.showComments.text = "Commentaires ("+this.data.commentaire.size.toString()+")"
+            comments.add(0,myComment)
+            this.showComments.text = "Commentaires ("+comments.size.toString()+")"
             Toast.makeText(this, "votre évaluation a été ajoutée" , Toast.LENGTH_LONG).show();
             if(this.isCommentsShown ) {
                 hideFragment()
@@ -348,7 +350,7 @@ class FicheFilmActivity : AppCompatActivity() {
                 this.isCommentsShown = false
             }
             dialog.cancel()
-        }*/
+        }
     }
 
 
@@ -408,6 +410,7 @@ class FicheFilmActivity : AppCompatActivity() {
                         p = Personne(person?.name?:"Aucun Nom", "12/2/1978", R.drawable.jenniferlawrence, R.drawable.jenniferlawrence, "biooooooooooooographie")
                         if(person.profile_path != null )p.profil = person.profile_path!!
                         p.id = person?.id?:0
+                        p.gender = person?.gender?:1
                         personnesLiees.add(p)
                     }
 
@@ -446,6 +449,8 @@ class FicheFilmActivity : AppCompatActivity() {
                                      3)
                             comments.add(comment)
                         }
+
+                    showComments.text = "Commentaires ("+comments.size.toString()+")"
 
 
                 } else

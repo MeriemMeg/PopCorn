@@ -19,13 +19,13 @@
             android:id="@+id/imageFilmLie"
             android:layout_width="100dp"
             android:layout_height="120dp"
-            android:background="@drawable/img2">
+            android:background="@drawable/defaultposter">
 
             <ImageView
                 android:id="@+id/posterr"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/commedesbetes" />
+                app:srcCompat="@drawable/defaultposter" />
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="wrap_content"

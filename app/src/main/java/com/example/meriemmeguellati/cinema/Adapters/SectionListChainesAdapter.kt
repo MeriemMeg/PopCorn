@@ -37,8 +37,7 @@ class SectionListChainesAdapter(private val mContext: Context, private val items
 
         holder.date.text = singleItem.date
         holder.time.text = singleItem.heure
-        holder.image.setImageResource(singleItem.image)
-
+//        holder.image.setImageResource(singleItem.image)
 
 
 

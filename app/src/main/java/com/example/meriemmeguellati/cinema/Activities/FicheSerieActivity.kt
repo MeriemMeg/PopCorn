@@ -58,6 +58,8 @@ class FicheSerieActivity : AppCompatActivity() {
         val intent = intent
         this.serie = intent.getSerializableExtra("serie") as Serie
 
+        loadComments(serie.id)
+
         series_liées_recycler_view = findViewById<RecyclerView>(R.id.series_liees)
         loadSimilarSeries(this.serie.id,this)
 
@@ -75,10 +77,10 @@ class FicheSerieActivity : AppCompatActivity() {
         description.text = this.serie.description
 
         val affiche = findViewById<FrameLayout>(R.id.affiche)
-        affiche.setBackgroundResource(this.serie.poster)
+       // affiche.setBackgroundResource(this.serie.poster)
 
         this.showComments = findViewById<TextView>(R.id.nb_comments)
-        this.showComments.text = "Commentaires (4)"
+        this.showComments.text = "Commentaires..."
         this.more = findViewById<ImageButton>(R.id.more)
         initNavigationDrawer()
 
@@ -104,9 +106,6 @@ class FicheSerieActivity : AppCompatActivity() {
             }
 
         }
-
-
-
 
     }
 
@@ -179,15 +178,14 @@ class FicheSerieActivity : AppCompatActivity() {
         close.setOnClickListener {view ->
             dialog.cancel()
         }
-
-      /*  val commenter: Button = mView?.findViewById<Button>(R.id.commenter)
+        val commenter: Button = mView?.findViewById<Button>(R.id.commenter)
         commenter.setOnClickListener{ view ->
             val comment: String = commentEditText.text.toString()
             val myComment = Comment(resources.getStringArray(R.array.comment_1)[0].toInt(),
                     resources.getStringArray(R.array.comment_1)[1],
                     comment, R.drawable.avatar,"Meguellati Ahmed",0)
-            this.data.commentaire.add(0,myComment)
-            this.showComments.text = "Commentaires ("+this.data.commentaire.size.toString()+")"
+            comments.add(0,myComment)
+            this.showComments.text = "Commentaires ("+comments.size.toString()+")"
             Toast.makeText(this, "votre commentaire a été ajouté" , Toast.LENGTH_LONG).show();
             dialog.cancel()
             if(this.isCommentsShown ) {
@@ -196,7 +194,7 @@ class FicheSerieActivity : AppCompatActivity() {
                 this.isCommentsShown = false
             }
 
-        }*/
+        }
     }
     fun showEvaluation(){
         var mBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
@@ -212,14 +210,14 @@ class FicheSerieActivity : AppCompatActivity() {
             dialog.cancel()
         }
 
-      /*  val evaluer : Button = mView?.findViewById<Button>(R.id.submit)
+       val evaluer : Button = mView?.findViewById<Button>(R.id.submit)
         evaluer.setOnClickListener {view ->
             val note: Float = ratingBar.getRating()
             val myComment = Comment(resources.getStringArray(R.array.comment_1)[0].toInt(),
                     resources.getStringArray(R.array.comment_1)[1],
                     "", R.drawable.avatar,"Meguellati Ahmed",note.toInt())
-            this.data.commentaire.add(0,myComment)
-            this.showComments.text = "Commentaires ("+this.data.commentaire.size.toString()+")"
+            comments.add(0,myComment)
+            this.showComments.text = "Commentaires ("+comments.size.toString()+")"
             Toast.makeText(this, "votre évaluation a été ajoutée" , Toast.LENGTH_LONG).show();
             if(this.isCommentsShown ) {
                 hideFragment()
@@ -227,7 +225,7 @@ class FicheSerieActivity : AppCompatActivity() {
                 this.isCommentsShown = false
             }
             dialog.cancel()
-        } */
+        }
     }
 
     fun initNavigationDrawer() {
@@ -339,6 +337,7 @@ class FicheSerieActivity : AppCompatActivity() {
                                 3)
                         comments.add(comment)
                     }
+                    showComments.text = "Commentaires ("+comments.size.toString()+")"
 
 
                 } else

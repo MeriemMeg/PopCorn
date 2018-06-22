@@ -16,5 +16,8 @@ class CastResponse {
     @SerializedName("name")
     var name: String? = null
 
+    @SerializedName("gender")
+    var gender: Int? = 1
+
 
 }

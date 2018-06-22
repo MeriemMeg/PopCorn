@@ -42,7 +42,7 @@ class SectionListSaisonAdapter(private val mContext: Context, private val itemsL
         Glide.with(mContext)
                 .load(BuildConfig.BASE_URL_IMG + "w154" + singleItem.poster_path)
                 .apply(RequestOptions()
-                        .placeholder(R.drawable.img2)
+                        .placeholder(R.drawable.defaultposter)
                         .centerCrop()
                 )
                 .into(holder.image)

@@ -8,6 +8,8 @@ class PersonneCastResponseItem {
     @SerializedName("credit_id")
     var credit_id: String? = null
 
+
+
     @SerializedName("overview")
     var overview: String? = null
 

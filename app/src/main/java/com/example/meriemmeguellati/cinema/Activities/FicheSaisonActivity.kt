@@ -60,15 +60,15 @@ class FicheSaisonActivity : AppCompatActivity() {
         titre.text = this.saison.serie+ " S" + this.saison.num
 
         val playStop = findViewById<ImageButton>(R.id.play_stop)
-       // playStop.setImageResource(R.drawable.ic_play_arrow_white_24dp)
+       playStop.setImageResource(R.drawable.ic_play_arrow_white_24dp)
 
         val background = findViewById<FrameLayout>(R.id.film_background)
-        background.setBackgroundResource(this.saison.affiche)
-       /* var videoView = findViewById<VideoView>(R.id.videoView) as VideoView
+       // background.setBackgroundResource(this.saison.affiche)
+        var videoView = findViewById<VideoView>(R.id.videoView) as VideoView
         val mediaController = MediaController(this)
         mediaController?.setAnchorView(videoView)
 
-        try {
+       /* try {
             // ID of video file.
             val id = this.getRawResIdByName(this.saison.trailer)
             videoView.setVideoURI(Uri.parse("android.resource://$packageName/$id"))
@@ -77,9 +77,10 @@ class FicheSaisonActivity : AppCompatActivity() {
             Log.e("Error", e.message)
             e.printStackTrace()
         }
-        videoView.setBackgroundResource(this.saison.poster)
+        */
+        videoView.setBackgroundResource(R.drawable.defaultfiche)
 
-        videoView.requestFocus() */
+       // videoView.requestFocus()
 
 
         val description = findViewById<TextView>(R.id.film_description)
@@ -95,7 +96,7 @@ class FicheSaisonActivity : AppCompatActivity() {
         loadEpisodes(saison.id,this)
 
         this.showComments = findViewById<TextView>(R.id.nb_comments)
-        this.showComments.text = "Commentaires (4)"
+        this.showComments.text = "Commentaires (0)"
         this.more = findViewById<ImageButton>(R.id.more)
         initNavigationDrawer()
         //évènements du Click
@@ -224,14 +225,14 @@ class FicheSaisonActivity : AppCompatActivity() {
             dialog.cancel()
         }
 
-    /*    val commenter: Button = mView?.findViewById<Button>(R.id.commenter)
+       val commenter: Button = mView?.findViewById<Button>(R.id.commenter)
         commenter.setOnClickListener{ view ->
             val comment: String = commentEditText.text.toString()
             val myComment = Comment(resources.getStringArray(R.array.comment_1)[0].toInt(),
                     resources.getStringArray(R.array.comment_1)[1],
                     comment, R.drawable.avatar,"Meguellati Ahmed",0)
-            this.data.commentaire.add(0,myComment)
-            this.showComments.text = "Commentaires ("+this.data.commentaire.size.toString()+")"
+            comments.add(0,myComment)
+            this.showComments.text = "Commentaires ("+comments.size.toString()+")"
             Toast.makeText(this, "votre commentaire a été ajouté" , Toast.LENGTH_LONG).show();
             dialog.cancel()
             if(this.isCommentsShown ) {
@@ -240,7 +241,7 @@ class FicheSaisonActivity : AppCompatActivity() {
                 this.isCommentsShown = false
             }
 
-        }*/
+        }
     }
     fun showEvaluation(){
         var mBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
@@ -256,14 +257,14 @@ class FicheSaisonActivity : AppCompatActivity() {
             dialog.cancel()
         }
 
-     /*   val evaluer : Button = mView?.findViewById<Button>(R.id.submit)
+       val evaluer : Button = mView?.findViewById<Button>(R.id.submit)
         evaluer.setOnClickListener {view ->
             val note: Float = ratingBar.getRating()
             val myComment = Comment(resources.getStringArray(R.array.comment_1)[0].toInt(),
                     resources.getStringArray(R.array.comment_1)[1],
                     "", R.drawable.avatar,"Meguellati Ahmed",note.toInt())
-            this.data.commentaire.add(0,myComment)
-            this.showComments.text = "Commentaires ("+this.data.commentaire.size.toString()+")"
+            comments.add(0,myComment)
+            this.showComments.text = "Commentaires ("+comments.size.toString()+")"
             Toast.makeText(this, "votre évaluation a été ajoutée" , Toast.LENGTH_LONG).show();
             if(this.isCommentsShown ) {
                 hideFragment()
@@ -271,7 +272,7 @@ class FicheSaisonActivity : AppCompatActivity() {
                 this.isCommentsShown = false
             }
             dialog.cancel()
-        }*/
+        }
     }
     fun initNavigationDrawer() {
         //views
@@ -349,6 +350,7 @@ class FicheSaisonActivity : AppCompatActivity() {
                         p = Personne(person?.name?:"Aucun Nom", "12/2/1978", R.drawable.jenniferlawrence, R.drawable.jenniferlawrence, "biooooooooooooographie")
                         if(person.profile_path != null )p.profil = person.profile_path!!
                         p.id = person?.id?:0
+                        p.gender = person?.gender?:1
                         saison.personnages.add(p)
                     }
 
@@ -368,36 +370,8 @@ class FicheSaisonActivity : AppCompatActivity() {
         })
     }
 
-    private fun loadComments(serieId: Int) {
-        apiCallComments = apiUser.getService().getComments(serieId)
-        apiCallComments!!.enqueue(object : Callback<ReviewsResponse> {
-            override fun onResponse(call: Call<ReviewsResponse>, response: Response<ReviewsResponse>) {
-                if (response.isSuccessful()) {
-
-                    val item = response.body()
-                    var comment : Comment
-
-                    for (c in item?.results!!){
-                        comment = Comment(
-                                0,
-                                "",
-                                c?.content?:"aucun contenu n'est disponible",
-                                R.drawable.jamescorden,
-                                c?.author?:"no name",
-                                3)
-                        comments.add(comment)
-                    }
 
 
-                } else
-                    loadFailed()
-            }
-
-            override fun onFailure(call: Call<ReviewsResponse>, t: Throwable) {
-                loadFailed()
-            }
-        })
-    }
 
     private fun loadFailed() {
         Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()

@@ -19,6 +19,7 @@ import com.example.meriemmeguellati.cinema.Fragments.*
 import com.example.meriemmeguellati.cinema.R
 import android.app.SearchManager
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.support.v7.app.AlertDialog
 import android.view.View
 import android.widget.Button
@@ -50,32 +51,55 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
-        val intent = intent
-        val fragment = intent.getIntExtra("fragment",1)
-        if (fragment == 2) {
 
-            val fragment =  FanFragment()
-            val bundle = Bundle()
-            var film = intent.getSerializableExtra("fan")
-            if (film!= null) bundle.putSerializable("fan",film)
-            var serie = intent.getSerializableExtra("fanS")
-            if (serie!= null) bundle.putSerializable("fanS",serie)
-            fragment.setArguments(bundle)
-            showFragment(fragment)
 
-        }
-        else if (fragment == 3) {
-            showFragment(MovieFragment())
-        }
-        else if (fragment == 4){
-            showFragment(SeriesFragment())
-        }
-        else if (fragment == 5){
-            showFragment(SallesFragment())
-        }
-        else {
-            showFragment(AccueilFragment())
-        }
+
+            val intent = intent
+            val fragment = intent.getIntExtra("fragment",1)
+            if (fragment == 2) {
+
+                if (!checkConnexion()) {
+                    showFragment(NoConnexionFragment())
+                    Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
+                }
+                else {
+                    val fragment = FanFragment()
+                    showFragment(fragment)
+                }
+
+            }
+            else if (fragment == 3) {
+                if (!checkConnexion()) {
+                    showFragment(NoConnexionFragment())
+                    Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
+                }
+                else showFragment(MovieFragment())
+            }
+            else if (fragment == 4){
+                if (!checkConnexion()) {
+                    showFragment(NoConnexionFragment())
+                    Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
+                }
+                else showFragment(SeriesFragment())
+            }
+            else if (fragment == 5){
+                if (!checkConnexion()) {
+                    showFragment(NoConnexionFragment())
+                    Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
+                }
+                else showFragment(SallesFragment())
+            }
+            else {
+                if (!checkConnexion()) {
+                    showFragment(NoConnexionFragment())
+                    Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
+                }
+                else showFragment(AccueilFragment())
+            }
+
+
+
+
 
         nav_view.setNavigationItemSelectedListener(this)
     }
@@ -120,24 +144,42 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
             R.id.nav_accueil -> {
                 // Handle the camera action
-                showFragment(AccueilFragment())
+                if (!checkConnexion()) {
+                    showFragment(NoConnexionFragment())
+                    Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
+                }else  showFragment(AccueilFragment())
                 supportActionBar!!.title = "Accueil"
             }
             R.id.nav_fan -> {
+                 showFragment(FanFragment())
 
                 supportActionBar!!.title = "Fan"
-                showFragment(FanFragment())
+
             }
             R.id.nav_films -> {
-                this.fragmentShown = 1
+                if (!checkConnexion()) {
+                    showFragment(NoConnexionFragment())
+                    Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
+                }else{
+                    this.fragmentShown = 1
+                    showFragment(MovieFragment())
+                }
+
                 supportActionBar!!.title = "Films"
-                showFragment(MovieFragment())
+
             }
             R.id.nav_series -> {
-                this.fragmentShown = 2
+                if (!checkConnexion()) {
+                    showFragment(NoConnexionFragment())
+                    Toast.makeText(this, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
+                }else {
+                    this.fragmentShown = 2
+
+                    showFragment(SeriesFragment())
+                }
 
                 supportActionBar!!.title = "Séries"
-                showFragment(SeriesFragment())
+
 
             }
             R.id.nav_salles -> {
@@ -202,6 +244,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             Toast.makeText(this, note.toString() , Toast.LENGTH_LONG).show();
             dialog.cancel()
         }
+    }
+
+     fun checkConnexion():Boolean{
+
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        return cm.activeNetworkInfo != null && cm.activeNetworkInfo.isConnectedOrConnecting
     }
 
     companion object {

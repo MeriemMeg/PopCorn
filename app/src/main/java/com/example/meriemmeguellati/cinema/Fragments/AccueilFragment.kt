@@ -1,6 +1,8 @@
 package com.example.meriemmeguellati.cinema.Fragments
 
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
@@ -75,8 +77,16 @@ class AccueilFragment : Fragment() {
                     moviesViewPager.setPageTransformer(false, fragmentCardShadowTransformer)
                     moviesViewPager.offscreenPageLimit = 3
 
-                } else
-                    loadFailed()
+                } else {
+                    if(response.code()== 404){
+                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                    }
+                    else if (response.code()== 401) {
+                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                    }
+
+                }
+
             }
 
             override fun onFailure(call: Call<NowPlayingResponse>, t: Throwable) {
@@ -112,6 +122,13 @@ class AccueilFragment : Fragment() {
 
     private fun loadFailed() {
         Toast.makeText(context, R.string.err_load_failed, Toast.LENGTH_SHORT).show()
+    }
+
+    fun checkConnexion():Boolean{
+
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        return cm.activeNetworkInfo != null && cm.activeNetworkInfo.isConnectedOrConnecting
     }
 
 

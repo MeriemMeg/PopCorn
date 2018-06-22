@@ -40,14 +40,25 @@ class SectionListPersonnesAdapter(private val mContext: Context, private val ite
 
         holder.tvTitle.text = singleItem.nom
 
-        holder.image.setBackgroundResource(singleItem.fiche)
-        Glide.with(mContext)
-                .load(BuildConfig.BASE_URL_IMG + "w154" + singleItem.profil)
-                .apply(RequestOptions()
-                        .placeholder(R.drawable.img2)
-                        .centerCrop()
-                )
-                .into(holder.itemImage)
+        //holder.image.setBackgroundResource(singleItem.fiche)
+        if(singleItem.gender == 1){
+            Glide.with(mContext)
+                    .load(BuildConfig.BASE_URL_IMG + "w154" + singleItem.profil)
+                    .apply(RequestOptions()
+                            .placeholder(R.drawable.femmeholder)
+                            .centerCrop()
+                    )
+                    .into(holder.itemImage)
+        } else {
+            Glide.with(mContext)
+                    .load(BuildConfig.BASE_URL_IMG + "w154" + singleItem.profil)
+                    .apply(RequestOptions()
+                            .placeholder(R.drawable.hommeholder)
+                            .centerCrop()
+                    )
+                    .into(holder.itemImage)
+        }
+
         holder.image.setOnClickListener {
             val intent = Intent(mContext, FichePersonnesActivity::class.java)
             intent.putExtra("Personne", singleItem)
