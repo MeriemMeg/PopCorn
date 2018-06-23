@@ -16,6 +16,10 @@ interface APImovies {
     @GET("movie/popular")
     fun getPopularMovie(@Query("language") language: String): Call<NowPlayingResponse>
 
+    //films en cours de projection
+    @GET("movie/latest")
+    fun getLatestMovie(@Query("language") language: String): Call<MovieResponse>
+
     // détails d'un film
     @GET("movie/{movie_id}")
     fun getDetailMovie(@Path("movie_id") movie_id: String, @Query("language") language: String): Call<MovieDetailResponse>

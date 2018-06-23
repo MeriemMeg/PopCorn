@@ -22,9 +22,15 @@
 
         <SwitchPreference
             android:defaultValue="false"
+            android:key="animation"
+            android:summary="Turn ON/Off Animation Films Notifications"
+            android:title="Animation" />
+
+        <SwitchPreference
+            android:defaultValue="false"
             android:key="adventure"
             android:summary="Turn ON/Off Adventure Films Notifications"
-            android:title="Animated" />
+            android:title="Adventure" />
 
         <SwitchPreference
             android:defaultValue="false"

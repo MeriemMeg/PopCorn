@@ -20,7 +20,9 @@ import com.example.meriemmeguellati.cinema.R
 import android.app.SearchManager
 import android.content.Intent
 import android.net.ConnectivityManager
+import android.os.Build
 import android.preference.PreferenceFragment
+import android.support.annotation.RequiresApi
 import android.support.v7.app.AlertDialog
 import android.view.View
 import android.widget.Button
@@ -29,6 +31,7 @@ import android.widget.SearchView
 import android.widget.Toast
 import com.example.meriemmeguellati.cinema.Adapters.CommentsFragment
 import com.example.meriemmeguellati.cinema.Model.Film
+import com.example.meriemmeguellati.cinema.Notifications.SchedulerJob
 import com.example.meriemmeguellati.cinema.R.id.drawer_layout
 
 
@@ -36,6 +39,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     var fragmentShown : Int = 0
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState)
@@ -53,7 +57,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
 
+        val PARAMS_NAME = "PARAMS"
+        val params = getSharedPreferences(PARAMS_NAME, 0)
+        val editeur = params.edit()
+        editeur.putInt("precedent", 12)
+        editeur.commit()
 
+        SchedulerJob.scheduleJob(this)
 
         val intent = intent
         val fragment = intent.getIntExtra("fragment",1)
@@ -241,27 +251,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onQueryTextChange(newText: String): Boolean {
         return false
     }
-    fun showEvaluation(){
-        var mBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
-        var mView: View = layoutInflater.inflate(R.layout.evaluation, null)
 
-        var ratingBar: RatingBar = mView.findViewById<RatingBar>(R.id.stars);
-        mBuilder.setView(mView)
-        var dialog: AlertDialog = mBuilder.create()
-        dialog.show()
-
-        val close : Button = mView?.findViewById<Button>(R.id.closePop)
-        close.setOnClickListener {view ->
-            dialog.cancel()
-        }
-
-        val evaluer : Button = mView?.findViewById<Button>(R.id.submit)
-        evaluer.setOnClickListener {view ->
-            val note: Float = ratingBar.getRating()
-            Toast.makeText(this, note.toString() , Toast.LENGTH_LONG).show();
-            dialog.cancel()
-        }
-    }
 
     fun checkConnexion():Boolean{
 

@@ -1,6 +1,7 @@
 package com.example.meriemmeguellati.cinema.Activities
 
 import android.annotation.SuppressLint
+import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
@@ -9,6 +10,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.example.meriemmeguellati.cinema.R
 import android.os.AsyncTask
+import android.os.Build
+import android.support.annotation.RequiresApi
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
@@ -25,6 +28,7 @@ import com.example.meriemmeguellati.cinema.Adapters.*
 import com.example.meriemmeguellati.cinema.BuildConfig
 import com.example.meriemmeguellati.cinema.Model.*
 import com.example.meriemmeguellati.cinema.NavDrawerHelper
+import com.example.meriemmeguellati.cinema.Notifications.NotificationCreator
 import com.example.meriemmeguellati.cinema.OfflineData.FilmAssocieEntity
 import com.example.meriemmeguellati.cinema.OfflineData.FilmDB
 import com.example.meriemmeguellati.cinema.OfflineData.FilmEntity
@@ -57,6 +61,7 @@ class FicheFilmActivity : AppCompatActivity() {
     var filmsLiees = ArrayList<Film>()
     var personnesLiees = ArrayList<Personne>()
 
+    @RequiresApi(Build.VERSION_CODES.M)
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
@@ -68,10 +73,17 @@ class FicheFilmActivity : AppCompatActivity() {
 
 
         val intent = intent
-         this.film = intent.getSerializableExtra("film") as Film
+        var mode = intent.getStringExtra("mode")
+        if(intent.getSerializableExtra("NotificationFilm") != null){
+
+            this.film = intent.getSerializableExtra("NotificationFilm") as Film
+            mode = "online"
+            loadNotifFilmDetails(film.id.toString())
+        }
+         else this.film = intent.getSerializableExtra("film") as Film
         this.estEnCoursDeProjection = this.film.estEnCoursDeProjection
 
-        val mode = intent.getStringExtra("mode")
+
 
         if (mode == "offline") {
             this.personnes = intent.getSerializableExtra("personnes") as ArrayList<Personne>
@@ -128,6 +140,9 @@ class FicheFilmActivity : AppCompatActivity() {
             this.more = findViewById<ImageButton>(R.id.more)
             personnesLieesRecycler_view = findViewById<RecyclerView>(R.id.personnes_associees)
             personnesLieesRecycler_view.setHasFixedSize(true)
+            val toast = Toast.makeText(applicationContext,"hello again", Toast.LENGTH_SHORT)
+            toast.show()
+
             loadAssociatedPersons(film.id.toString(), this)
             loadComments(film.id.toString())
             film_liées_recycler_view = findViewById<RecyclerView>(R.id.film_lies)
@@ -138,7 +153,7 @@ class FicheFilmActivity : AppCompatActivity() {
             //évènements du Click
 
             more.setOnClickListener {
-                if (isCommentsShown == false) {
+               if (isCommentsShown == false) {
                     val fragment = CommentsFragment()
                     val bundle = Bundle()
                     for (i in 0..(comments.size - 1)) {
@@ -156,6 +171,7 @@ class FicheFilmActivity : AppCompatActivity() {
                     more.setImageResource(R.drawable.ic_expand_more_black_24dp)
                     isCommentsShown = false
                 }
+
 
             }
 
@@ -418,6 +434,40 @@ class FicheFilmActivity : AppCompatActivity() {
         })
     }
 
+    private fun loadNotifFilmDetails(id:String){
+        var apiMoviesCall: Call<MovieDetailResponse>? = null
+        val apiMovies = APImoviesCall()
+        apiMoviesCall = apiMovies.getService().getDetailMovie(id,Language().Country())
+        apiMoviesCall!!.enqueue(object : Callback<MovieDetailResponse> {
+            @TargetApi(Build.VERSION_CODES.M)
+            @RequiresApi(Build.VERSION_CODES.M)
+            override fun onResponse(call: Call<MovieDetailResponse>, response: Response<MovieDetailResponse>) {
+                if (response.isSuccessful) {
+
+                    val item = response.body()
+
+
+                    if (item != null) {
+                        film.backdrop_path = item.backdropPath?:""
+                        film.id = item.id
+                        film.description = item.overview!!
+
+
+
+
+                    }
+
+                }
+
+
+            }
+
+            override fun onFailure(call: Call<MovieDetailResponse>, t: Throwable) {
+                //loadFailed()
+            }
+        })
+
+    }
     private fun loadAssociatedPersons(movie_item: String,context: Context) {
         apiCallPersons = apiUser.getService().getAssociatedPersons(movie_item)
         apiCallPersons!!.enqueue(object : Callback<CreditsResponse> {

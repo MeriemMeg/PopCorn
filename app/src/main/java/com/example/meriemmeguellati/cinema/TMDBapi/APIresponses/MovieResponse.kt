@@ -21,6 +21,9 @@ class MovieResponse {
     @SerializedName("genre_ids")
     var genreIds: List<Int>? = null
 
+    @SerializedName( "genres")
+    var genres : List<GenreResponse>? = null
+
     @SerializedName("poster_path")
      var posterPath: String? = null
 

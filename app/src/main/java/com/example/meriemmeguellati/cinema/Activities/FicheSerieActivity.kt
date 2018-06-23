@@ -105,6 +105,7 @@ class FicheSerieActivity : AppCompatActivity() {
                 this.isCommentsShown = false
             }
 
+
         }
 
     }
