@@ -35,4 +35,8 @@ interface APImovies {
     //commentaires d'un film
     @GET("movie/{movie_id}/reviews")
     fun getComments(@Path("movie_id") movie_id: String) : Call<ReviewsResponse>
+
+    //videos d'un film
+    @GET("movie/{movie_id}/videos")
+    fun getVideos(@Path("movie_id") movie_id: Int) : Call<VideoResponse>
 }

@@ -17,7 +17,10 @@ import android.view.*
 import android.widget.*
 import android.view.MotionEvent
 import android.view.View.OnTouchListener
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.meriemmeguellati.cinema.Adapters.*
+import com.example.meriemmeguellati.cinema.BuildConfig
 import com.example.meriemmeguellati.cinema.Data.Data
 import com.example.meriemmeguellati.cinema.Model.*
 import com.example.meriemmeguellati.cinema.NavDrawerHelper
@@ -29,6 +32,7 @@ class FicheEpisodeActivity : AppCompatActivity() {
     lateinit var episode : Episode
     lateinit var more : ImageButton
     lateinit var showComments : TextView
+    lateinit var backdrop : ImageView
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
@@ -47,20 +51,15 @@ class FicheEpisodeActivity : AppCompatActivity() {
         val naissance = findViewById<TextView>(R.id.bearthday)
         naissance.text = "Episode "+this.episode.saison.toString() + " x "+ this.episode.num.toString()
 
+        backdrop = findViewById(R.id.profileImage)
+        Glide.with(baseContext)
+                .load(BuildConfig.BASE_URL_IMG + "w780" + episode.still_path)
+                .apply(RequestOptions()
+                        .placeholder(R.drawable.defaultfiche)
+                        .centerCrop()
+                )
+                .into(backdrop)
 
-
-        val background = findViewById<FrameLayout>(R.id.film_background)
-      //  background.setBackgroundResource(this.episode.poster)
-        var videoView = findViewById<VideoView>(R.id.videoView)
-
-
-        // Set the media controller buttons
-
-        val mediaController = MediaController(this)
-
-        // Set the videoView that acts as the anchor for the MediaController.
-
-        mediaController?.setAnchorView(videoView)
 
         val description = findViewById<TextView>(R.id.film_description)
         description.text = episode.description
@@ -68,8 +67,6 @@ class FicheEpisodeActivity : AppCompatActivity() {
 
         val icon = findViewById<ImageButton>(R.id.play_stop)
         icon.setImageResource(R.drawable.ic_ondemand_video_white_24dp)
-
-
 
         val my_recycler_view = findViewById<RecyclerView>(R.id.filmgraphie)
         my_recycler_view.setHasFixedSize(true)

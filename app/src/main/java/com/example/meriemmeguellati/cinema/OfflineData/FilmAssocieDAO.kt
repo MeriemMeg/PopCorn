@@ -7,8 +7,11 @@ import android.arch.persistence.room.Query
 @Dao
 interface FilmAssocieDAO {
 
-    @Query("SELECT * FROM filmAssocie")
-    fun getFilmsAssocies(): List<FilmAssocieEntity>
+    @Query("SELECT * FROM filmAssocie WHERE film_id= :id_film")
+    fun getFilmsAssocies(id_film : Int): List<FilmAssocieEntity>
+
+    @Query("SELECT id FROM filmAssocie WHERE id = :id")
+    fun getFilm(id : Int): Int
 
     @Insert
     fun insert(filmAssocie: FilmAssocieEntity)

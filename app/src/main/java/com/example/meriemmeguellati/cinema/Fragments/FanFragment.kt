@@ -50,7 +50,7 @@ class FanFragment : Fragment() {
         val mesFeuilletonsViewPager = view.findViewById<View>(R.id.mes_feuilletons) as ViewPager
         val mesSallesViewPager = view.findViewById<View>(R.id.mes_salles) as ViewPager
         val data = Data(resources)
-        data.createData()
+
 
        // fanFilms.addAll(data.filmsSuivis)
         prepareFilms()
@@ -77,16 +77,16 @@ class FanFragment : Fragment() {
 
 
 
-        val pagerAdapter2 = SerieCardFragmentPagerAdapter(childFragmentManager, MainActivity.dpToPixels(2, activity),fanSeries)
+      /*  val pagerAdapter2 = SerieCardFragmentPagerAdapter(childFragmentManager, MainActivity.dpToPixels(2, activity),fanSeries)
         val fragmentCardShadowTransformer2 = ShadowTransformer(mesFeuilletonsViewPager, pagerAdapter2)
         fragmentCardShadowTransformer2.enableScaling(true)
         mesFeuilletonsViewPager.adapter = pagerAdapter2
         mesFeuilletonsViewPager.setPageTransformer(false, fragmentCardShadowTransformer2)
-        mesFeuilletonsViewPager.offscreenPageLimit = 3
+        mesFeuilletonsViewPager.offscreenPageLimit = 3*/
 
         val pagerAdapter3 = SalleCardFragmentPagerAdapter(childFragmentManager, MainActivity.dpToPixels(2, activity))
         val fragmentCardShadowTransformer3 = ShadowTransformer(mesSallesViewPager, pagerAdapter3)
-        fragmentCardShadowTransformer2.enableScaling(true)
+        fragmentCardShadowTransformer3.enableScaling(true)
         mesSallesViewPager.adapter = pagerAdapter3
         mesSallesViewPager.setPageTransformer(false, fragmentCardShadowTransformer3)
         mesSallesViewPager.offscreenPageLimit = 3
@@ -113,13 +113,14 @@ class FanFragment : Fragment() {
                     val films = ArrayList<Film>()
 
                     for (i in 0..(filmsEntity!!.size-1)){
-                        films.add(Film(
+                        var film = Film(
                                 filmsEntity!![i].titre,
                                 filmsEntity!![i].affiche,
                                 filmsEntity!![i].description,
                                 filmsEntity!![i].trailer,
                                 filmsEntity!![i].trailerposter)
-                        )
+                        film.id = filmsEntity!![i].id
+                        films.add(film)
                     }
                     if(films.size>0){
                         pagerAdapter = FilmCardFragmentPagerAdapter(childFragmentManager, MainActivity.dpToPixels(2, activity),films)

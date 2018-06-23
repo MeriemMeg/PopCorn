@@ -19,7 +19,7 @@
             android:id="@+id/imageFilmLie"
             android:layout_width="130dp"
             android:layout_height="150dp"
-            android:background="@drawable/img2">
+            android:background="@drawable/defaultposter">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="wrap_content"

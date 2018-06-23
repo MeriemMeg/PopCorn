@@ -15,8 +15,8 @@ object SchedulerJob {
     fun scheduleJob(context: Context) {
         val serviceComponent = ComponentName(context, NotificationJobService::class.java!!)
         val builder = JobInfo.Builder(0, serviceComponent)
-        builder.setMinimumLatency((100 * 1000).toLong()) // wait at least
-        builder.setOverrideDeadline((300 * 1000).toLong()) // maximum delay
+        builder.setMinimumLatency((170 * 1000).toLong()) // wait at least
+        builder.setOverrideDeadline((400 * 1000).toLong()) // maximum delay
         //builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED); // require unmetered network
         //builder.setRequiresDeviceIdle(true); // device should be idle
         //builder.setRequiresCharging(false); // we don't care if the device is charging or not

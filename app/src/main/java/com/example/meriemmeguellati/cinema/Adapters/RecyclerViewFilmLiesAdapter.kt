@@ -18,7 +18,7 @@ import com.example.meriemmeguellati.cinema.R
 
 import java.util.ArrayList
 
-class RecyclerViewFilmLiesAdapter(private val mContext: Context, private val dataList: ArrayList<Film>?) : RecyclerView.Adapter<RecyclerViewFilmLiesAdapter.ItemRowHolder>() {
+class RecyclerViewFilmLiesAdapter(private val mContext: Context, private val dataList: ArrayList<Film>?,private val mode :String) : RecyclerView.Adapter<RecyclerViewFilmLiesAdapter.ItemRowHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ItemRowHolder {
         val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.list_item, null)
@@ -33,7 +33,7 @@ class RecyclerViewFilmLiesAdapter(private val mContext: Context, private val dat
 
         itemRowHolder.itemTitle.text = "Films liés"
 
-        val itemListDataAdapter = SectionListFilmLiesAdapter(mContext, singleSectionItems)
+        val itemListDataAdapter = SectionListFilmLiesAdapter(mContext, singleSectionItems,mode)
 
         itemRowHolder.recycler_view_list.setHasFixedSize(true)
         itemRowHolder.recycler_view_list.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false)

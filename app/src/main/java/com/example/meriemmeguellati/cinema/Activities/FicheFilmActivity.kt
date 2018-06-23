@@ -3,7 +3,12 @@ package com.example.meriemmeguellati.cinema.Activities
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -11,6 +16,7 @@ import android.support.v7.widget.RecyclerView
 import com.example.meriemmeguellati.cinema.R
 import android.os.AsyncTask
 import android.os.Build
+import android.os.Environment
 import android.support.annotation.RequiresApi
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
@@ -18,6 +24,7 @@ import android.support.v4.app.FragmentTransaction
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.GridLayoutManager
+import android.util.Log
 import android.view.*
 import android.widget.*
 import com.bumptech.glide.Glide
@@ -25,6 +32,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.meriemmeguellati.cinema.TMDBapi.APIresponses.*
 import com.example.meriemmeguellati.cinema.TMDBapi.RetrofitCalls.APImoviesCall
 import com.example.meriemmeguellati.cinema.Adapters.*
+import com.example.meriemmeguellati.cinema.Animation.ShadowTransformer
 import com.example.meriemmeguellati.cinema.BuildConfig
 import com.example.meriemmeguellati.cinema.Model.*
 import com.example.meriemmeguellati.cinema.NavDrawerHelper
@@ -33,9 +41,14 @@ import com.example.meriemmeguellati.cinema.OfflineData.FilmAssocieEntity
 import com.example.meriemmeguellati.cinema.OfflineData.FilmDB
 import com.example.meriemmeguellati.cinema.OfflineData.FilmEntity
 import com.example.meriemmeguellati.cinema.OfflineData.PersonneEntity
+import com.google.android.gms.common.images.internal.LoadingImageView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
+import java.io.FileOutputStream
+import java.lang.ref.WeakReference
+import java.net.URL
 
 
 class FicheFilmActivity : AppCompatActivity() {
@@ -61,6 +74,9 @@ class FicheFilmActivity : AppCompatActivity() {
     var filmsLiees = ArrayList<Film>()
     var personnesLiees = ArrayList<Personne>()
 
+    private val apiMovies = APImoviesCall()
+    private var apiVediosCall: Call<VideoResponse>? = null
+
     @RequiresApi(Build.VERSION_CODES.M)
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,20 +101,34 @@ class FicheFilmActivity : AppCompatActivity() {
 
 
 
+
+        val titre = findViewById<TextView>(R.id.film_name)
+        titre.text = film.titre
+
+
+
+
+        val description = findViewById<TextView>(R.id.film_description)
+        description.text = film.description
+
+        backdrop = findViewById(R.id.backdrop_film)
+
         if (mode == "offline") {
-            this.personnes = intent.getSerializableExtra("personnes") as ArrayList<Personne>
-            this.filmsAssocies = intent.getSerializableExtra("filmsAssocies") as ArrayList<Film>
+           if (intent.getSerializableExtra("personnes") != null) this.personnes = intent.getSerializableExtra("personnes") as ArrayList<Personne>
+            else this.personnes = ArrayList<Personne>()
+            if (intent.getSerializableExtra("filmsAssocies") != null)this.filmsAssocies = intent.getSerializableExtra("filmsAssocies") as ArrayList<Film>
+            else this.filmsAssocies = ArrayList<Film>()
             preparePersonnage(this)
             prepareFilmsAssociés(this)
-            Toast.makeText(this, "size" + this.filmsAssocies.size,Toast.LENGTH_LONG).show()
-            Toast.makeText(this, "offline : ", Toast.LENGTH_SHORT).show()
+            var poster = loadImage("MOV"+film.titre)
+            backdrop.setImageBitmap(poster)
+
 
         }else {
 
 
-            backdrop = findViewById(R.id.backdrop_film)
             Glide.with(baseContext)
-                    .load(BuildConfig.BASE_URL_IMG + "w300" + film.backdrop_path)
+                    .load(BuildConfig.BASE_URL_IMG + "w780" + film.backdrop_path)
                     .apply(RequestOptions()
                             .placeholder(R.drawable.defaultfiche)
                             .centerCrop()
@@ -106,42 +136,13 @@ class FicheFilmActivity : AppCompatActivity() {
                     .into(backdrop)
 
 
-            val titre = findViewById<TextView>(R.id.film_name)
-            titre.text = film.titre
-
-            val playStop = findViewById<ImageButton>(R.id.play_stop)
-            playStop.setImageResource(R.drawable.ic_play_arrow_white_24dp)
-
-            val background = findViewById<FrameLayout>(R.id.film_background)
-            // background.setBackgroundResource(film.affiche)
-
-            var videoView = findViewById<VideoView>(R.id.videoView)
-            val mediaController = MediaController(this)
-            mediaController?.setAnchorView(videoView)
-
-            /*  try {
-            // ID of video file.
-            val id = this.getRawResIdByName(film.posterPath)
-            videoView.setVideoURI(Uri.parse("android.resource://$packageName/$id"))
-
-        } catch (e: Exception) {
-            Log.e("Error", e.message)
-            e.printStackTrace()
-        }*/
-            videoView.setBackgroundResource(R.drawable.defaultfiche)
-
-            //  videoView.requestFocus()
-
-
-            val description = findViewById<TextView>(R.id.film_description)
-            description.text = film.description
             this.showComments = findViewById<TextView>(R.id.nb_comments)
             this.showComments.text = "Commentaires..."
             this.more = findViewById<ImageButton>(R.id.more)
             personnesLieesRecycler_view = findViewById<RecyclerView>(R.id.personnes_associees)
             personnesLieesRecycler_view.setHasFixedSize(true)
-            val toast = Toast.makeText(applicationContext,"hello again", Toast.LENGTH_SHORT)
-            toast.show()
+           // val toast = Toast.makeText(applicationContext,"hello again", Toast.LENGTH_SHORT)
+           // toast.show()
 
             loadAssociatedPersons(film.id.toString(), this)
             loadComments(film.id.toString())
@@ -175,24 +176,9 @@ class FicheFilmActivity : AppCompatActivity() {
 
             }
 
-/*
-        playStop.setOnClickListener {
-            videoView.start()
-            playStop.setVisibility(View.INVISIBLE);
-            videoView.setBackgroundResource(0)
-            titre.setVisibility(View.INVISIBLE)
-        }
 
-        videoView.setOnTouchListener(object : View.OnTouchListener {
-            override fun onTouch(v: View, event: MotionEvent): Boolean {
 
-                videoView.pause()
-                playStop.setVisibility(View.VISIBLE);
-                titre.setVisibility(View.VISIBLE)
-                return false
-            }
-        })
- */ }
+  }
 
     }
 
@@ -224,13 +210,15 @@ class FicheFilmActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_projection -> {
-            if(this.estEnCoursDeProjection ) {
+          /*  if(this.estEnCoursDeProjection ) {
                 showSalle()
             }
             else {
                 val toast = Toast.makeText(getApplicationContext(),"Le film "+this.film.titre+" n'est projeté dans aucune salle cinéma actuellement", Toast.LENGTH_SHORT)
                 toast.show()
-            }
+            }*/
+
+            startYoutubeIntent(this,film.id)
             true
         }
 
@@ -245,9 +233,11 @@ class FicheFilmActivity : AppCompatActivity() {
                 saveFilm()
                 for (i in 0..(personnesLiees.size-1)){
                     savePersonne(i)
+                    Toast.makeText(baseContext, (i+1).toString()+"/"+personnesLiees.size, Toast.LENGTH_LONG).show()
                 }
                 for (j in 0..(filmsLiees.size-1)){
                     saveFilmsAssocies(j)
+                    Toast.makeText(baseContext, (j+1).toString()+"/"+filmsAssocies.size, Toast.LENGTH_LONG).show()
                 }
             }
 
@@ -408,24 +398,26 @@ class FicheFilmActivity : AppCompatActivity() {
             override fun onResponse(call: Call<NowPlayingResponse>, response: Response<NowPlayingResponse>) {
                 if (response.isSuccessful()) {
 
+
+
                     val items = response.body()!!.getResults()!!
 
                     var film : Film
                     for (item in items ){
-                        film = Film(item?.title?:"Aucun titre n'est disponible", R.drawable.p1, item?.overview?:"Aucune description n'est disponible", item?.posterPath?:"", R.drawable.p1)
+                        film = Film(item?.title?:"Aucun titre n'est disponible", "", item?.overview?:"Aucune description n'est disponible", item?.posterPath?:"", R.drawable.defaultposter)
                         film.id = item.id
                         filmsLiees.add(film)
                     }
 
                     //
-                    filmsLiesAdapter = RecyclerViewFilmLiesAdapter(contect, filmsLiees)
+                    filmsLiesAdapter = RecyclerViewFilmLiesAdapter(contect, filmsLiees,"online")
 
                     film_liées_recycler_view.layoutManager = LinearLayoutManager(contect, LinearLayoutManager.VERTICAL, false)
 
                     film_liées_recycler_view.adapter = filmsLiesAdapter
 
                 } else
-                    loadFailed()
+                    Toast.makeText(baseContext, response.message() , Toast.LENGTH_LONG).show();
             }
 
             override fun onFailure(call: Call<NowPlayingResponse>, t: Throwable) {
@@ -457,7 +449,8 @@ class FicheFilmActivity : AppCompatActivity() {
 
                     }
 
-                }
+                } else
+                    Toast.makeText(baseContext, response.message() , Toast.LENGTH_LONG).show();
 
 
             }
@@ -485,14 +478,14 @@ class FicheFilmActivity : AppCompatActivity() {
                         personnesLiees.add(p)
                     }
 
-                    PersonnesLieesAdapter = RecyclerViewPersonnesAdapter(context, personnesLiees)
+                    PersonnesLieesAdapter = RecyclerViewPersonnesAdapter(context, personnesLiees,"online")
 
                     personnesLieesRecycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
                     personnesLieesRecycler_view.adapter = PersonnesLieesAdapter
 
                 } else
-                    loadFailed()
+                    Toast.makeText(context, response.message() , Toast.LENGTH_LONG).show();
             }
 
             override fun onFailure(call: Call<CreditsResponse>, t: Throwable) {
@@ -525,7 +518,7 @@ class FicheFilmActivity : AppCompatActivity() {
 
 
                 } else
-                    loadFailed()
+                    Toast.makeText(baseContext, response.message() , Toast.LENGTH_LONG).show();
             }
 
             override fun onFailure(call: Call<ReviewsResponse>, t: Throwable) {
@@ -544,7 +537,9 @@ class FicheFilmActivity : AppCompatActivity() {
         val description = this.film.description
         val trailer = this.film.posterPath
         val trailerposter: Int = this.film.trailerposter
-        val affiche: Int = this.film.affiche
+       // val affiche: Int = this.film.affiche
+
+        val affiche = java.util.UUID.randomUUID().toString()
         val id : Int = this.film.id
 
 
@@ -564,6 +559,7 @@ class FicheFilmActivity : AppCompatActivity() {
                     film.estSuivi = true
                     val toast = Toast.makeText(applicationContext,"Le film est ajouté à votre favorie", Toast.LENGTH_SHORT)
                     toast.show()
+                saveImage(BuildConfig.BASE_URL_IMG + "w300" + film.backdrop_path, "MOV"+titre)
 
             }
         }.execute()
@@ -640,7 +636,7 @@ class FicheFilmActivity : AppCompatActivity() {
         personnesLieesRecycler_view = findViewById(R.id.personnes_associees)
         personnesLieesRecycler_view.setHasFixedSize(true)
 
-        PersonnesLieesAdapter = RecyclerViewPersonnesAdapter(context, personnes)
+        PersonnesLieesAdapter = RecyclerViewPersonnesAdapter(context, personnes,"offline")
 
         personnesLieesRecycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
@@ -651,7 +647,7 @@ class FicheFilmActivity : AppCompatActivity() {
         film_liées_recycler_view = findViewById(R.id.film_lies)
         film_liées_recycler_view.setHasFixedSize(true)
 
-        filmsLiesAdapter = RecyclerViewFilmLiesAdapter(context, filmsAssocies)
+        filmsLiesAdapter = RecyclerViewFilmLiesAdapter(context, filmsAssocies,"offline")
 
         film_liées_recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
@@ -671,14 +667,24 @@ class FicheFilmActivity : AppCompatActivity() {
                 val db = FilmDB.getInstance(act)
                 val dao = db?.FilmAssocieDAO()
 
-                val film = FilmAssocieEntity(id,film_id,titre, affiche)
-                dao?.insert(film)
+
+                val existing = dao?.getFilm(id)
+                if(existing != id){
+                    val film = FilmAssocieEntity(id,film_id,titre, affiche)
+                    dao?.insert(film)
+                }
+
+
+
 
                 return null
             }
 
 
             override fun onPostExecute(result: Void?) {
+
+                if(filmsLiees[i].posterPath != null && filmsLiees[i].posterPath!="")
+                saveImage(BuildConfig.BASE_URL_IMG + "w154" + filmsLiees[i].posterPath, "MOVA_" + titre)
 
             }
         }.execute()
@@ -697,8 +703,12 @@ class FicheFilmActivity : AppCompatActivity() {
                 val db = FilmDB.getInstance(act)
                 val dao = db?.PersonneDAO()
 
-                val personne = PersonneEntity(id,film_id,nom, profil)
-                dao?.insert(personne)
+                val existing = dao?.getPersonne(id)
+                if(existing != id){
+                    val personne = PersonneEntity(id,film_id,nom, profil)
+                    dao?.insert(personne)
+                }
+
 
                 return null
             }
@@ -706,8 +716,108 @@ class FicheFilmActivity : AppCompatActivity() {
 
             override fun onPostExecute(result: Void?) {
 
+                if(personnesLiees[i].profil != null && personnesLiees[i].profil != "")
+                saveImage(BuildConfig.BASE_URL_IMG + "w154" + personnesLiees[i].profil, "PER_" + nom)
+
             }
         }.execute()
 
     }
+
+    private class InsertTask// only retain a weak reference to the activity
+    internal constructor(context: FicheFilmActivity, private val url: String,private val movie_id:String) : AsyncTask<Void, Void, Boolean>() {
+
+        private var activityReference: WeakReference<FicheFilmActivity> = WeakReference(context)
+
+        // doInBackground methods runs on a worker thread
+        override fun doInBackground(vararg objs: Void): Boolean? {
+            val url = URL(url)
+            val input = url.openStream()
+            try {
+                //The sdcard directory e.g. '/sdcard' can be used directly, or
+                //more safely abstracted with getExternalStorageDirectory()
+                val storagePath = Environment.getExternalStorageDirectory()
+                println("storage path $storagePath")
+                val output = FileOutputStream(File(storagePath, movie_id+".jpg"))
+                try {
+                    val buffer = ByteArray(2048)
+                    var bytesRead = 0
+                    bytesRead = input.read(buffer, 0, buffer.size)
+                    while ((bytesRead) >= 0) {
+                        output.write(buffer, 0, bytesRead)
+                        bytesRead = input.read(buffer, 0, buffer.size)
+                    }
+                } finally {
+                    output.close()
+                }
+            } finally {
+                input.close()
+            }
+            return true
+        }
+
+        // onPostExecute runs on main thread
+        override fun onPostExecute(bool: Boolean?) {
+        }
+    }
+
+    fun saveImage(pic_Url: String, image_name: String) {
+        val result=
+                FicheFilmActivity.InsertTask(
+                        this,
+                        pic_Url,
+                        image_name).execute()
+    }
+
+    fun loadImage(image_name:String): Bitmap? {
+        val photoPath = Environment.getExternalStorageDirectory().toString() + "/"+image_name+".jpg"
+        return BitmapFactory.decodeFile(photoPath)
+    }
+
+
+    fun startYoutubeIntent (context : Context, id : Int){
+
+            apiVediosCall = apiMovies.getService().getVideos(id)
+            apiVediosCall!!.enqueue(object : Callback<VideoResponse> {
+                override fun onResponse(call: Call<VideoResponse>, response: Response<VideoResponse>) {
+                    if (response.isSuccessful) {
+
+                        val videos = response.body()!!.results
+                        if (videos != null) {
+                            var found = false
+                            for (video in videos){
+
+                                if(!found && video.site == "YouTube") {
+                                    Toast.makeText(applicationContext,"found", Toast.LENGTH_SHORT).show()
+                                    found = true
+                                    val appIntent = Intent(Intent.ACTION_VIEW,Uri.parse("vnd.youtube:"+video.key))
+                                    val webIntent =  Intent(Intent.ACTION_VIEW,Uri.parse("http://youtube.com/watch?v="+video.key))
+                                    try {
+                                        context.startActivity(appIntent)
+                                        //Toast.makeText(applicationContext,"app", Toast.LENGTH_SHORT).show()
+                                    } catch ( ex : ActivityNotFoundException) {
+                                        context.startActivity(webIntent)
+                                       // Toast.makeText(applicationContext,"web", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+
+                            }
+                        }
+
+
+                    } else {
+                        Toast.makeText(baseContext, response.message() , Toast.LENGTH_LONG).show();
+                    }
+
+                }
+
+                override fun onFailure(call: Call<VideoResponse>, t: Throwable) {
+                    loadFailed()
+                }
+            })
+
+    }
+
+
+
 }

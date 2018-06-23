@@ -25,7 +25,7 @@
             android:id="@+id/affiche"
             android:layout_width="match_parent"
             android:layout_height="429dp"
-            android:background="@drawable/once_upon_a_time">
+            android:background="@drawable/defaultfiche">
 
 
             <android.support.constraint.ConstraintLayout

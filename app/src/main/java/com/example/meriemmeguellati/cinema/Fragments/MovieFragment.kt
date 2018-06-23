@@ -63,7 +63,7 @@ class MovieFragment : Fragment() {
                     if (items != null) {
                         for (item in items){
 
-                            film = Film(item.title!!, R.drawable.p1, item.overview!!,item.posterPath!!, R.drawable.p1)
+                            film = Film(item.title!!, "", item.overview!!,item.posterPath!!, R.drawable.defaultposter)
                             film.id = item.id
                             film.backdrop_path = item.backdropPath?:""
                             films.add(film)

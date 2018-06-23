@@ -6,6 +6,10 @@ package com.example.meriemmeguellati.cinema.Adapters
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import android.os.Environment
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -26,7 +30,7 @@ import com.example.meriemmeguellati.cinema.R
 
 import java.util.ArrayList
 
-class SectionListFilmLiesAdapter(private val mContext: Context, private val itemsList: ArrayList<Film>?) : RecyclerView.Adapter<SectionListFilmLiesAdapter.SingleItemRowHolder>() {
+class SectionListFilmLiesAdapter(private val mContext: Context, private val itemsList: ArrayList<Film>?,private val mode: String) : RecyclerView.Adapter<SectionListFilmLiesAdapter.SingleItemRowHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): SingleItemRowHolder {
         val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.list_single_card, null)
@@ -38,13 +42,18 @@ class SectionListFilmLiesAdapter(private val mContext: Context, private val item
         val singleItem = itemsList!![i]
 
         holder.tvTitle.text = singleItem.titre
-        Glide.with(mContext)
-                .load(BuildConfig.BASE_URL_IMG + "w154" + singleItem.posterPath)
-                .apply(RequestOptions()
-                        .placeholder(R.drawable.defaultposter)
-                        .centerCrop()
-                )
-                .into(holder.itemImage)
+        if (mode === "offline") {
+            var poster = loadImage("MOVA_" + singleItem.titre)
+            holder.itemImage.setImageDrawable(BitmapDrawable(poster))
+        } else {
+            Glide.with(mContext)
+                    .load(BuildConfig.BASE_URL_IMG + "w154" + singleItem.posterPath)
+                    .apply(RequestOptions()
+                            .placeholder(R.drawable.defaultposter)
+                            .centerCrop()
+                    )
+                    .into(holder.itemImage)
+        }
         holder.image.setOnClickListener {
             val intent = Intent(mContext, FicheFilmActivity::class.java)
             intent.putExtra("film", singleItem)
@@ -85,6 +94,10 @@ class SectionListFilmLiesAdapter(private val mContext: Context, private val item
 
         }
 
+    }
+    fun loadImage(image_name:String): Bitmap? {
+        val photoPath = Environment.getExternalStorageDirectory().toString() + "/"+image_name+".jpg"
+        return BitmapFactory.decodeFile(photoPath)
     }
 
 }

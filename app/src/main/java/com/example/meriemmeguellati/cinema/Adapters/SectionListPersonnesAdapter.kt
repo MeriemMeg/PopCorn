@@ -6,6 +6,10 @@ package com.example.meriemmeguellati.cinema.Adapters
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import android.os.Environment
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -27,7 +31,7 @@ import com.example.meriemmeguellati.cinema.R
 
 import java.util.ArrayList
 
-class SectionListPersonnesAdapter(private val mContext: Context, private val itemsList: ArrayList<Personne>?) : RecyclerView.Adapter<SectionListPersonnesAdapter.SingleItemRowHolder>() {
+class SectionListPersonnesAdapter(private val mContext: Context, private val itemsList: ArrayList<Personne>?,private val mode:String) : RecyclerView.Adapter<SectionListPersonnesAdapter.SingleItemRowHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): SingleItemRowHolder {
         val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.list_single_card, null)
@@ -40,23 +44,29 @@ class SectionListPersonnesAdapter(private val mContext: Context, private val ite
 
         holder.tvTitle.text = singleItem.nom
 
-        //holder.image.setBackgroundResource(singleItem.fiche)
-        if(singleItem.gender == 1){
-            Glide.with(mContext)
-                    .load(BuildConfig.BASE_URL_IMG + "w154" + singleItem.profil)
-                    .apply(RequestOptions()
-                            .placeholder(R.drawable.femmeholder)
-                            .centerCrop()
-                    )
-                    .into(holder.itemImage)
+        if (mode === "offline") {
+            var poster = loadImage("PER_" + singleItem.nom)
+            holder.itemImage.setImageDrawable(BitmapDrawable(poster))
         } else {
-            Glide.with(mContext)
-                    .load(BuildConfig.BASE_URL_IMG + "w154" + singleItem.profil)
-                    .apply(RequestOptions()
-                            .placeholder(R.drawable.hommeholder)
-                            .centerCrop()
-                    )
-                    .into(holder.itemImage)
+            //holder.image.setBackgroundResource(singleItem.fiche)
+            if(singleItem.gender == 1){
+                Glide.with(mContext)
+                        .load(BuildConfig.BASE_URL_IMG + "w154" + singleItem.profil)
+                        .apply(RequestOptions()
+                                .placeholder(R.drawable.femmeholder)
+                                .centerCrop()
+                        )
+                        .into(holder.itemImage)
+            } else {
+                Glide.with(mContext)
+                        .load(BuildConfig.BASE_URL_IMG + "w154" + singleItem.profil)
+                        .apply(RequestOptions()
+                                .placeholder(R.drawable.hommeholder)
+                                .centerCrop()
+                        )
+                        .into(holder.itemImage)
+        }
+
         }
 
         holder.image.setOnClickListener {
@@ -96,6 +106,10 @@ class SectionListPersonnesAdapter(private val mContext: Context, private val ite
 
         }
 
+    }
+    fun loadImage(image_name:String): Bitmap? {
+        val photoPath = Environment.getExternalStorageDirectory().toString() + "/"+image_name+".jpg"
+        return BitmapFactory.decodeFile(photoPath)
     }
 
 }

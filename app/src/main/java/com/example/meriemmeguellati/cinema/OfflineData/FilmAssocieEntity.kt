@@ -15,5 +15,5 @@ data class FilmAssocieEntity(
         @ColumnInfo(name= "id") var id: Int,
         @ColumnInfo(name = "film_id") val filmId: Int,
         @ColumnInfo(name = "titre") val titre: String,
-        @ColumnInfo(name = "affiche") val affiche: Int
+        @ColumnInfo(name = "affiche") val affiche: String
 )

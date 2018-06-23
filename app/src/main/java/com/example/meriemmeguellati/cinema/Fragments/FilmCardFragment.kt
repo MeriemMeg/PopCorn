@@ -88,8 +88,8 @@ class FilmCardFragment : Fragment() {
                 act.db = FilmDB.getInstance(act.context!!)
                 act.filmDao = db?.FilmAssocieDAO()
                 act.personneDao = db?.PersonneDAO()
-                personneEntity = act.personneDao?.getPersonnes()
-                filmEntity = act.filmDao?.getFilmsAssocies()
+                personneEntity = act.personneDao?.getPersonnes(film.id)
+                filmEntity = act.filmDao?.getFilmsAssocies(film.id)
 
                 return null
             }
@@ -120,6 +120,7 @@ class FilmCardFragment : Fragment() {
                     }
 
                 }
+
 
                 if (filmEntity != null) {
 

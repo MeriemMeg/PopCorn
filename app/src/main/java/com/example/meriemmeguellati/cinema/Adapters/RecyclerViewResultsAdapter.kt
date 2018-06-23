@@ -41,7 +41,7 @@ class RecyclerViewResultsAdapter(private val mContext: Context, private val data
         Glide.with(mContext)
                 .load(BuildConfig.BASE_URL_IMG + "w154" + singleSectionItems.posterPath)
                 .apply(RequestOptions()
-                        .placeholder(R.drawable.img2)
+                        .placeholder(R.drawable.defaultposter)
                         .centerCrop()
                 )
                 .into(itemRowHolder.poster)

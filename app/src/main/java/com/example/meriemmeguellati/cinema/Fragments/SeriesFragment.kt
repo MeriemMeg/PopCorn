@@ -50,7 +50,7 @@ class SeriesFragment : Fragment() {
     }
 
     private fun LoadLatestSeries() {
-        apiSeriesCall = apiSeries.getService().getNowPlayingSeries(Language().Country())
+        apiSeriesCall = apiSeries.getService().getPopularSeries(Language().Country())
         apiSeriesCall!!.enqueue(object : Callback<LatestSeriesResponse> {
             override fun onResponse(call: Call<LatestSeriesResponse>, response: Response<LatestSeriesResponse>) {
                 if (response.isSuccessful) {
@@ -60,7 +60,7 @@ class SeriesFragment : Fragment() {
                     var series = ArrayList<Serie>()
                     if (items != null) {
                         for (item in items ) {
-                            serie =  Serie(item.name, R.drawable.p1, item.overview!!, R.drawable.p1)
+                            serie =  Serie(item.name, R.drawable.defaultposter, item.overview!!, R.drawable.defaultposter)
                             serie.id = item.id
                             serie.posterPath = item.poster_path?:""
                             series.add(serie)

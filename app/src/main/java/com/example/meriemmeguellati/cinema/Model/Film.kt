@@ -7,7 +7,7 @@ import java.io.Serializable
  */
 data class Film(
         val titre: String,
-        val affiche: Int,
+        val affiche: String,
         var description: String,
         val posterPath : String,
         val trailerposter : Int

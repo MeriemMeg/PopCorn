@@ -53,10 +53,10 @@ class NotificationJobService : JobService() {
                         var movie : Film
 
                         if (item != null) {
-                            movie = Film(item.title!!, R.drawable.p1, item.overview!!,item.posterPath?:"", R.drawable.p1)
+                            movie = Film(item.title!!,"", item.overview!!,item.posterPath?:"", R.drawable.defaultposter)
                             movie.backdrop_path = item.backdropPath?:""
                             movie.id = item.id
-                            Toast.makeText(applicationContext,item.posterPath, Toast.LENGTH_SHORT).show()
+                            //Toast.makeText(applicationContext,item.posterPath, Toast.LENGTH_SHORT).show()
                             if(verifyPreferences("notifications")){
                                 var send = false
                                 if(item.genres!!.isEmpty()){
@@ -64,7 +64,7 @@ class NotificationJobService : JobService() {
                                 } else{
                                     for (genre in item.genres!!){
                                         if (verifyPreferences(genre?.name?:"Drama")) send = true
-                                        Toast.makeText(applicationContext,genre.name, Toast.LENGTH_SHORT).show()
+                                        //Toast.makeText(applicationContext,genre.name, Toast.LENGTH_SHORT).show()
 
 
                                     }

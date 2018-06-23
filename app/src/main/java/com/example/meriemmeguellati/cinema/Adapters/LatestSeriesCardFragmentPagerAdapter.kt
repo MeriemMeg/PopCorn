@@ -31,7 +31,7 @@ class LatestSeriesCardFragmentPagerAdapter(fm: FragmentManager, private val base
         for (item in items){
 
             addCardFragment(SerieCardFragment())
-            serie =  Serie(item.name, R.drawable.p1, item.overview!!, R.drawable.p1)
+            serie =  Serie(item.name, R.drawable.defaultposter, item.overview!!, R.drawable.defaultposter)
             serie.id = item.id
             serie.posterPath = item.poster_path?:""
             this.data.add(serie)

@@ -21,7 +21,7 @@ import com.example.meriemmeguellati.cinema.R
 
 import java.util.ArrayList
 
-class RecyclerViewPersonnesAdapter(private val mContext: Context, private val dataList: ArrayList<Personne>?) : RecyclerView.Adapter<RecyclerViewPersonnesAdapter.ItemRowHolder>() {
+class RecyclerViewPersonnesAdapter(private val mContext: Context, private val dataList: ArrayList<Personne>?,private val mode:String) : RecyclerView.Adapter<RecyclerViewPersonnesAdapter.ItemRowHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ItemRowHolder {
         val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.list_item, null)
@@ -36,7 +36,7 @@ class RecyclerViewPersonnesAdapter(private val mContext: Context, private val da
         val singleSectionItems = dataList
         itemRowHolder.itemTitle.text = "Personnes associées"
 
-        val itemListDataAdapter = SectionListPersonnesAdapter(mContext, singleSectionItems)
+        val itemListDataAdapter = SectionListPersonnesAdapter(mContext, singleSectionItems,mode)
 
         itemRowHolder.recycler_view_list.setHasFixedSize(true)
         itemRowHolder.recycler_view_list.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false)

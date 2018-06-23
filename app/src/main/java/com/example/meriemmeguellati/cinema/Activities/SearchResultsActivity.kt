@@ -103,7 +103,7 @@ class SearchResultsActivity  : Activity(){
                     if (items != null) {
                         for (item in items){
 
-                            film = Film(item.title!!, R.drawable.p1, item.overview!!,item.posterPath?:"", R.drawable.p1)
+                            film = Film(item.title!!, "", item.overview!!,item.posterPath?:"", R.drawable.defaultposter)
                             film.id = item.id
                             film.backdrop_path = item.backdropPath?:""
                             FilmListResult.add(film)
@@ -120,7 +120,7 @@ class SearchResultsActivity  : Activity(){
 
 
                 } else
-                    loadFailed()
+                    Toast.makeText(context, response.message() , Toast.LENGTH_LONG).show();
             }
 
             override fun onFailure(call: Call<NowPlayingResponse>, t: Throwable) {
@@ -142,7 +142,7 @@ class SearchResultsActivity  : Activity(){
                     var serie : Serie
                     if (items != null) {
                         for (item in items ) {
-                            serie =  Serie(item.name, R.drawable.p1, item.overview!!, R.drawable.p1)
+                            serie =  Serie(item.name, R.drawable.defaultposter, item.overview!!, R.drawable.defaultposter)
                             serie.id = item.id
                             serie.posterPath = item.poster_path?:""
                             SerieListResult.add(serie)
@@ -157,7 +157,7 @@ class SearchResultsActivity  : Activity(){
 
 
                 } else
-                    loadFailed()
+                    Toast.makeText(context, response.message() , Toast.LENGTH_LONG).show();
             }
 
             override fun onFailure(call: Call<LatestSeriesResponse>, t: Throwable) {

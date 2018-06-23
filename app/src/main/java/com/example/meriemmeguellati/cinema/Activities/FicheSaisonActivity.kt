@@ -15,9 +15,12 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AlertDialog
 import android.view.*
 import android.widget.*
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.meriemmeguellati.cinema.TMDBapi.RetrofitCalls.APISeriesCall
 import com.example.meriemmeguellati.cinema.TMDBapi.APIresponses.*
 import com.example.meriemmeguellati.cinema.Adapters.*
+import com.example.meriemmeguellati.cinema.BuildConfig
 import com.example.meriemmeguellati.cinema.Model.*
 import com.example.meriemmeguellati.cinema.NavDrawerHelper
 import retrofit2.Call
@@ -43,7 +46,8 @@ class FicheSaisonActivity : AppCompatActivity() {
     lateinit var personnesLieesRecycler_view : RecyclerView
     lateinit var followItem : MenuItem
     var comments  = ArrayList<Comment>()
-
+    lateinit var backdrop : ImageView
+    lateinit var description :TextView
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,32 +63,20 @@ class FicheSaisonActivity : AppCompatActivity() {
         val titre = findViewById<TextView>(R.id.film_name)
         titre.text = this.saison.serie+ " S" + this.saison.num
 
-        val playStop = findViewById<ImageButton>(R.id.play_stop)
-       playStop.setImageResource(R.drawable.ic_play_arrow_white_24dp)
-
-        val background = findViewById<FrameLayout>(R.id.film_background)
-       // background.setBackgroundResource(this.saison.affiche)
-        var videoView = findViewById<VideoView>(R.id.videoView) as VideoView
-        val mediaController = MediaController(this)
-        mediaController?.setAnchorView(videoView)
-
-       /* try {
-            // ID of video file.
-            val id = this.getRawResIdByName(this.saison.trailer)
-            videoView.setVideoURI(Uri.parse("android.resource://$packageName/$id"))
-
-        } catch (e: Exception) {
-            Log.e("Error", e.message)
-            e.printStackTrace()
-        }
-        */
-        videoView.setBackgroundResource(R.drawable.defaultfiche)
-
-       // videoView.requestFocus()
 
 
-        val description = findViewById<TextView>(R.id.film_description)
-        description.text = this.saison.description
+
+         description = findViewById<TextView>(R.id.film_description)
+
+        backdrop = findViewById(R.id.backdrop_film)
+        Glide.with(baseContext)
+                .load(BuildConfig.BASE_URL_IMG + "w780" + saison.backdrop_path)
+                .apply(RequestOptions()
+                        .placeholder(R.drawable.defaultfiche)
+                        .centerCrop()
+                )
+                .into(backdrop)
+
 
 
         personnesLieesRecycler_view = findViewById<RecyclerView>(R.id.personnes_associees)
@@ -125,27 +117,7 @@ class FicheSaisonActivity : AppCompatActivity() {
 
 
 
-    /*    playStop.setOnClickListener {
-            videoView.start()
-            //getSupportActionBar()!!.hide()
-            playStop.setVisibility(View.INVISIBLE);
-            titre.setVisibility(View.INVISIBLE)
-            videoView.setBackgroundResource(0)
 
-        }
-
-        videoView.setOnTouchListener(object : View.OnTouchListener {
-            override fun onTouch(v: View, event: MotionEvent): Boolean {
-
-                videoView.pause()
-                //getSupportActionBar()!!.show()
-                playStop.setVisibility(View.VISIBLE);
-                titre.setVisibility(View.VISIBLE)
-                return false
-            }
-        })
-
-  */
     }
 
     override fun onDestroy() {
@@ -157,15 +129,7 @@ class FicheSaisonActivity : AppCompatActivity() {
 
     }
 
- /*   // Find ID corresponding to the name of the resource (in the directory raw).
-    fun getRawResIdByName(resName: String): Int {
-        val pkgName = this.packageName
-        // Return 0 if not found.
-        val resID = this.resources.getIdentifier(resName, "raw", pkgName)
-        Log.i("AndroidVideoView", "Res Name: $resName==> Res ID = $resID")
-        return resID
-    }
-*/
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -265,7 +229,7 @@ class FicheSaisonActivity : AppCompatActivity() {
                     "", R.drawable.avatar,"Meguellati Ahmed",note.toInt())
             comments.add(0,myComment)
             this.showComments.text = "Commentaires ("+comments.size.toString()+")"
-            Toast.makeText(this, "votre évaluation a été ajoutée" , Toast.LENGTH_LONG).show();
+
             if(this.isCommentsShown ) {
                 hideFragment()
                 this.more.setImageResource(R.drawable.ic_expand_more_black_24dp)
@@ -291,10 +255,12 @@ class FicheSaisonActivity : AppCompatActivity() {
                 if (response.isSuccessful()) {
 
                     val items = response.body()!!
+
+                    description.text = items.overview
                     var episode : Episode
 
                     for (item in items.episodes!!){
-                        episode = Episode(saison.serie?:"Aucun titre n'est disponible",saison.num, item.episode_number?:0, R.drawable.p1,R.drawable.p1, "")
+                        episode = Episode(saison.serie?:"Aucun titre n'est disponible",saison.num, item.episode_number?:0, R.drawable.defaultposter,R.drawable.defaultposter, "")
                         episode.id = item.id
                         episode.still_path = item.still_path?:""
                         episode.networks = saison.networks
@@ -307,7 +273,7 @@ class FicheSaisonActivity : AppCompatActivity() {
                                 p.profil = person.profile_path?:""
                                 p.id = person?.id?:0
                                 saison.personnages.add(p)
-                                PersonnesLieesAdapter = RecyclerViewPersonnesAdapter(context, saison.personnages)
+                                PersonnesLieesAdapter = RecyclerViewPersonnesAdapter(context, saison.personnages,"online")
 
                                 personnesLieesRecycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
@@ -328,7 +294,7 @@ class FicheSaisonActivity : AppCompatActivity() {
                     episodes_recycler_view.adapter = episodesAdapter
 
                 } else
-                    loadFailed()
+                    Toast.makeText(context, response.message() , Toast.LENGTH_LONG).show();
             }
 
             override fun onFailure(call: Call<SeasonDetailsResponse>, t: Throwable) {
@@ -354,14 +320,14 @@ class FicheSaisonActivity : AppCompatActivity() {
                         saison.personnages.add(p)
                     }
 
-                    PersonnesLieesAdapter = RecyclerViewPersonnesAdapter(context, saison.personnages)
+                    PersonnesLieesAdapter = RecyclerViewPersonnesAdapter(context, saison.personnages,"online")
 
                     personnesLieesRecycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
                     personnesLieesRecycler_view.adapter = PersonnesLieesAdapter
 
                 } else
-                    loadFailed()
+                    Toast.makeText(context, response.message() , Toast.LENGTH_LONG).show();
             }
 
             override fun onFailure(call: Call<CreditsResponse>, t: Throwable) {

@@ -9,11 +9,11 @@ data class FilmEntity (
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name= "id") var id: Int,
         @ColumnInfo(name= "titre") var titre: String,
-        @ColumnInfo(name= "affiche") var affiche: Int,
+        @ColumnInfo(name= "affiche") var affiche: String,
         @ColumnInfo(name= "description") var description: String,
         @ColumnInfo(name= "trailer") var trailer : String,
         @ColumnInfo(name= "trailerposter") var trailerposter : Int
 )
 {
-    constructor():this(0,"",1,"","",1)
+    constructor():this(0,"","","","",1)
 }

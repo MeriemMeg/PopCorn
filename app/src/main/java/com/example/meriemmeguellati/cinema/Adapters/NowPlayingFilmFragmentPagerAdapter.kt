@@ -33,7 +33,7 @@ class  NowPlayingFilmFragmentPagerAdapter(fm: FragmentManager, private val baseE
         for (item in items){
             addCardFragment(FilmCardFragment())
 
-            movie = Film(item.title!!, R.drawable.p1, item.overview!!,item.posterPath!!, R.drawable.p1)
+            movie = Film(item.title!!, "", item.overview!!,item.posterPath!!, R.drawable.defaultposter)
             movie.backdrop_path = item.backdropPath?:""
             movie.id = item.id
             this.data.add(movie)

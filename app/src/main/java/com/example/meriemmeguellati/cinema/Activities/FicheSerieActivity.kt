@@ -76,8 +76,7 @@ class FicheSerieActivity : AppCompatActivity() {
         val description = findViewById<TextView>(R.id.series_descrp)
         description.text = this.serie.description
 
-        val affiche = findViewById<FrameLayout>(R.id.affiche)
-       // affiche.setBackgroundResource(this.serie.poster)
+
 
         this.showComments = findViewById<TextView>(R.id.nb_comments)
         this.showComments.text = "Commentaires..."
@@ -250,7 +249,7 @@ class FicheSerieActivity : AppCompatActivity() {
                     var filmsLiees = ArrayList<Film>()
                     var s : Serie
                     for (item in items ){
-                        s = Serie(item?.name?:"Aucun titre n'est disponible", R.drawable.p1, item?.overview?:"Aucune description n'est disponible", R.drawable.p1)
+                        s = Serie(item?.name?:"Aucun titre n'est disponible", R.drawable.defaultposter, item?.overview?:"Aucune description n'est disponible", R.drawable.defaultposter)
                         s.id = item.id
                         s.posterPath = item?.poster_path?:""
                         serie.seriesLiees.add(s)
@@ -265,7 +264,7 @@ class FicheSerieActivity : AppCompatActivity() {
 
 
                 } else
-                    loadFailed()
+                    Toast.makeText(context, response.message() , Toast.LENGTH_LONG).show();
             }
 
             override fun onFailure(call: Call<LatestSeriesResponse>, t: Throwable) {
@@ -284,9 +283,9 @@ class FicheSerieActivity : AppCompatActivity() {
                     serie.backdrop_path = item?.backdrop_path?:""
                     serie.networks = item?.networks
                     Glide.with(baseContext)
-                            .load(BuildConfig.BASE_URL_IMG + "w300" + serie.backdrop_path)
+                            .load(BuildConfig.BASE_URL_IMG + "w780" + serie.backdrop_path)
                             .apply(RequestOptions()
-                                    .placeholder(R.drawable.revenge)
+                                    .placeholder(R.drawable.defaultfiche)
                                     .centerCrop()
                             )
                             .into(backdrop)
@@ -295,6 +294,7 @@ class FicheSerieActivity : AppCompatActivity() {
                     for (saison in cast!!){
                         s = Saison(serie?.titre?:"Aucun Nom", saison?.season_number?:0, R.drawable.jenniferlawrence, "", R.drawable.jenniferlawrence,"")
                         s.poster_path = saison?.poster_path?:""
+                        s.backdrop_path = serie.backdrop_path
                         s.id = serie.id
                         s.networks = serie.networks
                         serie.saisons.add(s)
@@ -310,7 +310,7 @@ class FicheSerieActivity : AppCompatActivity() {
 
 
                 } else
-                    loadFailed()
+                    Toast.makeText(context, response.message() , Toast.LENGTH_LONG).show();
             }
 
             override fun onFailure(call: Call<SerieDetailsResponse>, t: Throwable) {
@@ -342,7 +342,7 @@ class FicheSerieActivity : AppCompatActivity() {
 
 
                 } else
-                    loadFailed()
+                    Toast.makeText(baseContext, response.message() , Toast.LENGTH_LONG).show();
             }
 
             override fun onFailure(call: Call<ReviewsResponse>, t: Throwable) {

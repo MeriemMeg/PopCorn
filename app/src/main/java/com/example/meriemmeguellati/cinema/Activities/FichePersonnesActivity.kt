@@ -78,7 +78,7 @@ class FichePersonnesActivity : AppCompatActivity() {
                 .into(backdrop)
         else
             Glide.with(baseContext)
-                    .load(BuildConfig.BASE_URL_IMG + "w300" + personne.profil)
+                    .load(BuildConfig.BASE_URL_IMG + "w500" + personne.profil)
                     .apply(RequestOptions()
                             .placeholder(R.drawable.hommeholder)
                             .centerCrop()
@@ -255,7 +255,7 @@ class FichePersonnesActivity : AppCompatActivity() {
                     val items = response.body()!!
                     var film : Film
                     for (item in items.cast!!){
-                        film = Film(item?.title?:"Aucun titre n'est disponible", R.drawable.p1, item?.overview?:"Aucune description n'est disponible", item?.posterPath?:"", R.drawable.p1)
+                        film = Film(item?.title?:"Aucun titre n'est disponible","", item?.overview?:"Aucune description n'est disponible", item?.posterPath?:"", R.drawable.defaultposter)
                         film.id = item.id
                         film.backdrop_path = item.backdropPath?:""
                         personne.filmographie.add(film)
@@ -263,7 +263,7 @@ class FichePersonnesActivity : AppCompatActivity() {
 
                     film_liées_recycler_view.setHasFixedSize(true)
                     //
-                    filmographieAdapter = RecyclerViewFilmLiesAdapter(context, personne.filmographie)
+                    filmographieAdapter = RecyclerViewFilmLiesAdapter(context, personne.filmographie,"online")
 
                     film_liées_recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
@@ -272,7 +272,7 @@ class FichePersonnesActivity : AppCompatActivity() {
 
 
                 } else
-                    loadFailed()
+                    Toast.makeText(baseContext, response.message() , Toast.LENGTH_LONG).show();
             }
 
             override fun onFailure(call: Call<PersonneCastResponse>, t: Throwable) {
@@ -294,7 +294,7 @@ class FichePersonnesActivity : AppCompatActivity() {
                     description.text = personne.biographie
 
                 } else
-                    loadFailed()
+                    Toast.makeText(baseContext, response.message() , Toast.LENGTH_LONG).show();
             }
 
             override fun onFailure(call: Call<PersonDetailsResponse>, t: Throwable) {

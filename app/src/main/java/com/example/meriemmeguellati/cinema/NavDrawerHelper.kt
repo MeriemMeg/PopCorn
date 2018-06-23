@@ -24,10 +24,10 @@ import com.example.meriemmeguellati.cinema.Model.Serie
 class NavDrawerHelper(context: Context) : ContextWrapper(context) {
 
 
-    var funFilm : Film = Film(baseContext.resources.getStringArray(R.array.film_1)[0], R.drawable.img10, baseContext.resources.getStringArray(R.array.film_1)[1], "commedesbetes", R.drawable.img10)
+    var funFilm : Film = Film("Aucun", "", "","", R.drawable.defaultposter)
     var isFilmFan : Boolean = false
 
-    var funSerie: Serie = Serie(baseContext.resources.getStringArray(R.array.serie_1)[0], R.drawable.img10, baseContext.resources.getStringArray(R.array.serie_1)[1], R.drawable.img10)
+    var funSerie: Serie = Serie("Aucun", R.drawable.defaultposter, "", R.drawable.defaultposter)
     var isSerieFan :Boolean = false
 
     fun setFanFilms (film :Film){

@@ -31,9 +31,6 @@ import retrofit2.Response
 
 
 
-
-
-
 class AccueilFragment : Fragment() {
 
 
@@ -58,7 +55,7 @@ class AccueilFragment : Fragment() {
         LoadLatestMovies()
 
         latestSeriesPagerAdapter = LatestSeriesCardFragmentPagerAdapter(childFragmentManager, MainActivity.dpToPixels(2, activity))
-        LoadLatestSeries()
+        LoadLatestSeries(context)
 
         return view
     }
@@ -78,13 +75,7 @@ class AccueilFragment : Fragment() {
                     moviesViewPager.offscreenPageLimit = 3
 
                 } else {
-                    if(response.code()== 404){
-                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
-                    }
-                    else if (response.code()== 401) {
-                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
-                    }
-
+                    Toast.makeText(context, response.message() , Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -95,7 +86,7 @@ class AccueilFragment : Fragment() {
         })
     }
 
-    private fun LoadLatestSeries() {
+    private fun LoadLatestSeries(context: Context) {
         apiSeriesCall = apiSeries.getService().getNowPlayingSeries(Language().Country())
         apiSeriesCall!!.enqueue(object : Callback<LatestSeriesResponse> {
             override fun onResponse(call: Call<LatestSeriesResponse>, response: Response<LatestSeriesResponse>) {
@@ -110,7 +101,7 @@ class AccueilFragment : Fragment() {
 
 
                 } else
-                    loadFailed()
+                    Toast.makeText(context, response.message() , Toast.LENGTH_LONG).show();
             }
 
             override fun onFailure(call: Call<LatestSeriesResponse>, t: Throwable) {
